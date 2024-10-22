@@ -1,15 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { RootLayoutPresenter } from '$lib/presenters/root/AuthPresenter.svelte';
+	import { RootLayoutPresenter } from '$lib/presenters/root/RootLayoutPresenter.svelte';
 	import '../app.css';
 
 	let { children } = $props();
 
 	const presenter = RootLayoutPresenter.make();
-
-	$effect(() => {
-		presenter.load();
-	})
 	
 	$effect(() => {
 		if (!presenter.user) goto('/');

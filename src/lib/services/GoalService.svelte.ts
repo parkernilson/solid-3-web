@@ -16,6 +16,10 @@ export class GoalService extends SupabaseService {
 		return this.supabase.from('goals').select('*').eq('id', goalId).maybeSingle();
 	}
 
+	async getGoals(userId: string) {
+		return this.supabase.from('goals').select('*').eq('owner', userId)
+	}
+
 	async createGoal({ title }: CamelCase<Omit<Goal, 'id' | 'created_at' | 'owner'>>) {
 		return this.supabase.rpc('create_goal', { _title: title });
 	}
