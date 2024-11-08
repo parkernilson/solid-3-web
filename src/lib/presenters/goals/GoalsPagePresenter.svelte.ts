@@ -1,6 +1,6 @@
 import { AuthService } from '$lib/services/AuthService.svelte';
 import { ErrorService } from '$lib/services/ErrorService.svelte';
-import { GoalService, type Goal } from '$lib/services/GoalService.svelte';
+import { GoalService, type GoalWithStreak } from '$lib/services/GoalService.svelte';
 
 export class GoalsPagePresenter {
 	private authService: AuthService;
@@ -8,7 +8,7 @@ export class GoalsPagePresenter {
 	private errorService: ErrorService;
 	
 	private _loadingGoals = $state(true);
-	private _goals = $state<Goal[]>();
+	private _goals = $state<GoalWithStreak[]>();
 	
 	public get loadingGoals() { return this._loadingGoals }
 	private set loadingGoals(l) { this._loadingGoals = l }
@@ -37,14 +37,6 @@ export class GoalsPagePresenter {
 		}
 	}
 
-	async logout() {
-		try {
-			await this.authService.logout();
-		} catch (e) {
-			this.errorService.reportError(e);
-		}
-	}
-
 	async loadGoals() {
 		try {
 			this.loadingGoals = true;
@@ -52,11 +44,9 @@ export class GoalsPagePresenter {
 			if (!this.user) {
 				throw new Error("Tried to get goals without a signed in user")
 			}
-
-			const { data, error } = await this.goalService.getGoals(this.user.id)
-			if (error) throw error
-
-			this.goals = data		
+		
+			const goals = await this.goalService.getGoalsWithStreaks(this.user.id);
+			this.goals = goals;
 		} catch (e) {
 			this.errorService.reportError(e);
 		} finally {

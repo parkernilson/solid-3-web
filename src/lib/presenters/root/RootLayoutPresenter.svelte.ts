@@ -25,4 +25,12 @@ export class RootLayoutPresenter {
 			this.errorService.reportError(e);
 		}
 	}
+
+	async logout() {
+		try {
+			await this.authService.logout();
+		} catch (e) {
+			this.errorService.reportError(e);
+		}
+	}
 }

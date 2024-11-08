@@ -6,6 +6,8 @@ import { SupabaseService } from './SupabaseService.svelte';
 
 export type Goal = Database['public']['Tables']['goals']['Row'];
 export type Entry = Database['public']['Tables']['entries']['Row'];
+export type CurrentStreakInfo = Database['public']['CompositeTypes']['current_streak_info'];
+export type GoalWithStreak = Goal & { streak: CurrentStreakInfo };
 
 export class GoalService extends SupabaseService {
 	static make(): GoalService {
@@ -16,8 +18,46 @@ export class GoalService extends SupabaseService {
 		return this.supabase.from('goals').select('*').eq('id', goalId).maybeSingle();
 	}
 
+	async getGoalWithStreak(goalId: string) {
+		const { data: goalData, error: goalError } = await this.getGoal(goalId);
+		if (goalError) throw goalError;
+		if (!goalData) {
+			throw new Error('Goal not found');
+		}
+
+		const { data: streakData, error: streakError } = await this.getCurrentStreak({ goalId });
+		if (streakError) {
+			throw streakError;
+		}
+		if (!streakData) {
+			throw new Error('Streak not found');
+		}
+
+		return { ...goalData, streak: streakData };
+	}
+
 	async getGoals(userId: string) {
 		return this.supabase.from('goals').select('*').eq('owner', userId);
+	}
+
+	async getGoalsWithStreaks(userId: string) {
+		const { data: goalsData, error: goalsError } = await this.getGoals(userId);
+		if (goalsError) {
+			throw goalsError;
+		}
+		if (!goalsData) { throw new Error('Goals not found'); }
+
+		return Promise.all(
+			goalsData.map(async (goal) => {
+				const { data: streakData, error: streakError } = await this.getCurrentStreak({ goalId: goal.id });
+				if (streakError) throw streakError;
+				if (!streakData) {
+					throw new Error('Streak not found');
+				}
+
+				return { ...goal, streak: streakData };
+			})
+		);
 	}
 
 	async getEntries(goalId: string) {
@@ -47,5 +87,11 @@ export class GoalService extends SupabaseService {
 		goalId
 	}: CamelCase<Database['public']['Functions']['accept_shared_goal']['Args']>) {
 		return this.supabase.rpc('accept_shared_goal', { _goal_id: goalId });
+	}
+
+	async getCurrentStreak({
+		goalId
+	}: CamelCase<Database['public']['Functions']['get_current_streak_info']['Args']>) {
+		return this.supabase.rpc('get_current_streak_info', { _goal_id: goalId });
 	}
 }
