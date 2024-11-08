@@ -50,7 +50,7 @@ export class GoalsPagePresenter {
 			this.loadingGoals = true;
 
 			if (!this.user) {
-				throw new Error("Tried to get goals without an signed in user")
+				throw new Error("Tried to get goals without a signed in user")
 			}
 
 			const { data, error } = await this.goalService.getGoals(this.user.id)

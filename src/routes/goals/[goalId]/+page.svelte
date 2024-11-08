@@ -5,13 +5,13 @@
     const page = fromStore(pageStore);
 
     const presenter = GoalPagePresenter.make();
-    const { goal, loadingGoal } = presenter;
+    const { goal, loadingPage } = presenter;
 
     $effect(() => { presenter.loadPage(page.current.params.goalId) })
 
 </script>
 
-{#if loadingGoal}
+{#if loadingPage}
     <p>Loading goal...</p>
 {:else if goal}
     <h1>{goal.title}</h1>

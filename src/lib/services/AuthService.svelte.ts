@@ -23,12 +23,10 @@ export class AuthService extends SupabaseService {
 	}
 
 	async setupAuthStateListener() {
-		const { data: initialUserData, error: initialUserError } = await this.supabase.auth.getUser();
-
-		if (initialUserError) throw initialUserError;
+		const { data: initialUserData } = await this.supabase.auth.getUser();
 
 		if (initialUserData) {
-			this.user = initialUserData.user;
+			this.user = initialUserData.user!;
 		}
 
 		this.supabase.auth.onAuthStateChange((e, session) => {

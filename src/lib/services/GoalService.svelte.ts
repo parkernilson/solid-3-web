@@ -17,7 +17,11 @@ export class GoalService extends SupabaseService {
 	}
 
 	async getGoals(userId: string) {
-		return this.supabase.from('goals').select('*').eq('owner', userId)
+		return this.supabase.from('goals').select('*').eq('owner', userId);
+	}
+
+	async getEntries(goalId: string) {
+		return this.supabase.from('entries').select('*').eq('goal', goalId);
 	}
 
 	async createGoal({ title }: CamelCase<Omit<Goal, 'id' | 'created_at' | 'owner'>>) {
@@ -38,10 +42,10 @@ export class GoalService extends SupabaseService {
 	}: CamelCase<Database['public']['Functions']['share_goal']['Args']>) {
 		return this.supabase.rpc('share_goal', { _goal_id: goalId, _with_user: withUser });
 	}
-    
-    async acceptSharedGoal({
-        goalId
-    }: CamelCase<Database["public"]["Functions"]["accept_shared_goal"]["Args"]>) {
-        return this.supabase.rpc('accept_shared_goal', { _goal_id: goalId })
-    }
+
+	async acceptSharedGoal({
+		goalId
+	}: CamelCase<Database['public']['Functions']['accept_shared_goal']['Args']>) {
+		return this.supabase.rpc('accept_shared_goal', { _goal_id: goalId });
+	}
 }
