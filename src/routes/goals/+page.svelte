@@ -14,6 +14,6 @@
 	<p>Loading goals...</p>
 {:else if presenter.goals}
 	{#each presenter.goals! as goal}
-		<GoalListView {goal} />
+		<a href="/goals/{goal.id}"><GoalListView {goal} /></a>
 	{/each}
 {/if}
