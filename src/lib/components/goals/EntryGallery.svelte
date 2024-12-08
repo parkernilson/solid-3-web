@@ -1,16 +1,28 @@
 <script lang="ts">
-	import type { Entry, GoalWithStreak } from "$lib/model/goals";
+	import type { GoalWithStreak } from '$lib/model/goals';
+	import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
+	import { onMount } from 'svelte';
+	import InfiniteScrollingContainer from '../InfiniteScrollingContainer.svelte';
 
-    const { goal, entries }: { goal: GoalWithStreak; entries: Entry[]} = $props();
+	const { goal }: { goal: GoalWithStreak } = $props();
 
-    const page1 = entries.slice(0, 9);
+	const presenter = EntryGalleryPresenter.make(goal.id);
 
+	onMount(async () => {
+		await presenter.load();
+	});
 </script>
 
-<div class="grid grid-cols-3">
-    {#each page1 as entry}
-        <div class="border h-8">
-
-        </div>
-    {/each}
-</div>
+<InfiniteScrollingContainer 
+    loadMoreItems={presenter.loadMoreEntries.bind(presenter)}
+    hasMore={presenter.hasMoreEntries}
+    loading={presenter.loadingMoreEntries}
+>
+	<div class="grid grid-cols-3">
+		{#each presenter.entries as entry}
+            <div class="border h-32">
+                <p>{entry.text_content}</p>
+            </div>
+        {/each}
+	</div>
+</InfiniteScrollingContainer>

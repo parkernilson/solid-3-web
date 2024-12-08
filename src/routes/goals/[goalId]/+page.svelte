@@ -28,7 +28,6 @@
         />
         <EntryGallery
             goal={presenter.goal}
-            entries={presenter.entries!}
         />
     </div>
 {:else}

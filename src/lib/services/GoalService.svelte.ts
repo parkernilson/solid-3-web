@@ -2,6 +2,8 @@ import type { Entry, Goal, GoalWithStreak } from '$lib/model/goals';
 import type { Database } from '$lib/supabase/database.types';
 import { supabase } from '$lib/supabase/supabase';
 import type { CamelCase } from '$lib/utils/types';
+import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
+import type { PaginatedRequest } from '$lib/utils/types/pagination/PaginatedRequest';
 import { ErrorService } from './ErrorService.svelte';
 import { SupabaseService } from './SupabaseService.svelte';
 
@@ -64,16 +66,19 @@ export class GoalService extends SupabaseService {
 		return this.supabase.from('entries').select('*').eq('goal', goalId);
 	}
 
-	async getEntriesPaginated(goalId: string, pageSize: number, cursor: string | null) {
+	async getEntriesPaginated(
+		goalId: string,
+		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>
+	): Promise<PaginatedResponse<Entry>> {
 		const query = this.supabase
 			.from('entries')
 			.select('*')
 			.eq('goal', goalId)
 			.order('date_of', { ascending: false })
-			.limit(pageSize)
-			
-		if (cursor) {
-			query.lt("date_of", cursor)
+			.limit(pageSize + 1);
+
+		if (exclusiveStartKey) {
+			query.lt('date_of', exclusiveStartKey);
 		}
 
 		const { data, error } = await query;
@@ -81,10 +86,13 @@ export class GoalService extends SupabaseService {
 			throw error;
 		}
 
+		const hasMore = data.length > pageSize;
+		const requestedPage = data.slice(0, pageSize);
+
 		return {
-			data,
-			nextCursor: data?.[data.length - 1]?.date_of ?? null
-		}
+			data: requestedPage,
+			hasMore
+		};
 	}
 
 	async createGoal({ title }: CamelCase<Omit<Goal, 'id' | 'created_at' | 'owner'>>) {
@@ -123,7 +131,7 @@ export class GoalService extends SupabaseService {
 			.from('streak_summary')
 			.select('*')
 			.eq('goal', goalId)
-			.order("streak_count", { ascending: false })
+			.order('streak_count', { ascending: false })
 			.limit(1)
 			.maybeSingle();
 	}

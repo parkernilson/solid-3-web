@@ -1,13 +1,57 @@
+import type { Entry } from "$lib/model/goals";
 import { ErrorService } from "$lib/services/ErrorService.svelte";
 import { GoalService } from "$lib/services/GoalService.svelte";
+import type { PaginatedRequest } from "$lib/utils/types/pagination/PaginatedRequest";
+import { GoalServicePresenter } from "./GoalServicePresenter.svelte";
 
-export class EntryGalleryPresenter {
-	private goalService: GoalService;
-    private errorService: ErrorService;
+export class EntryGalleryPresenter extends GoalServicePresenter {
+    constructor(private goalId: string, goalService: GoalService, errorService: ErrorService) {
+        super(errorService, goalService);
+    }
 
-	constructor(goalService: GoalService, errorService: ErrorService) {
-		this.goalService = goalService;
-        this.errorService = errorService;
-	}
+    static make(goalId: string) {
+        return new EntryGalleryPresenter(goalId, GoalService.make(), ErrorService.instance());
+    }
 
+    private _entries = $state<Entry[]>([]);
+    private _hasMoreEntries = $state(true);
+    private _loadingMoreEntries = $state(false);
+
+    get entries() { return this._entries }
+    private set entries(e) { this._entries = e }
+    get hasMoreEntries() { return this._hasMoreEntries }
+    private set hasMoreEntries(h) { this._hasMoreEntries = h }
+    get loadingMoreEntries() { return this._loadingMoreEntries }
+    private set loadingMoreEntries(l) { this._loadingMoreEntries = l }
+
+    async loadMoreEntries() {
+        if (!this.hasMoreEntries || this.loading) return;
+        const lastEntry = this.entries?.[this.entries.length - 1];
+        await this.loadEntries({ pageSize: 12, exclusiveStartKey: lastEntry?.date_of })
+    }
+
+    async loadEntries({ pageSize, exclusiveStartKey }: PaginatedRequest): Promise<void> {
+        try {
+            this.loadingMoreEntries = true
+
+            const { data: entriesData, hasMore } = await this.goalService.getEntriesPaginated(
+                this.goalId,
+                {
+                    pageSize, exclusiveStartKey
+                }
+            )
+
+            this.entries = [...(this.entries ?? []), ...entriesData]
+            this.hasMoreEntries = hasMore
+        } catch(e) {
+            this.errorService.reportError(e)
+        } finally {
+            this.loadingMoreEntries = false
+        }
+
+    }
+
+    async loadResource(): Promise<void> {
+        await this.loadEntries({ pageSize: 10, exclusiveStartKey: null })
+    }
 }
