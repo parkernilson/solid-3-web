@@ -1,13 +1,19 @@
+import type { Entry, GoalWithStreak } from "$lib/model/goals";
 import { ErrorService } from "$lib/services/ErrorService.svelte";
-import { type Entry, GoalService, type GoalWithStreak } from "$lib/services/GoalService.svelte";
+import { GoalService } from "$lib/services/GoalService.svelte";
 
 export class GoalPagePresenter {
 	private goalService: GoalService;
     private errorService: ErrorService;
 
+    private shortDateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
+
 	private _loadingPage = $state(true);
     private _goal = $state<GoalWithStreak>();
     private _entries = $state<Entry[]>();
+    private _formattedStartDate = $derived(this.goal ? 
+        this.shortDateFormatter.format(new Date(this.goal.created_at))
+    : null)
 
     get loadingPage() { return this._loadingPage }
     private set loadingPage(v) { this._loadingPage = v }
@@ -15,6 +21,7 @@ export class GoalPagePresenter {
     private set goal(g) { this._goal = g }
     get entries() { return this._entries }
     private set entries(e) { this._entries = e }
+    get formattedStartDate() { return this._formattedStartDate }
 
 	constructor(goalService: GoalService, errorService: ErrorService) {
 		this.goalService = goalService;

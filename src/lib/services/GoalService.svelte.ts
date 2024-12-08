@@ -1,13 +1,9 @@
+import type { Entry, Goal } from '$lib/model/goals';
 import type { Database } from '$lib/supabase/database.types';
 import { supabase } from '$lib/supabase/supabase';
 import type { CamelCase } from '$lib/utils/types';
 import { ErrorService } from './ErrorService.svelte';
 import { SupabaseService } from './SupabaseService.svelte';
-
-export type Goal = Database['public']['Tables']['goals']['Row'];
-export type Entry = Database['public']['Tables']['entries']['Row'];
-export type CurrentStreakInfo = Database['public']['CompositeTypes']['current_streak_info'];
-export type GoalWithStreak = Goal & { streak: CurrentStreakInfo };
 
 export class GoalService extends SupabaseService {
 	static make(): GoalService {
