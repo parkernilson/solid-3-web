@@ -1,6 +1,7 @@
+import type { GoalWithStreak } from '$lib/model/goals';
 import { AuthService } from '$lib/services/AuthService.svelte';
 import { ErrorService } from '$lib/services/ErrorService.svelte';
-import { GoalService, type GoalWithStreak } from '$lib/services/GoalService.svelte';
+import { GoalService } from '$lib/services/GoalService.svelte';
 
 export class GoalsPagePresenter {
 	private authService: AuthService;

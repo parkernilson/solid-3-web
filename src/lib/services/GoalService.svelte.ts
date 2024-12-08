@@ -1,4 +1,4 @@
-import type { Entry, Goal } from '$lib/model/goals';
+import type { Entry, Goal, GoalWithStreak } from '$lib/model/goals';
 import type { Database } from '$lib/supabase/database.types';
 import { supabase } from '$lib/supabase/supabase';
 import type { CamelCase } from '$lib/utils/types';
@@ -14,7 +14,7 @@ export class GoalService extends SupabaseService {
 		return this.supabase.from('goals').select('*').eq('id', goalId).maybeSingle();
 	}
 
-	async getGoalWithStreak(goalId: string) {
+	async getGoalWithStreakInfo(goalId: string): Promise<GoalWithStreak> {
 		const { data: goalData, error: goalError } = await this.getGoal(goalId);
 		if (goalError) throw goalError;
 		if (!goalData) {
@@ -29,29 +29,33 @@ export class GoalService extends SupabaseService {
 			throw new Error('Streak not found');
 		}
 
-		return { ...goalData, streak: streakData };
+		const { data: recordData, error: recordError } = await this.getRecordStreak({ goalId });
+		if (recordError) {
+			throw recordError;
+		}
+		if (!recordData) {
+			throw new Error('Record not found');
+		}
+
+		return { ...goalData, streak: streakData, record: recordData };
 	}
 
 	async getGoals(userId: string) {
 		return this.supabase.from('goals').select('*').eq('owner', userId);
 	}
 
-	async getGoalsWithStreaks(userId: string) {
+	async getGoalsWithStreaks(userId: string): Promise<GoalWithStreak[]> {
 		const { data: goalsData, error: goalsError } = await this.getGoals(userId);
 		if (goalsError) {
 			throw goalsError;
 		}
-		if (!goalsData) { throw new Error('Goals not found'); }
+		if (!goalsData) {
+			throw new Error('Goals not found');
+		}
 
 		return Promise.all(
 			goalsData.map(async (goal) => {
-				const { data: streakData, error: streakError } = await this.getCurrentStreak({ goalId: goal.id });
-				if (streakError) throw streakError;
-				if (!streakData) {
-					throw new Error('Streak not found');
-				}
-
-				return { ...goal, streak: streakData };
+				return this.getGoalWithStreakInfo(goal.id);
 			})
 		);
 	}
@@ -89,5 +93,15 @@ export class GoalService extends SupabaseService {
 		goalId
 	}: CamelCase<Database['public']['Functions']['get_current_streak_info']['Args']>) {
 		return this.supabase.rpc('get_current_streak_info', { _goal_id: goalId });
+	}
+
+	async getRecordStreak({ goalId }: { goalId: string }) {
+		return this.supabase
+			.from('streak_summary')
+			.select('*')
+			.eq('goal', goalId)
+			.order("streak_count", { ascending: false })
+			.limit(1)
+			.maybeSingle();
 	}
 }
