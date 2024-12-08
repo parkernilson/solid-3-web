@@ -4,6 +4,7 @@
 	import { fromStore } from "svelte/store";
 	import { onMount } from "svelte";
 	import HeaderStats from "$lib/components/goals/HeaderStats.svelte";
+	import EntryGallery from "$lib/components/goals/EntryGallery.svelte";
     const page = fromStore(pageStore);
 
     const presenter = GoalPagePresenter.make();
@@ -24,6 +25,10 @@
             streak={presenter.goal.streak.streak_count || 0}
             record={presenter.goal.record.streak_count || 0}
             startDate={presenter.goal.created_at}
+        />
+        <EntryGallery
+            goal={presenter.goal}
+            entries={presenter.entries!}
         />
     </div>
 {:else}

@@ -21,6 +21,36 @@
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:5173",
             "webRoot": "${workspaceFolder}",
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Vitest Tests",
+            "autoAttachChildProcesses": true,
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "test"
+            ],
+            "smartStep": true,
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Current Test File",
+            "autoAttachChildProcesses": true,
+            "skipFiles": ["<node_internals>/**"],
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+              "run",
+              "test",
+              "--",
+              "${relativeFile}"
+            ],
+            "smartStep": true,
+            "console": "integratedTerminal"
+          }
     ]
 }

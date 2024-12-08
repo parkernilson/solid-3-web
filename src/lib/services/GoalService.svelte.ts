@@ -64,6 +64,29 @@ export class GoalService extends SupabaseService {
 		return this.supabase.from('entries').select('*').eq('goal', goalId);
 	}
 
+	async getEntriesPaginated(goalId: string, pageSize: number, cursor: string | null) {
+		const query = this.supabase
+			.from('entries')
+			.select('*')
+			.eq('goal', goalId)
+			.order('date_of', { ascending: false })
+			.limit(pageSize)
+			
+		if (cursor) {
+			query.lt("date_of", cursor)
+		}
+
+		const { data, error } = await query;
+		if (error) {
+			throw error;
+		}
+
+		return {
+			data,
+			nextCursor: data?.[data.length - 1]?.date_of ?? null
+		}
+	}
+
 	async createGoal({ title }: CamelCase<Omit<Goal, 'id' | 'created_at' | 'owner'>>) {
 		return this.supabase.rpc('create_goal', { _title: title });
 	}
