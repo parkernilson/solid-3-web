@@ -5,14 +5,6 @@ import type { PaginatedRequest } from "$lib/utils/types/pagination/PaginatedRequ
 import { GoalServicePresenter } from "./GoalServicePresenter.svelte";
 
 export class EntryGalleryPresenter extends GoalServicePresenter {
-    constructor(private goalId: string, goalService: GoalService, errorService: ErrorService) {
-        super(errorService, goalService);
-    }
-
-    static make(goalId: string) {
-        return new EntryGalleryPresenter(goalId, GoalService.make(), ErrorService.instance());
-    }
-
     private _entries = $state<Entry[]>([]);
     private _hasMoreEntries = $state(true);
     private _loadingMoreEntries = $state(false);
@@ -23,6 +15,14 @@ export class EntryGalleryPresenter extends GoalServicePresenter {
     private set hasMoreEntries(h) { this._hasMoreEntries = h }
     get loadingMoreEntries() { return this._loadingMoreEntries }
     private set loadingMoreEntries(l) { this._loadingMoreEntries = l }
+
+    constructor(private goalId: string, goalService: GoalService, errorService: ErrorService) {
+        super(errorService, goalService);
+    }
+
+    static make(goalId: string) {
+        return new EntryGalleryPresenter(goalId, GoalService.make(), ErrorService.instance());
+    }
 
     async loadMoreEntries() {
         if (!this.hasMoreEntries || this.loading) return;

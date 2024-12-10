@@ -9,7 +9,7 @@
 
     const presenter = GoalPagePresenter.make();
 
-    onMount(() => { presenter.loadPage(page.current.params.goalId) })
+    onMount(async () => { await presenter.loadPage(page.current.params.goalId) })
 
 </script>
 

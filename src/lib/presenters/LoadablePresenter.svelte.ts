@@ -1,4 +1,4 @@
-import { ErrorablePresenter } from "./ServicePresenter.svelte";
+import { ErrorablePresenter } from "./ErrorablePresenter";
 
 export abstract class LoadablePresenter extends ErrorablePresenter {
 

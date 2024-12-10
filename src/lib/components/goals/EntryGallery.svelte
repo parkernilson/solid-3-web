@@ -3,6 +3,7 @@
 	import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
 	import { onMount } from 'svelte';
 	import InfiniteScrollingContainer from '../InfiniteScrollingContainer.svelte';
+	import EntrySquare from './EntrySquare.svelte';
 
 	const { goal }: { goal: GoalWithStreak } = $props();
 
@@ -20,9 +21,7 @@
 >
 	<div class="grid grid-cols-3">
 		{#each presenter.entries as entry}
-            <div class="border h-32">
-                <p>{entry.text_content}</p>
-            </div>
+		    <EntrySquare {entry} {goal} />
         {/each}
 	</div>
 </InfiniteScrollingContainer>

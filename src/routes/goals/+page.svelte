@@ -4,8 +4,8 @@
 	import { onMount } from 'svelte';
 	const presenter = $state(GoalsPagePresenter.make());
 
-	onMount(() => {
-		presenter.load();
+	onMount(async () => {
+		await presenter.load();
 	});
 </script>
 
