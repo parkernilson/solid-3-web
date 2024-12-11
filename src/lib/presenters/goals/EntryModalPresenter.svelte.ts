@@ -3,6 +3,7 @@ import { AuthService } from '$lib/services/AuthService.svelte';
 import { ErrorService } from '$lib/services/ErrorService.svelte';
 import { GoalService } from '$lib/services/GoalService.svelte';
 import { ErrorablePresenter } from '../ErrorablePresenter';
+import type { EntryGalleryPresenter } from './EntryGalleryPresenter.svelte';
 
 export class EntryModalPresenter extends ErrorablePresenter {
 	private _isOwner = $state<boolean>();
@@ -33,19 +34,37 @@ export class EntryModalPresenter extends ErrorablePresenter {
 		private _goal: Goal,
 		private goalService: GoalService,
 		errorService: ErrorService,
-		private authService: AuthService
+		private authService: AuthService,
+		private entryGalleryPresenter: EntryGalleryPresenter
 	) {
 		super(errorService);
 		this.isOwner = this.authService.user?.id === this.goal.owner;
 	}
 
-	static make(entry: Entry, goal: Goal) {
+	static make(entry: Entry, goal: Goal, entryGalleryPresenter: EntryGalleryPresenter) {
 		return new EntryModalPresenter(
 			entry,
 			goal,
 			GoalService.make(),
 			ErrorService.instance(),
-			AuthService.instance()
+			AuthService.instance(),
+			entryGalleryPresenter
 		);
+	}
+
+	async updateEntry(entry: Entry) {
+		const oldEntry = $state.snapshot(this.entryGalleryPresenter.entries.find((e) => e.id === entry.id));
+		this.entryGalleryPresenter.updateEntry(entry);
+		try {
+			await this.goalService.updateEntry({
+				dateOf: entry.date_of,
+				id: entry.id,
+				success: entry.success,
+				textContent: entry.text_content,
+			});
+		} catch(e) {
+			if (oldEntry) this.entryGalleryPresenter.updateEntry(oldEntry);
+			this.errorService.reportError(e);
+		}
 	}
 }

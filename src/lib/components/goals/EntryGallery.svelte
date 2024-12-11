@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { setContext } from 'svelte';
 	import type { GoalWithStreak } from '$lib/model/goals';
 	import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
 	import { onMount } from 'svelte';
@@ -8,6 +9,8 @@
 	const { goal }: { goal: GoalWithStreak } = $props();
 
 	const presenter = EntryGalleryPresenter.make(goal.id);
+
+	setContext('EntryGalleryPresenter', presenter);
 
 	onMount(async () => {
 		await presenter.load();

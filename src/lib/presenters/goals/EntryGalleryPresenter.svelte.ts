@@ -54,4 +54,9 @@ export class EntryGalleryPresenter extends GoalServicePresenter {
     async loadResource(): Promise<void> {
         await this.loadEntries({ pageSize: 10, exclusiveStartKey: null })
     }
+
+    async updateEntry(entry: Entry) {
+        const updatedEntries = this.entries.map(e => e.id === entry.id ? entry : e)
+        this.entries = updatedEntries
+    }
 }
