@@ -1,8 +1,8 @@
-import { RootLayoutPresenter } from "$lib/presenters/root/RootLayoutPresenter.svelte";
+import { presenterFactory } from "$lib/factories";
 
 export const ssr = false;
 
 export const load = async () => {
-    const presenter = RootLayoutPresenter.make();
+    const presenter = presenterFactory.createRootLayoutPresenter();
     await presenter.load()
 }

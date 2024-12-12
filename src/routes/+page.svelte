@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import { LoginPresenter } from "$lib/presenters/auth/LoginPresenter.svelte";
+	import { presenterFactory } from "$lib/factories";
 
-    const presenter = LoginPresenter.make();
+    const presenter = presenterFactory.createLoginPresenter();
 
     $effect(() => {
         if (presenter.user) {

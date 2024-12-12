@@ -1,15 +1,3 @@
-export class ErrorService {
-    reportError(e: unknown) {
-        console.error(e)
-    }
-
-    static make() {
-        return new ErrorService();
-    }
-
-    static instance() {
-        return errorService;
-    }
+export interface ErrorService {
+    reportError(e: unknown): void;
 }
-
-const errorService = ErrorService.make();

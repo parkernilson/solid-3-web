@@ -1,8 +1,9 @@
 <script lang="ts">
 	import GoalListView from '$lib/components/goals/GoalListView.svelte';
-	import { GoalsPagePresenter } from '$lib/presenters/goals/GoalsPagePresenter.svelte';
+	import { presenterFactory } from '$lib/factories';
 	import { onMount } from 'svelte';
-	const presenter = $state(GoalsPagePresenter.make());
+
+	const presenter = presenterFactory.createGoalsPagePresenter();
 
 	onMount(async () => {
 		await presenter.load();

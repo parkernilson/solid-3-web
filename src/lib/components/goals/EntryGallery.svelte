@@ -1,14 +1,13 @@
 <script lang="ts">
-	import { setContext } from 'svelte';
-	import type { GoalWithStreak } from '$lib/model/goals';
-	import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
-	import { onMount } from 'svelte';
+	import { presenterFactory } from '$lib/factories';
+	import type { GoalInfo } from '$lib/model/goals';
+	import { onMount, setContext } from 'svelte';
 	import InfiniteScrollingContainer from '../InfiniteScrollingContainer.svelte';
 	import EntrySquare from './EntrySquare.svelte';
 
-	const { goal }: { goal: GoalWithStreak } = $props();
+	const { goal }: { goal: GoalInfo } = $props();
 
-	const presenter = EntryGalleryPresenter.make(goal.id);
+	const presenter = presenterFactory.createEntryGalleryPresenter(goal.id);
 
 	setContext('EntryGalleryPresenter', presenter);
 

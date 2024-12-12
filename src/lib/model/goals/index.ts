@@ -9,4 +9,4 @@ export type StreakInfo = Omit<
 	'current_period_success'
 >;
 export type CurrentStreakInfo = Database['public']['CompositeTypes']['current_streak_info'];
-export type GoalWithStreak = Goal & { streak: CurrentStreakInfo; record: StreakInfo };
+export type GoalInfo = Goal & { streak: CurrentStreakInfo; record: StreakInfo };

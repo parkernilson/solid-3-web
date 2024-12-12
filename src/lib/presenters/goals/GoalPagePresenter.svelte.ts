@@ -1,13 +1,10 @@
-import type { Entry, GoalWithStreak } from "$lib/model/goals";
-import { ErrorService } from "$lib/services/ErrorService.svelte";
-import { GoalService } from "$lib/services/GoalService.svelte";
+import type { Entry, GoalInfo } from "$lib/model/goals";
+import type { ErrorService } from "$lib/services/ErrorService.svelte";
+import type { GoalService } from "$lib/services/GoalService.svelte";
 
 export class GoalPagePresenter {
-	private goalService: GoalService;
-    private errorService: ErrorService;
-
 	private _loadingPage = $state(true);
-    private _goal = $state<GoalWithStreak>();
+    private _goal = $state<GoalInfo>();
     private _entries = $state<Entry[]>();
 
     get loadingPage() { return this._loadingPage }
@@ -17,26 +14,17 @@ export class GoalPagePresenter {
     get entries() { return this._entries }
     private set entries(e) { this._entries = e }
 
-	constructor(goalService: GoalService, errorService: ErrorService) {
-		this.goalService = goalService;
-        this.errorService = errorService;
-	}
-
-	static make() {
-		return new GoalPagePresenter(
-            GoalService.make(),
-            ErrorService.instance()
-        );
-	}
+	constructor(private goalService: GoalService, private errorService: ErrorService) {}
 
     async loadPage(goalId: string) {
         try {
             this.loadingPage = true
-            const goal = await this.goalService.getGoalWithStreakInfo(goalId)
+            const goal = await this.goalService.getGoalInfo(goalId)
             this.goal = goal
-            const { data: entriesData, error: entriesError } = await this.goalService.getEntries(goalId)
-            if (entriesError) throw entriesError
-            this.entries = entriesData
+            // TODO: re enable the initial entries loading
+            // const { data: entriesData, error: entriesError } = await this.goalService.getEntries(goalId)
+            // if (entriesError) throw entriesError
+            this.entries = []
         } catch(e) {
             this.errorService.reportError(e)
         } finally {

@@ -1,11 +1,11 @@
 import type { Entry } from '$lib/model/goals';
-import { ErrorService } from '$lib/services/ErrorService.svelte';
-import { GoalService } from '$lib/services/GoalService.svelte';
+import type { ErrorService } from '$lib/services/ErrorService.svelte';
+import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
 import { bisectLeft } from '$lib/utils/arrays/bisect-left';
 import type { PaginatedRequest } from '$lib/utils/types/pagination/PaginatedRequest';
-import { GoalServicePresenter } from './GoalServicePresenter.svelte';
+import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
-export class EntryGalleryPresenter extends GoalServicePresenter {
+export class EntryGalleryPresenter extends LoadablePresenter {
 	private _entries = $state<Entry[]>([]);
 	private _hasMoreEntries = $state(true);
 	private _loadingMoreEntries = $state(false);
@@ -31,14 +31,10 @@ export class EntryGalleryPresenter extends GoalServicePresenter {
 
 	constructor(
 		private goalId: string,
-		goalService: GoalService,
-		errorService: ErrorService
+		private goalService: SupabaseGoalService,
+		protected errorService: ErrorService
 	) {
-		super(errorService, goalService);
-	}
-
-	static make(goalId: string) {
-		return new EntryGalleryPresenter(goalId, GoalService.make(), ErrorService.instance());
+		super(errorService);
 	}
 
 	async loadMoreEntries() {

@@ -1,12 +1,18 @@
-import { GoalService } from '$lib/services/GoalService.svelte';
-import { supabase } from '$lib/supabase/supabase';
+import { SupabaseServiceFactory } from '$lib/factories/services/SupabaseServiceFactory.svelte';
+import { SupabaseFactory } from '$lib/factories/supabase/SupabaseFactory.svelte';
+import type { GoalService } from '$lib/services/GoalService.svelte';
+import type { SupabaseClient } from '$lib/supabase/supabase';
 import { beforeAll, describe, it } from 'vitest';
 
 describe('GoalService', async () => {
 	let goalService: GoalService;
+	let supabase: SupabaseClient;
 
 	beforeAll(async () => {
-		goalService = GoalService.make();
+		const supabaseFactory = new SupabaseFactory();
+		const serviceFactory = new SupabaseServiceFactory(supabaseFactory);
+		supabase = supabaseFactory.createSupabaseClient();
+		goalService = serviceFactory.createGoalService();
 	});
 
 	// This test is left as an example for how to set up tests in the future

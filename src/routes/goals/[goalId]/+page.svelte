@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { GoalPagePresenter } from "$lib/presenters/goals/GoalPagePresenter.svelte";
-    import { page as pageStore } from "$app/stores";
-	import { fromStore } from "svelte/store";
-	import { onMount } from "svelte";
-	import HeaderStats from "$lib/components/goals/HeaderStats.svelte";
+	import { page as pageStore } from "$app/stores";
 	import EntryGallery from "$lib/components/goals/EntryGallery.svelte";
+	import HeaderStats from "$lib/components/goals/HeaderStats.svelte";
+	import { presenterFactory } from "$lib/factories";
+	import { onMount } from "svelte";
+	import { fromStore } from "svelte/store";
     const page = fromStore(pageStore);
 
-    const presenter = GoalPagePresenter.make();
+    const presenter = presenterFactory.createGoalPagePresenter();
 
     onMount(async () => { await presenter.loadPage(page.current.params.goalId) })
 

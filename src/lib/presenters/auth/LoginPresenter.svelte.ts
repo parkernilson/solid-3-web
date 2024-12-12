@@ -1,10 +1,7 @@
-import { AuthService } from '$lib/services/AuthService.svelte';
-import { ErrorService } from '$lib/services/ErrorService.svelte';
+import type { AuthService } from "$lib/services/AuthService.svelte";
+import type { ErrorService } from "$lib/services/ErrorService.svelte";
 
 export class LoginPresenter {
-	private authService: AuthService;
-	private errorService: ErrorService;
-
 	private _email = $state('');
 	private _password = $state('');
 
@@ -25,19 +22,11 @@ export class LoginPresenter {
 		this._password = p;
 	}
 
-	constructor(authService: AuthService, errorService: ErrorService) {
-		this.authService = authService;
-		this.errorService = errorService;
-	}
-
-	static make(): LoginPresenter {
-		return new LoginPresenter(AuthService.instance(), ErrorService.instance());
-	}
+	constructor(private authService: AuthService, private errorService: ErrorService) {}
 
 	async login() {
 		try {
-			const { error } = await this.authService.login(this.email, this.password);
-			if (error) throw error;
+			await this.authService.login(this.email, this.password);
 		} catch (e) {
 			this.errorService.reportError(e);
 		}

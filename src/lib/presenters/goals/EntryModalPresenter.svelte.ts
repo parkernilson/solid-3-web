@@ -1,9 +1,9 @@
 import { entryDateFormatter } from '$lib/model/entries/date-formatter';
 import type { EntryUpsert } from '$lib/model/entries/EntryUpsert';
 import type { Entry, Goal } from '$lib/model/goals';
-import { AuthService } from '$lib/services/AuthService.svelte';
-import { ErrorService } from '$lib/services/ErrorService.svelte';
-import { GoalService } from '$lib/services/GoalService.svelte';
+import type { AuthService } from '$lib/services/AuthService.svelte';
+import type { ErrorService } from '$lib/services/ErrorService.svelte';
+import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
 import { ErrorablePresenter } from '../ErrorablePresenter';
 import type { EntryGalleryPresenter } from './EntryGalleryPresenter.svelte';
 import { v4 as uuidv4 } from 'uuid';
@@ -38,7 +38,7 @@ export class EntryModalPresenter extends ErrorablePresenter {
 	constructor(
 		private _entry: Entry | null,
 		private _goal: Goal,
-		private goalService: GoalService,
+		private goalService: SupabaseGoalService,
 		errorService: ErrorService,
 		private authService: AuthService,
 		private entryGalleryPresenter: EntryGalleryPresenter
@@ -48,17 +48,6 @@ export class EntryModalPresenter extends ErrorablePresenter {
 		if (!_entry) {
 			this.isEditing = true;
 		}
-	}
-
-	static make(entry: Entry | null, goal: Goal, entryGalleryPresenter: EntryGalleryPresenter) {
-		return new EntryModalPresenter(
-			entry,
-			goal,
-			GoalService.make(),
-			ErrorService.instance(),
-			AuthService.instance(),
-			entryGalleryPresenter
-		);
 	}
 
 	// TODO: clean up this logic and make it more robust
@@ -81,18 +70,19 @@ export class EntryModalPresenter extends ErrorablePresenter {
 		this.entryGalleryPresenter.upsertEntryLocal(optimisticEntry);
 
 		try {
-			const { data, error } = await this.goalService.upsertEntry({
-				goalId: entry.goal,
-				entryId: entry.id,
-				dateOf: entry.date_of,
-				success: entry.success,
-				textContent: entry.text_content ?? undefined,
-			});
+			// TODO: reimplement this
+			// const { data, error } = await this.goalService.upsertEntry({
+			// 	goalId: entry.goal,
+			// 	entryId: entry.id,
+			// 	dateOf: entry.date_of,
+			// 	success: entry.success,
+			// 	textContent: entry.text_content ?? undefined,
+			// });
 
-			if (error) throw error;
-			if (!data) throw new Error('No data returned from upsert_entry');
+			// if (error) throw error;
+			// if (!data) throw new Error('No data returned from upsert_entry');
 
-			this.entryGalleryPresenter.upsertEntryLocal(data);
+			// this.entryGalleryPresenter.upsertEntryLocal(data);
 		} catch(e) {
 			// Rollback optimistic update
 			if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(oldEntry);

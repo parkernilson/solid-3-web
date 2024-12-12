@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { GoalWithStreak } from "$lib/model/goals";
+	import type { GoalInfo } from "$lib/model/goals";
 
-    const { goal }: { goal: GoalWithStreak } = $props();
+    const { goal }: { goal: GoalInfo } = $props();
 
 </script>
 

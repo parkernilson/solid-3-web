@@ -6,5 +6,4 @@ export abstract class ErrorablePresenter {
     constructor(errorService: ErrorService) {
         this.errorService = errorService;
     }
-
 }
