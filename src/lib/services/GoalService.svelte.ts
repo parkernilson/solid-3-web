@@ -99,21 +99,20 @@ export class GoalService extends SupabaseService {
 		return this.supabase.rpc('create_goal', { _title: title });
 	}
 
-	async createEntry({ goal, textContent, success }: CamelCase<Omit<Entry, 'id' | 'created_at'>>) {
-		return this.supabase.rpc('create_entry', {
-			_goal_id: goal,
-			_text_content: textContent ?? undefined,
+	async upsertEntry({
+		goalId,
+		entryId,
+		dateOf,
+		textContent,
+		success
+	}: CamelCase<Database['public']['Functions']['upsert_entry']['Args']>) {
+		return this.supabase.rpc('upsert_entry', {
+			_goal_id: goalId,
+			_entry_id: entryId,
+			_date_of: dateOf,
+			_text_content: textContent,
 			_success: success
 		});
-	}
-
-	async updateEntry({ id, textContent, success, dateOf }: CamelCase<Omit<Entry, 'created_at' | 'goal'>>) {
-		return this.supabase.rpc('update_entry', {
-			_entry_id: id,
-			_text_content: textContent ?? (null as unknown as string),
-			_success: success,
-			_date_of: dateOf
-		}).throwOnError();
 	}
 
 	async shareGoal({
