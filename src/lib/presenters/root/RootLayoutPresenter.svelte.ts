@@ -12,7 +12,7 @@ export class RootLayoutPresenter {
 		try {
 			await this.authService.setupAuthStateListener();
 		} catch (e) {
-			this.errorService.reportError(e);
+			this.errorService.handleError(e);
 		}
 	}
 
@@ -20,7 +20,7 @@ export class RootLayoutPresenter {
 		try {
 			await this.authService.logout();
 		} catch (e) {
-			this.errorService.reportError(e);
+			this.errorService.handleError(e);
 		}
 	}
 }

@@ -1,3 +1,3 @@
 export interface ErrorService {
-    reportError(e: unknown): void;
+    handleError(e: unknown): void;
 }

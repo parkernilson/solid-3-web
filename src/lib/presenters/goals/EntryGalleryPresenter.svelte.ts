@@ -58,7 +58,7 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 			this.entries = [...(this.entries ?? []), ...entriesData];
 			this.hasMoreEntries = hasMore;
 		} catch (e) {
-			this.errorService.reportError(e);
+			this.errorService.handleError(e);
 		} finally {
 			this.loadingMoreEntries = false;
 		}

@@ -33,7 +33,7 @@ export class GoalsPagePresenter {
 		try {
 			await this.loadGoals();
 		} catch (e) {
-			this.errorService.reportError(e);
+			this.errorService.handleError(e);
 		}
 	}
 
@@ -48,7 +48,7 @@ export class GoalsPagePresenter {
 			const goals = await this.goalService.listGoalInfos(this.user.id);
 			this.goals = goals;
 		} catch (e) {
-			this.errorService.reportError(e);
+			this.errorService.handleError(e);
 		} finally {
 			this.loadingGoals = false;
 		}

@@ -28,7 +28,7 @@ export class LoginPresenter {
 		try {
 			await this.authService.login(this.email, this.password);
 		} catch (e) {
-			this.errorService.reportError(e);
+			this.errorService.handleError(e);
 		}
 	}
 }

@@ -26,7 +26,7 @@ export class GoalPagePresenter {
             // if (entriesError) throw entriesError
             this.entries = []
         } catch(e) {
-            this.errorService.reportError(e)
+            this.errorService.handleError(e)
         } finally {
             this.loadingPage = false
         }

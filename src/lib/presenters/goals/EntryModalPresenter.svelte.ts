@@ -5,10 +5,10 @@ import { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
 import { v4 as uuidv4 } from 'uuid';
-import { ErrorablePresenter } from '../ErrorablePresenter';
+import { ErrorHandlingPresenter } from '../ErrorHandlingPresenter';
 import type { EntryGalleryPresenter } from './EntryGalleryPresenter.svelte';
 
-export class EntryModalPresenter extends ErrorablePresenter {
+export class EntryModalPresenter extends ErrorHandlingPresenter {
 	private authService = $state<AuthService>();
 	private _isOwner = $derived(
 		this.authService?.user ? this.authService.user.id === this.goal.owner : false
@@ -97,7 +97,7 @@ export class EntryModalPresenter extends ErrorablePresenter {
 			if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(oldEntry);
 			else this.entryGalleryPresenter.removeEntryLocal(optimisticEntry.id);
 
-			this.errorService.reportError(e);
+			this.errorService.handleError(e);
 		}
 	}
 
