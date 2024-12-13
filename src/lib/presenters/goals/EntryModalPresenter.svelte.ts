@@ -1,17 +1,27 @@
 import { entryDateFormatter } from '$lib/model/entries/date-formatter';
 import type { EntryUpsert } from '$lib/model/entries/EntryUpsert';
 import type { Entry, Goal } from '$lib/model/goals';
-import type { AuthService } from '$lib/services/AuthService.svelte';
+import { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
+import { v4 as uuidv4 } from 'uuid';
 import { ErrorablePresenter } from '../ErrorablePresenter';
 import type { EntryGalleryPresenter } from './EntryGalleryPresenter.svelte';
-import { v4 as uuidv4 } from 'uuid';
 
 export class EntryModalPresenter extends ErrorablePresenter {
-	private _isOwner = $state<boolean>();
+	private authService = $state<AuthService>();
+	private _isOwner = $derived(
+		this.authService?.user ? this.authService.user.id === this.goal.owner : false
+	);
 	private _isEditable = $derived(this.isOwner);
 	private _isEditing = $state(false);
+
+    public currentTextContent = $state("");
+    public newEntry: EntryUpsert = $derived({
+        ...this.entry,
+        goal: this.goal.id,
+        text_content: this.currentTextContent
+    })
 
 	get entry() {
 		return this._entry;
@@ -21,9 +31,6 @@ export class EntryModalPresenter extends ErrorablePresenter {
 	}
 	get isOwner() {
 		return this._isOwner;
-	}
-	private set isOwner(v) {
-		this._isOwner = v;
 	}
 	get isEditable() {
 		return this._isEditable;
@@ -40,20 +47,24 @@ export class EntryModalPresenter extends ErrorablePresenter {
 		private _goal: Goal,
 		private goalService: SupabaseGoalService,
 		errorService: ErrorService,
-		private authService: AuthService,
+		authService: AuthService,
 		private entryGalleryPresenter: EntryGalleryPresenter
 	) {
 		super(errorService);
-		this.isOwner = this.authService.user?.id === this.goal.owner;
-		if (!_entry) {
+		this.authService = authService;
+		if (_entry) {
+			this.currentTextContent = _entry.text_content ?? "";
+		} else {
 			this.isEditing = true;
 		}
 	}
 
 	// TODO: clean up this logic and make it more robust
 	async optimisticallyUpsertEntry(entry: EntryUpsert) {
-		const oldEntry = $state.snapshot(this.entryGalleryPresenter.entries.find((e) => e.id === entry.id));
-		
+		const oldEntry = $state.snapshot(
+			this.entryGalleryPresenter.entries.find((e) => e.id === entry.id)
+		);
+
 		// Create an optimistically estimation for the object that will be created
 		const optimisticEntry: Entry = {
 			// Provide defaults so that we have a guaranteed full Entry object
@@ -65,8 +76,8 @@ export class EntryModalPresenter extends ErrorablePresenter {
 			// Override with new values
 			...entry,
 			// This entry will be optimistic until the server confirms it
-			optimisticLocalOnly: true,
-		}
+			optimisticLocalOnly: true
+		};
 		this.entryGalleryPresenter.upsertEntryLocal(optimisticEntry);
 
 		try {
@@ -78,17 +89,23 @@ export class EntryModalPresenter extends ErrorablePresenter {
 			// 	success: entry.success,
 			// 	textContent: entry.text_content ?? undefined,
 			// });
-
 			// if (error) throw error;
 			// if (!data) throw new Error('No data returned from upsert_entry');
-
 			// this.entryGalleryPresenter.upsertEntryLocal(data);
-		} catch(e) {
+		} catch (e) {
 			// Rollback optimistic update
 			if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(oldEntry);
 			else this.entryGalleryPresenter.removeEntryLocal(optimisticEntry.id);
 
 			this.errorService.reportError(e);
 		}
+	}
+
+	startEditing() {
+		this.isEditing = true;
+	}
+
+	cancelEditing() {
+		this.isEditing = false;
 	}
 }
