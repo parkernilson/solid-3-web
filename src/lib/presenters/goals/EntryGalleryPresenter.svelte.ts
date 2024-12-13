@@ -43,25 +43,26 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 		await this.loadEntries({ pageSize: 12, exclusiveStartKey: lastEntry?.date_of });
 	}
 
-	async loadEntries({ pageSize, exclusiveStartKey }: PaginatedRequest): Promise<void> {
-		try {
-			this.loadingMoreEntries = true;
+	private async loadEntries({ pageSize, exclusiveStartKey }: PaginatedRequest): Promise<void> {
+		await this.doErrorable({
+			action: async () => {
+				this.loadingMoreEntries = true;
 
-			const { data: entriesData, hasMore } = await this.goalService.getEntriesPaginated(
-				this.goalId,
-				{
-					pageSize,
-					exclusiveStartKey
-				}
-			);
+				const { data: entriesData, hasMore } = await this.goalService.getEntriesPaginated(
+					this.goalId,
+					{
+						pageSize,
+						exclusiveStartKey
+					}
+				);
 
-			this.entries = [...(this.entries ?? []), ...entriesData];
-			this.hasMoreEntries = hasMore;
-		} catch (e) {
-			this.errorService.handleError(e);
-		} finally {
-			this.loadingMoreEntries = false;
-		}
+				this.entries = [...(this.entries ?? []), ...entriesData];
+				this.hasMoreEntries = hasMore;
+			},
+			onFinally: () => {
+				this.loadingMoreEntries = false;
+			}
+		})
 	}
 
 	async loadResource(): Promise<void> {

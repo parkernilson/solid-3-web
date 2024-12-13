@@ -1,6 +1,6 @@
 import { ErrorHandlingPresenter } from './ErrorHandlingPresenter';
 
-export abstract class LoadablePresenter extends ErrorHandlingPresenter {
+export abstract class LoadablePresenter<LoadArgs extends Record<string, unknown> = never> extends ErrorHandlingPresenter {
 	private _loading = $state(true);
 
 	get loading() {
@@ -10,11 +10,11 @@ export abstract class LoadablePresenter extends ErrorHandlingPresenter {
 		this._loading = v;
 	}
 
-	async load() {
+	async load(args: LoadArgs) {
 		await this.doErrorable({
 			action: async () => {
 				this.loading = true;
-				await this.loadResource();
+				await this.loadResource(args);
 			},
 			onFinally: () => {
 				this.loading = false;
@@ -22,5 +22,5 @@ export abstract class LoadablePresenter extends ErrorHandlingPresenter {
 		});
 	}
 
-	abstract loadResource(): Promise<void>;
+	abstract loadResource(args: LoadArgs): Promise<void>;
 }

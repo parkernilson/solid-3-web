@@ -59,14 +59,8 @@ export class EntryModalPresenter extends ErrorHandlingPresenter {
 		}
 	}
 
-	// TODO: clean up this logic and make it more robust
-	async optimisticallyUpsertEntry(entry: EntryUpsert) {
-		const oldEntry = $state.snapshot(
-			this.entryGalleryPresenter.entries.find((e) => e.id === entry.id)
-		);
-
-		// Create an optimistically estimation for the object that will be created
-		const optimisticEntry: Entry = {
+	private createOptimisticEntry(entry: EntryUpsert): Entry {
+		return {
 			// Provide defaults so that we have a guaranteed full Entry object
 			id: `temp-${uuidv4()}`,
 			created_at: new Date().toISOString(),
@@ -78,27 +72,34 @@ export class EntryModalPresenter extends ErrorHandlingPresenter {
 			// This entry will be optimistic until the server confirms it
 			optimisticLocalOnly: true
 		};
-		this.entryGalleryPresenter.upsertEntryLocal(optimisticEntry);
+	}
 
-		try {
-			// TODO: reimplement this
-			// const { data, error } = await this.goalService.upsertEntry({
-			// 	goalId: entry.goal,
-			// 	entryId: entry.id,
-			// 	dateOf: entry.date_of,
-			// 	success: entry.success,
-			// 	textContent: entry.text_content ?? undefined,
-			// });
-			// if (error) throw error;
-			// if (!data) throw new Error('No data returned from upsert_entry');
-			// this.entryGalleryPresenter.upsertEntryLocal(data);
-		} catch (e) {
-			// Rollback optimistic update
-			if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(oldEntry);
-			else this.entryGalleryPresenter.removeEntryLocal(optimisticEntry.id);
+	async optimisticallyUpsertEntry(entry: EntryUpsert) {
+		const oldEntry = $state.snapshot(
+			this.entryGalleryPresenter.entries.find((e) => e.id === entry.id)
+		);
 
-			this.errorService.handleError(e);
-		}
+		const optimisticEntry = this.createOptimisticEntry(entry);
+
+		// Create an optimistically estimation for the object that will be created
+		await this.doErrorable({
+			action: async () => {
+				this.entryGalleryPresenter.upsertEntryLocal(optimisticEntry);
+				const resultingEntry = await this.goalService.upsertEntry({
+					goalId: entry.goal,
+					entryId: entry.id,
+					dateOf: entry.date_of,
+					success: entry.success,
+					textContent: entry.text_content ?? undefined,
+				});
+				if (!resultingEntry) throw new Error('No data returned from upsert_entry');
+				this.entryGalleryPresenter.upsertEntryLocal(resultingEntry);
+			}, onError: () => {
+				// Rollback optimistic update
+				if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(oldEntry);
+				else this.entryGalleryPresenter.removeEntryLocal(optimisticEntry.id);
+			}
+		})
 	}
 
 	startEditing() {

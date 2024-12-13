@@ -2,8 +2,9 @@ import type { GoalInfo } from '$lib/model/goals';
 import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
+import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
-export class GoalsPagePresenter {
+export class GoalsPagePresenter extends LoadablePresenter {
 	private _loadingGoals = $state(true);
 	private _goals = $state<GoalInfo[]>();
 
@@ -25,32 +26,30 @@ export class GoalsPagePresenter {
 
 	constructor(
 		private authService: AuthService,
-		private errorService: ErrorService,
+		errorService: ErrorService,
 		private goalService: GoalService
-	) {}
+	) {
+		super(errorService);
+	}
 
-	async load() {
-		try {
-			await this.loadGoals();
-		} catch (e) {
-			this.errorService.handleError(e);
-		}
+	async loadResource(): Promise<void> {
+		await this.loadGoals();
 	}
 
 	async loadGoals() {
-		try {
-			this.loadingGoals = true;
+		await this.doErrorable({
+			action: async () => {
+				this.loadingGoals = true;
 
-			if (!this.user) {
-				throw new Error('Tried to get goals without a signed in user');
+				if (!this.user) {
+					throw new Error('Tried to get goals without a signed in user');
+				}
+
+				const goals = await this.goalService.listGoalInfos(this.user.id);
+				this.goals = goals;
+			}, onFinally: () => {
+				this.loadingGoals = false;
 			}
-
-			const goals = await this.goalService.listGoalInfos(this.user.id);
-			this.goals = goals;
-		} catch (e) {
-			this.errorService.handleError(e);
-		} finally {
-			this.loadingGoals = false;
-		}
+		})
 	}
 }

@@ -1,34 +1,22 @@
-import type { Entry, GoalInfo } from "$lib/model/goals";
+import type { GoalInfo } from "$lib/model/goals";
 import type { ErrorService } from "$lib/services/ErrorService.svelte";
 import type { GoalService } from "$lib/services/GoalService.svelte";
+import { LoadablePresenter } from "../LoadablePresenter.svelte";
 
-export class GoalPagePresenter {
+export class GoalPagePresenter extends LoadablePresenter<{ goalId: string }> {
 	private _loadingPage = $state(true);
     private _goal = $state<GoalInfo>();
-    private _entries = $state<Entry[]>();
 
     get loadingPage() { return this._loadingPage }
     private set loadingPage(v) { this._loadingPage = v }
     get goal() { return this._goal }
     private set goal(g) { this._goal = g }
-    get entries() { return this._entries }
-    private set entries(e) { this._entries = e }
 
-	constructor(private goalService: GoalService, private errorService: ErrorService) {}
+	constructor(private goalService: GoalService, errorService: ErrorService) {
+        super(errorService);
+    }
 
-    async loadPage(goalId: string) {
-        try {
-            this.loadingPage = true
-            const goal = await this.goalService.getGoalInfo(goalId)
-            this.goal = goal
-            // TODO: re enable the initial entries loading
-            // const { data: entriesData, error: entriesError } = await this.goalService.getEntries(goalId)
-            // if (entriesError) throw entriesError
-            this.entries = []
-        } catch(e) {
-            this.errorService.handleError(e)
-        } finally {
-            this.loadingPage = false
-        }
+    async loadResource({ goalId }: { goalId: string }): Promise<void> {
+        this.goal = await this.goalService.getGoalInfo(goalId)
     }
 }

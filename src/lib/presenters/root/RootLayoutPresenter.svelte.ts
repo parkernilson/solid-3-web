@@ -1,26 +1,23 @@
 import type { AuthService } from "$lib/services/AuthService.svelte";
 import type { ErrorService } from "$lib/services/ErrorService.svelte";
+import { LoadablePresenter } from "../LoadablePresenter.svelte";
 
-export class RootLayoutPresenter {
+export class RootLayoutPresenter extends LoadablePresenter {
 	get user() {
 		return this.authService.user;
 	}
 
-	constructor(private authService: AuthService, private errorService: ErrorService) {}
+	constructor(private authService: AuthService, errorService: ErrorService) {
+		super(errorService);
+	}
 
-	async load() {
-		try {
-			await this.authService.setupAuthStateListener();
-		} catch (e) {
-			this.errorService.handleError(e);
-		}
+	async loadResource(): Promise<void> {
+		await this.authService.setupAuthStateListener();
 	}
 
 	async logout() {
-		try {
-			await this.authService.logout();
-		} catch (e) {
-			this.errorService.handleError(e);
-		}
+		await this.doErrorable({
+			action: this.authService.logout.bind(this.authService),
+		})
 	}
 }
