@@ -7,18 +7,24 @@ import { ServiceFactory } from "./ServiceFactory.svelte";
 
 export class SupabaseServiceFactory extends ServiceFactory {
     private supabase: SupabaseClient;
+    private authServiceInstance: SupabaseAuthService;
     
     constructor(supabaseFactory: SupabaseFactory) {
         super();
         this.supabase = supabaseFactory.createSupabaseClient();
+        this.authServiceInstance = this.createAuthService();
     }
 
     createGoalService(): SupabaseGoalService {
         return new SupabaseGoalService(this.supabase);
     }
 
-    createAuthService(): SupabaseAuthService {
+    protected createAuthService(): SupabaseAuthService {
         return new SupabaseAuthService(this.supabase);
+    }
+
+    getAuthServiceInstance(): SupabaseAuthService {
+        return this.authServiceInstance;
     }
 
     createErrorService(): ConsoleLoggingErrorService {

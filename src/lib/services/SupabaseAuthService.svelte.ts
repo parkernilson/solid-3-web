@@ -2,10 +2,13 @@ import { type SupabaseClient } from '$lib/supabase/supabase';
 import { AuthService } from './AuthService.svelte';
 
 export class SupabaseAuthService extends AuthService {
+	private supabase: SupabaseClient;
+
 	constructor(
-		private supabase: SupabaseClient,
+		supabase: SupabaseClient,
 	) {
 		super();
+		this.supabase = supabase;
 	}
 
 	async setupAuthStateListener() {
