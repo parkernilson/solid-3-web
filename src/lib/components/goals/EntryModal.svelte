@@ -11,7 +11,6 @@
     const entryGalleryPresenter = getContext<EntryGalleryPresenter>("EntryGalleryPresenter");
     const presenter = presenterFactory.createEntryModalPresenter(entryGalleryPresenter, goal, entry ?? undefined);
 
-
     async function updateEntry() {
         await presenter.optimisticallyUpsertEntry(presenter.newEntry);
         showModal = false;
