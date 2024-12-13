@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { presenterFactory } from "$lib/factories";
-	import type { EntryUpsert } from "$lib/model/entries/EntryUpsert";
 	import type { Entry, Goal } from "$lib/model/goals";
 	import { EntryGalleryPresenter } from "$lib/presenters/goals/EntryGalleryPresenter.svelte";
 	import { getContext } from "svelte";
