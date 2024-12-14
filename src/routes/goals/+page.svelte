@@ -6,7 +6,7 @@
 	const presenter = presenterFactory.createGoalsPagePresenter();
 
 	onMount(async () => {
-		await presenter.load();
+		await presenter.load({});
 	});
 </script>
 
@@ -14,7 +14,7 @@
 {#if presenter.loadingGoals}
 	<p>Loading goals...</p>
 {:else if presenter.goals}
-	{#each presenter.goals! as goal}
-		<a href="/goals/{goal.id}"><GoalListView {goal} /></a>
+	{#each presenter.goals! as goalInfo}
+		<a href="/goals/{goalInfo.goal.id}"><GoalListView goal={goalInfo} /></a>
 	{/each}
 {/if}

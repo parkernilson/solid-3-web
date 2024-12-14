@@ -1,42 +1,49 @@
-import type { Entry, GoalInfo } from '$lib/model/goals';
-import type { Database } from '$lib/supabase/database.types';
+import type { SupabaseDomainConverter } from '$lib/model/converters/supabase/SupabaseDomainConverter';
+import { CurrentStreakInfo, Entry, Goal, StreakInfo, type GoalInfo } from '$lib/model/domain/goals';
 import type { SupabaseClient } from '$lib/supabase/supabase';
-import type { CamelCase } from '$lib/utils/types';
+import { isNotNullRow } from '$lib/utils/types/isNotNullRow';
 import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
 import type { PaginatedRequest } from '$lib/utils/types/pagination/PaginatedRequest';
-import type { AcceptSharedGoalParams, CreateGoalParams, CreateGoalResult, GoalService, ShareGoalParams, UpsertEntryParams, UpsertEntryResult } from './GoalService.svelte';
+import type {
+	AcceptSharedGoalParams,
+	CreateGoalParams,
+	CreateGoalResult,
+	getCurrentStreakParams,
+	GoalService,
+	ShareGoalParams,
+	UpsertEntryParams,
+	UpsertEntryResult
+} from './GoalService.svelte';
 
 export class SupabaseGoalService implements GoalService {
-	constructor(private supabase: SupabaseClient) {}
+	constructor(
+		private supabase: SupabaseClient,
+		private converter: SupabaseDomainConverter
+	) {}
 
-	private async getGoal(goalId: string) {
-		return this.supabase.from('goals').select('*').eq('id', goalId).maybeSingle();
+	private async getGoal(goalId: string): Promise<Goal> {
+		const { data, error } = await this.supabase
+			.from('goals')
+			.select('*')
+			.eq('id', goalId)
+			.maybeSingle();
+		if (error) throw error;
+		if (!data) throw new Error('Goal not found');
+		return this.converter.convertGoal(data);
 	}
 
 	async getGoalInfo(goalId: string): Promise<GoalInfo> {
-		const { data: goalData, error: goalError } = await this.getGoal(goalId);
-		if (goalError) throw goalError;
-		if (!goalData) {
-			throw new Error('Goal not found');
-		}
+		const goalData = await this.getGoal(goalId);
 
-		const { data: streakData, error: streakError } = await this.getCurrentStreak({ goalId });
-		if (streakError) {
-			throw streakError;
-		}
-		if (!streakData) {
-			throw new Error('Streak not found');
-		}
+		const currentStreakInfo = await this.getCurrentStreak({ goalId });
 
-		const { data: recordData, error: recordError } = await this.getRecordStreak({ goalId });
-		if (recordError) {
-			throw recordError;
-		}
-		if (!recordData) {
-			throw new Error('Record not found');
-		}
+		const recordStreakInfo = await this.getRecordStreak({ goalId });
 
-		return { ...goalData, streak: streakData, record: recordData };
+		return {
+			goal: goalData,
+			streak: currentStreakInfo,
+			record: recordStreakInfo
+		};
 	}
 
 	private async listGoals(userId: string) {
@@ -80,7 +87,7 @@ export class SupabaseGoalService implements GoalService {
 		}
 
 		const hasMore = data.length > pageSize;
-		const requestedPage = data.slice(0, pageSize);
+		const requestedPage = data.slice(0, pageSize).map(this.converter.convertEntry);
 
 		return {
 			data: requestedPage,
@@ -113,35 +120,40 @@ export class SupabaseGoalService implements GoalService {
 		if (error) {
 			throw error;
 		}
-		return data;
+		if (!data) {
+			throw new Error('No data returned from upsert_entry');
+		}
+		return this.converter.convertEntry(data);
 	}
 
-	async shareGoal({
-		goalId,
-		withUser
-	}: ShareGoalParams): Promise<void> {
+	async shareGoal({ goalId, withUser }: ShareGoalParams): Promise<void> {
 		await this.supabase.rpc('share_goal', { _goal_id: goalId, _with_user: withUser });
 	}
 
-	async acceptSharedGoal({
-		goalId
-	}: AcceptSharedGoalParams): Promise<void> {
+	async acceptSharedGoal({ goalId }: AcceptSharedGoalParams): Promise<void> {
 		await this.supabase.rpc('accept_shared_goal', { _goal_id: goalId });
 	}
 
-	private async getCurrentStreak({
-		goalId
-	}: CamelCase<Database['public']['Functions']['get_current_streak_info']['Args']>) {
-		return this.supabase.rpc('get_current_streak_info', { _goal_id: goalId });
+	private async getCurrentStreak({ goalId }: getCurrentStreakParams): Promise<CurrentStreakInfo> {
+		const { data, error } = await this.supabase.rpc('get_current_streak_info', {
+			_goal_id: goalId
+		});
+		if (error) throw error;
+		if (!data || !isNotNullRow(data)) throw new Error('No current streak found');
+		return this.converter.convertCurrentStreakInfo(data);
 	}
 
-	private async getRecordStreak({ goalId }: { goalId: string }) {
-		return this.supabase
+	private async getRecordStreak({ goalId }: { goalId: string }): Promise<StreakInfo> {
+		const { data, error } = await this.supabase
 			.from('streak_summary')
 			.select('*')
 			.eq('goal', goalId)
 			.order('streak_count', { ascending: false })
 			.limit(1)
 			.maybeSingle();
+
+		if (error) throw error;
+		if (!data || !isNotNullRow(data)) throw new Error('No record streak found');
+		return this.converter.convertStreakInfo(data);
 	}
 }

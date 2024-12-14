@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { streak, record, startDate }: { streak: number; record: number; startDate: string } =
+	const { streak, record, startDate }: { streak: number; record: number; startDate: string | Date } =
 		$props();
 
     const startDateObj = new Date(startDate);

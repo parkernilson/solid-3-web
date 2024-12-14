@@ -1,4 +1,4 @@
-import type { Entry, Goal } from "$lib/model/goals";
+import type { Entry, Goal } from "$lib/model/domain/goals";
 import { LoginPresenter } from "$lib/presenters/auth/LoginPresenter.svelte";
 import { EntryGalleryPresenter } from "$lib/presenters/goals/EntryGalleryPresenter.svelte";
 import { EntryModalPresenter } from "$lib/presenters/goals/EntryModalPresenter.svelte";

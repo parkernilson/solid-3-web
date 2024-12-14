@@ -4,5 +4,5 @@ export const ssr = false;
 
 export const load = async () => {
     const presenter = presenterFactory.createRootLayoutPresenter();
-    await presenter.load()
+    await presenter.load({});
 }

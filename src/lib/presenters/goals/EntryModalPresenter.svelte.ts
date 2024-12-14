@@ -1,6 +1,5 @@
-import { entryDateFormatter } from '$lib/model/entries/date-formatter';
-import type { EntryUpsert } from '$lib/model/entries/EntryUpsert';
-import type { Entry, Goal } from '$lib/model/goals';
+import type { EntryUpsert } from '$lib/model/domain/goals';
+import { Entry, Goal } from '$lib/model/domain/goals';
 import { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
@@ -16,12 +15,16 @@ export class EntryModalPresenter extends ErrorHandlingPresenter {
 	private _isEditable = $derived(this.isOwner);
 	private _isEditing = $state(false);
 
-    public currentTextContent = $state("");
-    public newEntry: EntryUpsert = $derived({
-        ...this.entry,
-        goal: this.goal.id,
-        text_content: this.currentTextContent
-    })
+	public currentTextContent = $state<string | null>(Entry.defaults().textContent);
+	public currentDateOf = $state(Entry.defaults().dateOf);
+	public currentSuccess = $state(Entry.defaults().success);
+
+	public newEntry = $derived<EntryUpsert>({
+		goal: this.goal.id,
+		textContent: this.currentTextContent,
+		dateOf: this.currentDateOf,
+		success: this.currentSuccess
+	})
 
 	get entry() {
 		return this._entry;
@@ -53,25 +56,21 @@ export class EntryModalPresenter extends ErrorHandlingPresenter {
 		super(errorService);
 		this.authService = authService;
 		if (_entry) {
-			this.currentTextContent = _entry.text_content ?? "";
+			this.currentTextContent = _entry.textContent ?? '';
 		} else {
 			this.isEditing = true;
 		}
 	}
 
 	private createOptimisticEntry(entry: EntryUpsert): Entry {
-		return {
-			// Provide defaults so that we have a guaranteed full Entry object
+		return Entry.fromJson({
 			id: `temp-${uuidv4()}`,
-			created_at: new Date().toISOString(),
-			date_of: entryDateFormatter.format(new Date()),
-			success: true,
-			text_content: null,
-			// Override with new values
-			...entry,
-			// This entry will be optimistic until the server confirms it
+			goal: entry.goal,
+			textContent: entry.textContent,
+			dateOf: entry.dateOf,
+			success: entry.success,
 			optimisticLocalOnly: true
-		};
+		});
 	}
 
 	async optimisticallyUpsertEntry(entry: EntryUpsert) {
@@ -88,18 +87,19 @@ export class EntryModalPresenter extends ErrorHandlingPresenter {
 				const resultingEntry = await this.goalService.upsertEntry({
 					goalId: entry.goal,
 					entryId: entry.id,
-					dateOf: entry.date_of,
+					dateOf: entry.dateOf,
 					success: entry.success,
-					textContent: entry.text_content ?? undefined,
+					textContent: entry.textContent ?? undefined
 				});
 				if (!resultingEntry) throw new Error('No data returned from upsert_entry');
 				this.entryGalleryPresenter.upsertEntryLocal(resultingEntry);
-			}, onError: () => {
+			},
+			onError: () => {
 				// Rollback optimistic update
-				if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(oldEntry);
+				if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(Entry.fromJson(oldEntry));
 				else this.entryGalleryPresenter.removeEntryLocal(optimisticEntry.id);
 			}
-		})
+		});
 	}
 
 	startEditing() {

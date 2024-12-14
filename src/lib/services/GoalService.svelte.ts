@@ -1,4 +1,4 @@
-import type { Entry, GoalInfo } from '$lib/model/goals';
+import type { Entry, GoalInfo } from '$lib/model/domain/goals';
 import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
 import type { PaginatedRequest } from '$lib/utils/types/pagination/PaginatedRequest';
 
@@ -27,6 +27,10 @@ export interface ShareGoalParams {
 }
 
 export interface AcceptSharedGoalParams {
+    goalId: string;
+}
+
+export interface getCurrentStreakParams {
     goalId: string;
 }
 

@@ -1,4 +1,4 @@
-import type { Entry } from '$lib/model/goals';
+import { Entry } from '$lib/model/domain/goals';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
 import { bisectLeft } from '$lib/utils/arrays/bisect-left';
@@ -40,7 +40,7 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 	async loadMoreEntries() {
 		if (!this.hasMoreEntries || this.loading) return;
 		const lastEntry = this.entries?.[this.entries.length - 1];
-		await this.loadEntries({ pageSize: 12, exclusiveStartKey: lastEntry?.date_of });
+		await this.loadEntries({ pageSize: 12, exclusiveStartKey: lastEntry?.dateOf });
 	}
 
 	private async loadEntries({ pageSize, exclusiveStartKey }: PaginatedRequest): Promise<void> {
@@ -71,7 +71,7 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 
 	private async addEntryLocal(entry: Entry) {
 		const insertIndex = bisectLeft(this.entries, entry, true, 0, this.entries.length, (a, b) =>
-			a.date_of.localeCompare(b.date_of)
+			a.dateOf.localeCompare(b.dateOf)
 		);
 		this.entries = [
 			...this.entries.slice(0, insertIndex),

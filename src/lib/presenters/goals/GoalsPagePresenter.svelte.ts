@@ -1,4 +1,4 @@
-import type { GoalInfo } from '$lib/model/goals';
+import type { GoalInfo } from '$lib/model/domain/goals';
 import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
