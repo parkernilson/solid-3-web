@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { page as pageStore } from '$app/stores';
+	import GoalOptionsPopover from '$lib/components/GoalOptionsPopover.svelte';
 	import EntryGallery from '$lib/components/goals/EntryGallery.svelte';
 	import HeaderStats from '$lib/components/goals/HeaderStats.svelte';
+	import Popover from '$lib/components/Popover.svelte';
 	import { presenterFactory } from '$lib/factories';
 	import { onMount } from 'svelte';
 	import { fromStore } from 'svelte/store';
@@ -25,7 +27,8 @@
 			<a aria-label="Back" href="/goals" class="mr-6"
 				><i class="fa-solid fa-chevron-left fa-xl"></i></a
 			>
-			<h1 class="text-xl">{goal.title}</h1>
+			<h1 class="text-xl flex-1">{goal.title}</h1>
+			<GoalOptionsPopover />
 		</div>
 		<HeaderStats
 			streak={streak?.streakCount || 0}
