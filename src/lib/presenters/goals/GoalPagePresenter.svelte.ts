@@ -4,11 +4,8 @@ import type { GoalService } from "$lib/services/GoalService.svelte";
 import { LoadablePresenter } from "../LoadablePresenter.svelte";
 
 export class GoalPagePresenter extends LoadablePresenter<{ goalId: string }> {
-	private _loadingPage = $state(true);
     private _goal = $state<GoalInfo>();
 
-    get loadingPage() { return this._loadingPage }
-    private set loadingPage(v) { this._loadingPage = v }
     get goal() { return this._goal }
     private set goal(g) { this._goal = g }
 

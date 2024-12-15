@@ -20,6 +20,7 @@ export class EntryModalPresenter extends ErrorHandlingPresenter {
 	public currentSuccess = $state(Entry.defaults().success);
 
 	public newEntry = $derived<EntryUpsert>({
+		id: this.entry?.id,
 		goal: this.goal.id,
 		textContent: this.currentTextContent,
 		dateOf: this.currentDateOf,
@@ -56,7 +57,9 @@ export class EntryModalPresenter extends ErrorHandlingPresenter {
 		super(errorService);
 		this.authService = authService;
 		if (_entry) {
-			this.currentTextContent = _entry.textContent ?? '';
+			this.currentTextContent = _entry.textContent;
+			this.currentDateOf = _entry.dateOf;
+			this.currentSuccess = _entry.success;
 		} else {
 			this.isEditing = true;
 		}

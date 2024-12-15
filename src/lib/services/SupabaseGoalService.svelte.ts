@@ -134,16 +134,16 @@ export class SupabaseGoalService implements GoalService {
 		await this.supabase.rpc('accept_shared_goal', { _goal_id: goalId });
 	}
 
-	private async getCurrentStreak({ goalId }: getCurrentStreakParams): Promise<CurrentStreakInfo> {
+	private async getCurrentStreak({ goalId }: getCurrentStreakParams): Promise<CurrentStreakInfo | null> {
 		const { data, error } = await this.supabase.rpc('get_current_streak_info', {
 			_goal_id: goalId
 		});
 		if (error) throw error;
-		if (!data || !isNotNullRow(data)) throw new Error('No current streak found');
+		if (!data || !isNotNullRow(data)) return null;
 		return this.converter.convertCurrentStreakInfo(data);
 	}
 
-	private async getRecordStreak({ goalId }: { goalId: string }): Promise<StreakInfo> {
+	private async getRecordStreak({ goalId }: { goalId: string }): Promise<StreakInfo | null> {
 		const { data, error } = await this.supabase
 			.from('streak_summary')
 			.select('*')
@@ -153,7 +153,7 @@ export class SupabaseGoalService implements GoalService {
 			.maybeSingle();
 
 		if (error) throw error;
-		if (!data || !isNotNullRow(data)) throw new Error('No record streak found');
+		if (!data || !isNotNullRow(data)) return null;
 		return this.converter.convertStreakInfo(data);
 	}
 }

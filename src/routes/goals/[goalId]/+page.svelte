@@ -14,7 +14,7 @@
 	});
 </script>
 
-{#if presenter.loadingPage}
+{#if presenter.loading}
 	<p>Loading goal...</p>
 {:else if presenter.goal}
 	{@const goal = presenter.goal.goal}
