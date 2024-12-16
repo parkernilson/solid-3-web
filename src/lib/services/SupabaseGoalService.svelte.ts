@@ -1,5 +1,13 @@
 import type { SupabaseDomainConverter } from '$lib/model/converters/supabase/SupabaseDomainConverter';
-import { CurrentStreakInfo, Entry, Goal, StreakInfo, type GoalInfo } from '$lib/model/domain/goals';
+import {
+	CurrentStreakInfo,
+	Entry,
+	Goal,
+	StreakInfo,
+	UserProfile,
+	type GoalInfo
+} from '$lib/model/domain/goals';
+import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import type { SupabaseClient } from '$lib/supabase/supabase';
 import { isNotNullRow } from '$lib/utils/types/isNotNullRow';
 import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
@@ -134,7 +142,9 @@ export class SupabaseGoalService implements GoalService {
 		await this.supabase.rpc('accept_shared_goal', { _goal_id: goalId });
 	}
 
-	private async getCurrentStreak({ goalId }: getCurrentStreakParams): Promise<CurrentStreakInfo | null> {
+	private async getCurrentStreak({
+		goalId
+	}: getCurrentStreakParams): Promise<CurrentStreakInfo | null> {
 		const { data, error } = await this.supabase.rpc('get_current_streak_info', {
 			_goal_id: goalId
 		});
@@ -155,5 +165,55 @@ export class SupabaseGoalService implements GoalService {
 		if (error) throw error;
 		if (!data || !isNotNullRow(data)) return null;
 		return this.converter.convertStreakInfo(data);
+	}
+
+	async getSharedWithUsers(goalId: string): Promise<ShareRecord[]> {
+		const { data: supabaseShareRecords, error: shareRecordsError } = await this.supabase
+			.from('shared_goals')
+			.select('*')
+			.eq('goal', goalId);
+		if (shareRecordsError) throw shareRecordsError;
+		if (!supabaseShareRecords) return [];
+		const userIds = supabaseShareRecords.map((record) => record.shared_with);
+		const { data: usersData, error: usersError } = await this.supabase
+			.from('profiles')
+			.select('*')
+			.in('id', userIds);
+		if (usersError) throw usersError;
+		if (!usersData) throw new Error('Users could not be fetched');
+		const shareRecords = supabaseShareRecords.map((record) => {
+			const user = usersData.find((user) => user.id === record.shared_with);
+			if (!user) throw new Error('User not found');
+			return this.converter.convertShareRecord(user, record);
+		});
+		return shareRecords;
+	}
+
+	async getUsersPaginated(
+		searchTerm: string,
+		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>
+	): Promise<PaginatedResponse<UserProfile>> {
+		const query = this.supabase
+			.from('profiles')
+			.select('*')
+			.ilike('email', `%${searchTerm}%`)
+			.limit(pageSize + 1);
+
+		if (exclusiveStartKey) {
+			query.gt('email', exclusiveStartKey);
+		}
+
+		const { data, error } = await query;
+		if (error) {
+			throw error;
+		}
+
+		const hasMore = data.length > pageSize;
+		const requestedPage = data.slice(0, pageSize).map(this.converter.convertUserProfile);
+
+		return {
+			data: requestedPage,
+			hasMore
+		};
 	}
 }

@@ -1,4 +1,5 @@
-import type { Entry, GoalInfo } from '$lib/model/domain/goals';
+import type { Entry, GoalInfo, UserProfile } from '$lib/model/domain/goals';
+import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
 import type { PaginatedRequest } from '$lib/utils/types/pagination/PaginatedRequest';
 
@@ -45,4 +46,9 @@ export interface GoalService {
     upsertEntry(params: UpsertEntryParams): Promise<UpsertEntryResult>;
     shareGoal(params: ShareGoalParams): Promise<void>;
     acceptSharedGoal(params: AcceptSharedGoalParams): Promise<void>;
+    getSharedWithUsers(goalId: string): Promise<ShareRecord[]>;
+    getUsersPaginated(
+        searchTerm: string,
+        { pageSize, exclusiveStartKey }: PaginatedRequest<string>
+    ): Promise<PaginatedResponse<UserProfile>>;
 }
