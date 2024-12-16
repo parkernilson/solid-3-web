@@ -28,7 +28,7 @@
 				><i class="fa-solid fa-chevron-left fa-xl"></i></a
 			>
 			<h1 class="text-xl flex-1">{goal.title}</h1>
-			<GoalOptionsPopover />
+			<GoalOptionsPopover goal={presenter.goal.goal} />
 		</div>
 		<HeaderStats
 			streak={streak?.streakCount || 0}

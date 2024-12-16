@@ -4,6 +4,7 @@ import { EntryGalleryPresenter } from "$lib/presenters/goals/EntryGalleryPresent
 import { EntryModalPresenter } from "$lib/presenters/goals/EntryModalPresenter.svelte";
 import { GoalPagePresenter } from "$lib/presenters/goals/GoalPagePresenter.svelte";
 import { GoalsPagePresenter } from "$lib/presenters/goals/GoalsPagePresenter.svelte";
+import { ShareGoalDialogPresenter } from "$lib/presenters/goals/ShareGoalDialogPresenter";
 import { RootLayoutPresenter } from "$lib/presenters/root/RootLayoutPresenter.svelte";
 import type { ServiceFactory } from "../services/ServiceFactory.svelte";
 
@@ -55,6 +56,14 @@ export class PresenterFactory {
             this.serviceFactory.createErrorService(),
             this.serviceFactory.getAuthServiceInstance(),
             entryGalleryPresenter
+        )
+    }
+
+    createShareGoalDialogPresenter(goal: Goal) {
+        return new ShareGoalDialogPresenter(
+            goal,
+            this.serviceFactory.createGoalService(),
+            this.serviceFactory.createErrorService()
         )
     }
 }
