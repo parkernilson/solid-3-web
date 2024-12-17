@@ -4,7 +4,7 @@
 	let isOpen = $state(false);
 
 	function togglePopover(event: MouseEvent) {
-        event.stopPropagation();
+		event.stopPropagation();
 		isOpen = !isOpen;
 	}
 
@@ -18,10 +18,11 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div class="relative inline-block" onclick={togglePopover}>
+<div class="relative inline-block">
 	<button
 		class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
 		aria-label="More options"
+		onclick={togglePopover}
 	>
         <i class="fa-solid fa-ellipsis-vertical fa-lg"></i>
 	</button>
