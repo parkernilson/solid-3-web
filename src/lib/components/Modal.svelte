@@ -1,5 +1,10 @@
 <script lang="ts">
-	let { showModal = $bindable(), header, children } = $props();
+	let {
+		showModal = $bindable(),
+		header,
+		children,
+		showCloseButton = true
+	}: { showModal: boolean; header?: any; children: any; showCloseButton?: boolean } = $props();
 
 	let dialog = $state<HTMLDialogElement>();
 
@@ -9,22 +14,30 @@
 
 	$effect(() => {
 		if (dialog && !showModal) dialog.close();
-	})
+	});
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
 <dialog
 	bind:this={dialog}
 	onclose={() => (showModal = false)}
-	onclick={(e) => { if (e.target === dialog) dialog.close(); }}
+	onclick={(e) => {
+		if (e.target === dialog) dialog.close();
+	}}
 >
 	<div>
-		{@render header?.()}
-		<hr />
-		{@render children?.()}
-		<hr />
-		<!-- svelte-ignore a11y_autofocus -->
-		<button autofocus onclick={() => dialog?.close()}>close modal</button>
+		{#if header}
+			{@render header?.()}
+			<hr />
+		{/if}
+		{#if children}
+			{@render children?.()}
+			<hr />
+		{/if}
+		{#if showCloseButton}
+			<!-- svelte-ignore a11y_autofocus -->
+			<button autofocus onclick={() => dialog?.close()}>close modal</button>
+		{/if}
 	</div>
 </dialog>
 

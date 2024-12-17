@@ -1,19 +1,7 @@
-import type { GoalInfo } from "$lib/model/domain/goals";
-import type { ErrorService } from "$lib/services/ErrorService.svelte";
-import type { GoalService } from "$lib/services/GoalService.svelte";
-import { LoadablePresenter } from "../LoadablePresenter.svelte";
+import type { GoalRoutePresenter } from "./GoalRoutePresenter.svelte";
 
-export class GoalPagePresenter extends LoadablePresenter<{ goalId: string }> {
-    private _goal = $state<GoalInfo>();
+export class GoalPagePresenter {
+    get goal() { return this.goalRoutePresenter.goal }
 
-    get goal() { return this._goal }
-    private set goal(g) { this._goal = g }
-
-	constructor(private goalService: GoalService, errorService: ErrorService) {
-        super(errorService);
-    }
-
-    async loadResource({ goalId }: { goalId: string }): Promise<void> {
-        this.goal = await this.goalService.getGoalInfo(goalId)
-    }
+	constructor(private goalRoutePresenter: GoalRoutePresenter) {}
 }

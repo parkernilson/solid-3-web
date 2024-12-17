@@ -1,10 +1,7 @@
 <script lang="ts">
-	import type { Goal } from "$lib/model/domain/goals";
-	import Popover from "./Popover.svelte";
-	import ShareGoalDialog from "./ShareGoalDialog.svelte";
+	import Popover from './Popover.svelte';
 
-    const { goal }: { goal: Goal } = $props();
-
+	const { goalId }: { goalId: string } = $props();
 </script>
 
 <Popover>

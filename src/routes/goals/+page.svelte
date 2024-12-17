@@ -1,20 +1,23 @@
 <script lang="ts">
 	import GoalListView from '$lib/components/goals/GoalListView.svelte';
-	import { presenterFactory } from '$lib/factories';
-	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
 
-	const presenter = presenterFactory.createGoalsPagePresenter();
+	const { data }: { data: PageData } = $props();
+	const presenter = data.goalsPagePresenter;
 
-	onMount(async () => {
-		await presenter.load({});
-	});
 </script>
 
 <h1>Goals</h1>
-{#if presenter.loadingGoals}
+{#await data.loadingGoalsPage}
 	<p>Loading goals...</p>
-{:else if presenter.goals}
-	{#each presenter.goals! as goalInfo}
-		<a href="/goals/{goalInfo.goal.id}"><GoalListView goal={goalInfo} /></a>
-	{/each}
-{/if}
+{:then _}
+	{#if presenter.goals}
+		{#each presenter.goals! as goalInfo}
+			<a href="/goals/{goalInfo.goal.id}"><GoalListView goal={goalInfo} /></a>
+		{/each}
+	{:else}
+		<p>Found no error, but goals were not defined</p>
+	{/if}
+{:catch _}
+	<p>Could not load goals</p>
+{/await}
