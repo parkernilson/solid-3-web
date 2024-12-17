@@ -1,5 +1,6 @@
 import type { Entry, Goal } from '$lib/model/domain/goals';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
+import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
 import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
 import { EntryModalPresenter } from '$lib/presenters/goals/EntryModalPresenter.svelte';
 import { GoalPagePresenter } from '$lib/presenters/goals/GoalPagePresenter.svelte';
@@ -11,8 +12,11 @@ import type { ServiceFactory } from '../services/ServiceFactory.svelte';
 
 export class PresenterFactory {
 	private goalRoutePresenterInstance: GoalRoutePresenter | undefined;
+	private dialogPresenterInstance: DialogPresenter;
 
-	constructor(private serviceFactory: ServiceFactory) {}
+	constructor(private serviceFactory: ServiceFactory) {
+		this.dialogPresenterInstance = new DialogPresenter();
+	}
 
 	createRootLayoutPresenter() {
 		return new RootLayoutPresenter(
@@ -83,5 +87,9 @@ export class PresenterFactory {
 			throw new Error('Tried to create a ShareGoalPagePresenter without a GoalRoutePresenter instance');
 		}
 		return new ShareGoalPagePresenter(this.goalRoutePresenterInstance);
+	}
+
+	getDialogPresenterInstance() {
+		return this.dialogPresenterInstance;
 	}
 }

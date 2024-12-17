@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import DialogProvider from '$lib/components/DialogProvider.svelte';
 	import { presenterFactory } from '$lib/factories';
 	import '../app.css';
 
@@ -14,3 +15,5 @@
 </script>
 
 {@render children()}
+
+<DialogProvider />
