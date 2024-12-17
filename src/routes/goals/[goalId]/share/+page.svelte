@@ -5,7 +5,6 @@
     const presenter = data.shareGoalPagePresenter;
 </script>
 
-
 {#await data.loadingGoalRoute}
     <p>Loading...</p>
 {:then _}
