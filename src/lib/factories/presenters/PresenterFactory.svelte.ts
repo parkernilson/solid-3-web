@@ -53,7 +53,8 @@ export class PresenterFactory {
         return new ShareGoalDialogPresenter(
             goal,
             this.serviceFactory.createGoalService(),
-            this.serviceFactory.createErrorService()
+            this.serviceFactory.createErrorService(),
+			this.dialogPresenterInstance
         )
     }
 

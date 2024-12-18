@@ -21,10 +21,10 @@
         <!-- TODO: add the handlers for sharing with and unsharing with users -->
         <UserPicker 
             initialSelectedUsers={presenter.sharedWithUsers}
-            beforeSelect={console.log}
-            onSelect={console.log}
-            beforeDeselect={console.log}
-            onDeselect={console.log}
+            beforeSelect={presenter.confirmShare.bind(presenter)}
+            onSelect={presenter.doShare.bind(presenter)}
+            beforeDeselect={presenter.confirmUnshare.bind(presenter)}
+            onDeselect={presenter.doUnshare.bind(presenter)}
         />
     {:else}
         <p>There was a problem loading the initial share records</p>

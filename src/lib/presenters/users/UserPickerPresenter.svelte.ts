@@ -3,6 +3,12 @@ import type { ErrorService } from "$lib/services/ErrorService.svelte";
 import type { GoalService } from "$lib/services/GoalService.svelte";
 import { ErrorHandlingPresenter } from "../ErrorHandlingPresenter";
 
+export class UserSelectCancelError extends Error {
+	constructor() {
+		super("User select action cancelled");
+	}
+}
+
 export type UserSelectAction = (user: UserProfile) => Promise<void> | void;
 
 export class UserPickerPresenter extends ErrorHandlingPresenter {
@@ -63,17 +69,24 @@ export class UserPickerPresenter extends ErrorHandlingPresenter {
 		try {
 			await this.selectUser(user);
 		} catch (error) {
-			// TODO: handle cancel error here, handle all others with error handler
-			console.log(error);
+			if (error instanceof UserSelectCancelError) {
+				return;
+			}
+			throw error;
 		}
 	}
 
+	// TODO: whenever some unexpected error occurs, we should reset the state to the previous
+	// state for both select and deselect operations
+	// TODO: get rid of the code duplication in handleSelectUser and handleDeselectUser
 	async handleDeselectUser(user: UserProfile) {
 		try {
 			await this.deselectUser(user);
 		} catch (error) {
-			// TODO: handle cancel error here, handle all others with error handler
-			console.log(error);
+			if (error instanceof UserSelectCancelError) {
+				return;
+			}
+			throw error;
 		}
 	}
 
