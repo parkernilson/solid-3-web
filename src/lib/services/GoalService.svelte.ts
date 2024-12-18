@@ -49,6 +49,7 @@ export interface GoalService {
     getSharedWithUsers(goalId: string): Promise<ShareRecord[]>;
     getUsersPaginated(
         searchTerm: string,
+        excludeSelf: boolean,
         { pageSize, exclusiveStartKey }: PaginatedRequest<string>
     ): Promise<PaginatedResponse<UserProfile>>;
 }

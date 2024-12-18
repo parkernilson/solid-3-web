@@ -17,7 +17,7 @@ export class SupabaseServiceFactory extends ServiceFactory {
 	}
 
 	createGoalService(): SupabaseGoalService {
-		return new SupabaseGoalService(this.supabase, new SupabaseDomainConverter());
+		return new SupabaseGoalService(this.supabase, new SupabaseDomainConverter(), this.authServiceInstance);
 	}
 
 	protected createAuthService(): SupabaseAuthService {

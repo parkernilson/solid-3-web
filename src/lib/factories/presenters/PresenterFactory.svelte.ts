@@ -105,6 +105,7 @@ export class PresenterFactory {
 	}
 
 	createUserPickerPresenter(
+		excludeSelf: boolean,
 		initialSelectedUsers?: UserProfile[],
 		beforeSelect?: UserSelectAction,
 		onSelect?: UserSelectAction,
@@ -114,6 +115,7 @@ export class PresenterFactory {
 		return new UserPickerPresenter(
 			this.serviceFactory.createErrorService(),
 			this.serviceFactory.createGoalService(),
+			excludeSelf,
 			initialSelectedUsers,
 			beforeSelect,
 			onSelect,

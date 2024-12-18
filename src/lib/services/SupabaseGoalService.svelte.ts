@@ -22,11 +22,13 @@ import type {
 	UpsertEntryParams,
 	UpsertEntryResult
 } from './GoalService.svelte';
+import type { SupabaseAuthService } from './SupabaseAuthService.svelte';
 
 export class SupabaseGoalService implements GoalService {
 	constructor(
 		private supabase: SupabaseClient,
-		private converter: SupabaseDomainConverter
+		private converter: SupabaseDomainConverter,
+		private authService: SupabaseAuthService
 	) {}
 
 	private async getGoal(goalId: string): Promise<Goal> {
@@ -191,6 +193,7 @@ export class SupabaseGoalService implements GoalService {
 
 	async getUsersPaginated(
 		searchTerm: string,
+		excludeSelf: boolean,
 		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>
 	): Promise<PaginatedResponse<UserProfile>> {
 		const query = this.supabase
@@ -201,6 +204,13 @@ export class SupabaseGoalService implements GoalService {
 
 		if (exclusiveStartKey) {
 			query.gt('email', exclusiveStartKey);
+		}
+
+		if (excludeSelf) {
+			if (!this.authService.user) {
+				throw new Error('Exclude self is true but no user is logged in');
+			}
+			query.neq('id', this.authService.user.id)
 		}
 
 		const { data, error } = await query;

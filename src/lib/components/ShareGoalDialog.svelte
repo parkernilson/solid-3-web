@@ -24,6 +24,7 @@
             onSelect={presenter.doShare.bind(presenter)}
             beforeDeselect={presenter.confirmUnshare.bind(presenter)}
             onDeselect={presenter.doUnshare.bind(presenter)}
+            excludeSelf={true}
         />
     {:else}
         <p>There was a problem loading the initial share records</p>

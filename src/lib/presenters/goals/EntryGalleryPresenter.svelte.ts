@@ -1,6 +1,6 @@
 import { Entry } from '$lib/model/domain/goals';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
-import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
+import type { GoalService } from '$lib/services/GoalService.svelte';
 import { bisectLeft } from '$lib/utils/arrays/bisect-left';
 import type { PaginatedRequest } from '$lib/utils/types/pagination/PaginatedRequest';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
@@ -31,7 +31,7 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 
 	constructor(
 		private goalId: string,
-		private goalService: SupabaseGoalService,
+		private goalService: GoalService,
 		protected errorService: ErrorService
 	) {
 		super(errorService);

@@ -10,15 +10,18 @@
         onSelect,
         beforeDeselect,
         onDeselect,
+        excludeSelf 
     }: {
         initialSelectedUsers?: UserProfile[],
         beforeSelect?: UserSelectAction,
         onSelect?: UserSelectAction,
         beforeDeselect?: UserSelectAction,
         onDeselect?: UserSelectAction,
+        excludeSelf: boolean
     } = $props();
 
     const presenter = presenterFactory.createUserPickerPresenter(
+        excludeSelf,
         initialSelectedUsers,
         beforeSelect,
         onSelect,

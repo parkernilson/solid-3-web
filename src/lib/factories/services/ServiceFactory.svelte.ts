@@ -1,9 +1,9 @@
 import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
-import type { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
+import type { GoalService } from '$lib/services/GoalService.svelte';
 
 export abstract class ServiceFactory {
-	abstract createGoalService(): SupabaseGoalService;
+	abstract createGoalService(): GoalService;
 	abstract createErrorService(): ErrorService;
 	protected abstract createAuthService(): AuthService;
 
