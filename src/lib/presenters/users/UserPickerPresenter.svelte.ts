@@ -65,28 +65,20 @@ export class UserPickerPresenter extends ErrorHandlingPresenter {
 		this.selectedUsers = initialSelectedUsers;
     }
 
-	async handleSelectUser(user: UserProfile) {
+	async handleSelectAction(action: 'select' | 'deselect', user: UserProfile) {
+		const selectedUsersSnapshot = [...this.selectedUsers ?? []];
 		try {
-			await this.selectUser(user);
-		} catch (error) {
-			if (error instanceof UserSelectCancelError) {
+			if (action === 'select') {
+				await this.selectUser(user);
+			} else {
+				await this.deselectUser(user);
+			}
+		} catch(e) {
+			if (e instanceof UserSelectCancelError) {
 				return;
 			}
-			throw error;
-		}
-	}
-
-	// TODO: whenever some unexpected error occurs, we should reset the state to the previous
-	// state for both select and deselect operations
-	// TODO: get rid of the code duplication in handleSelectUser and handleDeselectUser
-	async handleDeselectUser(user: UserProfile) {
-		try {
-			await this.deselectUser(user);
-		} catch (error) {
-			if (error instanceof UserSelectCancelError) {
-				return;
-			}
-			throw error;
+			this.errorService.handleError(e);
+			this.selectedUsers = selectedUsersSnapshot;
 		}
 	}
 

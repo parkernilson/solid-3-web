@@ -18,7 +18,6 @@
     <p>Loading...</p>
 {:else}
     {#if presenter.sharedWithUsers}
-        <!-- TODO: add the handlers for sharing with and unsharing with users -->
         <UserPicker 
             initialSelectedUsers={presenter.sharedWithUsers}
             beforeSelect={presenter.confirmShare.bind(presenter)}

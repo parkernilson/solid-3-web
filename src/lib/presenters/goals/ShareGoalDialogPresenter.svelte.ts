@@ -8,9 +8,7 @@ import { UserSelectCancelError } from '../users/UserPickerPresenter.svelte';
 
 export class ShareGoalDialogPresenter extends LoadablePresenter<{ goalId: string }> {
 	private _shareRecords = $state<ShareRecord[]>();
-	private _sharedWithUsers = $derived(
-		this.shareRecords?.map((rec) => rec.user) ?? [],
-	)
+	private _sharedWithUsers = $derived(this.shareRecords?.map((rec) => rec.user) ?? []);
 
 	get goal() {
 		return this._goal;
@@ -38,72 +36,55 @@ export class ShareGoalDialogPresenter extends LoadablePresenter<{ goalId: string
 		this.shareRecords = await this.goalService.getSharedWithUsers(goalId);
 	}
 
-	// TODO: get rid of the code duplication in confirmShare and confirmUnshare
-	async confirmShare(user: UserProfile) {
-		const dialog: Dialog = {
+	private getShareDialog(action: 'share' | 'unshare', user: UserProfile): Dialog {
+		return {
 			content: {
-				title: "Share Goal",
-				body: `Are you sure you want to share this goal with ${user.email}?`,
+				title: action === 'share' ? 'Share Goal' : 'Unshare Goal',
+				body:
+					action === 'share'
+						? `Are you sure you want to share this goal with ${user.email}?`
+						: `Are you sure you want to unshare this goal with ${user.email}?`
 			},
 			actions: {
 				accept: {
-					label: "Share",
+					label: action === 'share' ? 'Share' : 'Unshare',
 					handle: async () => {
 						return {
-							action: 'accept',
-						}
+							action: 'accept'
+						};
 					}
 				},
 				cancel: {
-					label: "Cancel",
+					label: 'Cancel',
 					handle: async () => {
 						return {
-							action: 'cancel',
-						}
+							action: 'cancel'
+						};
 					}
 				}
 			}
-		}
-		const result = await this.dialogPresenter.showDialog(dialog)
+		};
+	}
+
+	async confirmShare(user: UserProfile) {
+		const dialog = this.getShareDialog('share', user);
+		const result = await this.dialogPresenter.showDialog(dialog);
 		if (result.action === 'cancel') throw new UserSelectCancelError();
 	}
 
 	async doShare(user: UserProfile) {
 		// TODO: Implement sharing
-		console.log('Sharing goal with ', user.email)
+		console.log('Sharing goal with ', user.email);
 	}
-	
+
 	async confirmUnshare(user: UserProfile) {
-		const dialog: Dialog = {
-			content: {
-				title: "Unshare Goal",
-				body: `Are you sure you want to unshare this goal with ${user.email}?`,
-			},
-			actions: {
-				accept: {
-					label: "Unshare",
-					handle: async () => {
-						return {
-							action: 'accept',
-						}
-					}
-				},
-				cancel: {
-					label: "Cancel",
-					handle: async () => {
-						return {
-							action: 'cancel',
-						}
-					}
-				}
-			}
-		}
-		const result = await this.dialogPresenter.showDialog(dialog)
+		const dialog = this.getShareDialog('unshare', user);
+		const result = await this.dialogPresenter.showDialog(dialog);
 		if (result.action === 'cancel') throw new UserSelectCancelError();
 	}
 
 	async doUnshare(user: UserProfile) {
 		// TODO: Implement unsharing
-		console.log('Unsharing goal with ', user.email)
+		console.log('Unsharing goal with ', user.email);
 	}
 }

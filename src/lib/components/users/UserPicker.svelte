@@ -38,7 +38,7 @@
         {#if presenter.selectedUsers}
             {#each presenter.selectedUsers as user}
                 <div class="px-3 py-1">
-                    <button onclick={() => presenter.handleDeselectUser(user)}>{user.email}</button>
+                    <button onclick={async () => await presenter.handleSelectAction('deselect', user)}>{user.email}</button>
                 </div>
             {/each}
         {/if}
@@ -52,7 +52,7 @@
         {#if presenter.displayedUsers}
             {#each presenter.displayedUsers as user}
                 <div class="px-3 py-1">
-                    <button onclick={() => presenter.handleSelectUser(user)}>{user.email}</button>
+                    <button onclick={async () => await presenter.handleSelectAction('select', user)}>{user.email}</button>
                 </div>
             {/each}
         {/if}
