@@ -1,4 +1,4 @@
-import type { Entry, Goal } from '$lib/model/domain/goals';
+import type { Entry, Goal, UserProfile } from '$lib/model/domain/goals';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
 import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
@@ -6,9 +6,10 @@ import { EntryModalPresenter } from '$lib/presenters/goals/EntryModalPresenter.s
 import { GoalPagePresenter } from '$lib/presenters/goals/GoalPagePresenter.svelte';
 import { GoalRoutePresenter } from '$lib/presenters/goals/GoalRoutePresenter.svelte';
 import { GoalsPagePresenter } from '$lib/presenters/goals/GoalsPagePresenter.svelte';
-import { ShareGoalDialogPresenter } from '$lib/presenters/goals/ShareGoalDialogPresenter';
+import { ShareGoalDialogPresenter } from '$lib/presenters/goals/ShareGoalDialogPresenter.svelte';
 import { ShareGoalPagePresenter } from '$lib/presenters/goals/ShareGoalPagePresenter.svelte';
 import { RootLayoutPresenter } from '$lib/presenters/root/RootLayoutPresenter.svelte';
+import { UserPickerPresenter, type UserSelectAction } from '$lib/presenters/users/UserPickerPresenter.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
 
 export class PresenterFactory {
@@ -100,5 +101,23 @@ export class PresenterFactory {
 
 	getDialogPresenterInstance() {
 		return this.dialogPresenterInstance;
+	}
+
+	createUserPickerPresenter(
+		initialSelectedUsers?: UserProfile[],
+		beforeSelect?: UserSelectAction,
+		onSelect?: UserSelectAction,
+		beforeDeselect?: UserSelectAction,
+		onDeselect?: UserSelectAction
+	) {
+		return new UserPickerPresenter(
+			this.serviceFactory.createErrorService(),
+			this.serviceFactory.createGoalService(),
+			initialSelectedUsers,
+			beforeSelect,
+			onSelect,
+			beforeDeselect,
+			onDeselect
+		)
 	}
 }
