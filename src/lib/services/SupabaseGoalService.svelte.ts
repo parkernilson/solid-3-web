@@ -19,6 +19,7 @@ import type {
 	getCurrentStreakParams,
 	GoalService,
 	ShareGoalParams,
+	UnshareGoalParams,
 	UpsertEntryParams,
 	UpsertEntryResult
 } from './GoalService.svelte';
@@ -137,7 +138,12 @@ export class SupabaseGoalService implements GoalService {
 	}
 
 	async shareGoal({ goalId, withUser }: ShareGoalParams): Promise<void> {
+		// TODO: implement email sending / notification
 		await this.supabase.rpc('share_goal', { _goal_id: goalId, _with_user: withUser });
+	}
+
+	async unshareGoal({ goalId, withUser }: UnshareGoalParams): Promise<void> {
+		await this.supabase.rpc('unshare_goal', { _goal_id: goalId, _with_user: withUser });
 	}
 
 	async acceptSharedGoal({ goalId }: AcceptSharedGoalParams): Promise<void> {

@@ -27,6 +27,8 @@ export interface ShareGoalParams {
     withUser: string;
 }
 
+export type UnshareGoalParams = ShareGoalParams;
+
 export interface AcceptSharedGoalParams {
     goalId: string;
 }
@@ -45,6 +47,7 @@ export interface GoalService {
     createGoal(params: CreateGoalParams): Promise<CreateGoalResult>;
     upsertEntry(params: UpsertEntryParams): Promise<UpsertEntryResult>;
     shareGoal(params: ShareGoalParams): Promise<void>;
+    unshareGoal(params: UnshareGoalParams): Promise<void>;
     acceptSharedGoal(params: AcceptSharedGoalParams): Promise<void>;
     getSharedWithUsers(goalId: string): Promise<ShareRecord[]>;
     getUsersPaginated(

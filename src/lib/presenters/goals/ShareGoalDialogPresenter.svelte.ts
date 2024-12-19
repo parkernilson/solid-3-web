@@ -73,8 +73,14 @@ export class ShareGoalDialogPresenter extends LoadablePresenter<{ goalId: string
 	}
 
 	async doShare(user: UserProfile) {
-		// TODO: Implement sharing
-		console.log('Sharing goal with ', user.email);
+		await this.doErrorable({
+			action: async () => {
+				await this.goalService.shareGoal({
+					goalId: this.goal.id,
+					withUser: user.id
+				})
+			}
+		})
 	}
 
 	async confirmUnshare(user: UserProfile) {
@@ -84,7 +90,13 @@ export class ShareGoalDialogPresenter extends LoadablePresenter<{ goalId: string
 	}
 
 	async doUnshare(user: UserProfile) {
-		// TODO: Implement unsharing
-		console.log('Unsharing goal with ', user.email);
+		await this.doErrorable({
+			action: async () => {
+				await this.goalService.unshareGoal({
+					goalId: this.goal.id,
+					withUser: user.id
+				})
+			}
+		})
 	}
 }
