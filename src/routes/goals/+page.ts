@@ -2,9 +2,11 @@ import { presenterFactory } from "$lib/factories"
 
 export const load = async ({ parent }) => {
     await parent();
-    const presenter = presenterFactory.createGoalsPagePresenter()
+    const goalsRoutePresenter = presenterFactory.getNewGoalsRoutePresenterInstance()
+    const goalsPagePresenter = presenterFactory.createGoalsPagePresenter()
     return {
-        loadingGoalsPage: presenter.load({}),
-        goalsPagePresenter: presenter
+        loadingGoalsRoute: goalsRoutePresenter.load({}),
+        goalsRoutePresenter,
+        goalsPagePresenter
     }
 }

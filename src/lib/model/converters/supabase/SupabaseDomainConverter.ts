@@ -6,7 +6,8 @@ import type {
 	SupabaseStreakInfo
 } from '$lib/model/db/supabase/SupabaseStreakInfo';
 import type { SupabaseUserProfile } from '$lib/model/db/supabase/SupabaseUserProfile';
-import { CurrentStreakInfo, Entry, Goal, StreakInfo, UserProfile } from '$lib/model/domain/goals';
+import { CurrentStreakInfo, Entry, Goal, StreakInfo } from '$lib/model/domain/goals';
+import { UserProfile } from '$lib/model/domain/users';
 import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 
 export class SupabaseDomainConverter {

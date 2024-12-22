@@ -65,7 +65,7 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 		})
 	}
 
-	async loadResource(): Promise<void> {
+	protected async loadResource(): Promise<void> {
 		await this.loadEntries({ pageSize: 10, exclusiveStartKey: null });
 	}
 

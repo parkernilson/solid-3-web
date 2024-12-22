@@ -1,4 +1,5 @@
-import { Goal, UserProfile } from '$lib/model/domain/goals';
+import { Goal } from '$lib/model/domain/goals';
+import { UserProfile } from '$lib/model/domain/users';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
@@ -32,7 +33,7 @@ export class ShareGoalDialogPresenter extends LoadablePresenter<{ goalId: string
 		super(errorService);
 	}
 
-	async loadResource({ goalId }: { goalId: string }): Promise<void> {
+	protected async loadResource({ goalId }: { goalId: string }): Promise<void> {
 		this.shareRecords = await this.goalService.getSharedWithUsers(goalId);
 	}
 

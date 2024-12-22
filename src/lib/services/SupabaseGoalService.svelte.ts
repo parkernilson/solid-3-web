@@ -4,9 +4,9 @@ import {
 	Entry,
 	Goal,
 	StreakInfo,
-	UserProfile,
 	type GoalInfo
 } from '$lib/model/domain/goals';
+import { UserProfile } from '$lib/model/domain/users';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import type { SupabaseClient } from '$lib/supabase/supabase';
 import { isNotNullRow } from '$lib/utils/types/isNotNullRow';
@@ -216,7 +216,7 @@ export class SupabaseGoalService implements GoalService {
 			if (!this.authService.user) {
 				throw new Error('Exclude self is true but no user is logged in');
 			}
-			query.neq('id', this.authService.user.id)
+			query.neq('id', this.authService.user.id);
 		}
 
 		const { data, error } = await query;
@@ -231,5 +231,20 @@ export class SupabaseGoalService implements GoalService {
 			data: requestedPage,
 			hasMore
 		};
+	}
+
+	async listShareRecords(): Promise<ShareRecord[]> {
+		if (!this.authService.user) throw new Error('No user logged in');
+		const userProfile = this.converter.convertUserProfile(this.authService.user);
+		const { data, error } = await this.supabase
+			.from('shared_goals')
+			.select('*')
+			.eq('shared_with', this.authService.user.id);
+		if (error) throw error;
+		if (!data) return [];
+		const shareRecords = data.map((sharedGoal) =>
+			this.converter.convertShareRecord(userProfile, sharedGoal)
+		);
+		return shareRecords;
 	}
 }

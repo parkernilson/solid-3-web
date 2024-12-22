@@ -13,7 +13,7 @@ export class GoalRoutePresenter extends LoadablePresenter<{ goalId: string }> {
         super(errorService);
     }
 
-    async loadResource({ goalId }: { goalId: string }): Promise<void> {
+    protected async loadResource({ goalId }: { goalId: string }): Promise<void> {
         this.goal = await this.goalService.getGoalInfo(goalId)
     }
 }

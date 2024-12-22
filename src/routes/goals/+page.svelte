@@ -8,9 +8,12 @@
 </script>
 
 <h1>Goals</h1>
-{#await data.loadingGoalsPage}
+{#await data.loadingGoalsRoute}
 	<p>Loading goals...</p>
 {:then _}
+	{#if presenter.sharedGoalsWithMePending}
+		<a class="hover:text-blue-600" href="/goals/share-requests">{presenter.sharedGoalsWithMePending.length} share requests</a>
+	{/if}
 	{#if presenter.goals}
 		{#each presenter.goals! as goalInfo}
 			<a href="/goals/{goalInfo.goal.id}"><GoalListView goal={goalInfo} /></a>

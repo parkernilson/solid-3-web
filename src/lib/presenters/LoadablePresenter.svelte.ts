@@ -24,5 +24,5 @@ export abstract class LoadablePresenter<
 		});
 	}
 
-	abstract loadResource(args: LoadArgs): Promise<void>;
+	protected abstract loadResource(args: LoadArgs): Promise<void>;
 }
