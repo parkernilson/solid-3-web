@@ -1,6 +1,6 @@
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 
-export abstract class ErrorHandlingPresenter {
+export abstract class ErrorHandler {
 	protected errorService: ErrorService;
 
 	constructor(errorService: ErrorService) {

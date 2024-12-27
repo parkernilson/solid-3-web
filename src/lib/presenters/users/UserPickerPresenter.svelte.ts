@@ -1,7 +1,7 @@
 import { UserProfile } from '$lib/model/domain/goals';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
-import { ErrorHandlingPresenter } from '../ErrorHandlingPresenter';
+import { ErrorHandler } from '../ErrorHandler';
 
 export class UserSelectCancelError extends Error {
 	constructor() {
@@ -11,7 +11,7 @@ export class UserSelectCancelError extends Error {
 
 export type UserSelectAction = (user: UserProfile) => Promise<void> | void;
 
-export class UserPickerPresenter extends ErrorHandlingPresenter {
+export class UserPickerPresenter extends ErrorHandler {
 	private _selectedUsers = $state<UserProfile[]>();
 	private _displayedUsers = $state<UserProfile[]>();
 	private _searchTerm = $state<string>('');

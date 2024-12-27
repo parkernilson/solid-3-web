@@ -1,4 +1,4 @@
-import { ErrorHandlingPresenter } from "./ErrorHandlingPresenter";
+import { ErrorHandler } from "./ErrorHandler";
 
 export interface DialogResponse {
     action: 'accept' | 'cancel';
@@ -21,7 +21,7 @@ export interface Dialog {
     }
 }
 
-export class DialogPresenter extends ErrorHandlingPresenter {
+export class DialogPresenter extends ErrorHandler {
     private _isOpen = $state(false);
     private _dialog: Dialog | undefined = $state();
     private _resolve: (value: DialogResponse) => void = () => {};
