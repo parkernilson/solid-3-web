@@ -199,8 +199,8 @@ export class SupabaseGoalService implements GoalService {
 
 	async getUsersPaginated(
 		searchTerm: string,
-		excludeSelf: boolean,
-		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>
+		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>,
+		excludeUserId?: string,
 	): Promise<PaginatedResponse<UserProfile>> {
 		const query = this.supabase
 			.from('profiles')
@@ -212,11 +212,8 @@ export class SupabaseGoalService implements GoalService {
 			query.gt('email', exclusiveStartKey);
 		}
 
-		if (excludeSelf) {
-			if (!this.authService.user) {
-				throw new Error('Exclude self is true but no user is logged in');
-			}
-			query.neq('id', this.authService.user.id);
+		if (excludeUserId) {
+			query.neq('id', excludeUserId);
 		}
 
 		const { data, error } = await query;
@@ -233,17 +230,15 @@ export class SupabaseGoalService implements GoalService {
 		};
 	}
 
-	async listShareRecords(): Promise<ShareRecord[]> {
-		if (!this.authService.user) throw new Error('No user logged in');
-		const userProfile = this.converter.convertUserProfile(this.authService.user);
+	async listShareRecords(user: UserProfile): Promise<ShareRecord[]> {
 		const { data, error } = await this.supabase
 			.from('shared_goals')
 			.select('*')
-			.eq('shared_with', this.authService.user.id);
+			.eq('shared_with', user.id);
 		if (error) throw error;
 		if (!data) return [];
 		const shareRecords = data.map((sharedGoal) =>
-			this.converter.convertShareRecord(userProfile, sharedGoal)
+			this.converter.convertShareRecord(user, sharedGoal)
 		);
 		return shareRecords;
 	}

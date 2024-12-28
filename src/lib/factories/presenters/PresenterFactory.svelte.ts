@@ -1,5 +1,6 @@
 import type { Entry, Goal } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
+import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
 import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
@@ -13,72 +14,65 @@ import { ShareGoalPagePresenter } from '$lib/presenters/goals/ShareGoalPagePrese
 import { ShareRequestsPagePresenter } from '$lib/presenters/goals/ShareRequestsPagePresenter.svelte';
 import { RootLayoutPresenter } from '$lib/presenters/root/RootLayoutPresenter.svelte';
 import { UserPickerPresenter, type UserSelectAction } from '$lib/presenters/users/UserPickerPresenter.svelte';
+import { ModelFactory } from '../models/ModelFactory.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
 
 export class PresenterFactory {
-	private goalRoutePresenterInstance: GoalRoutePresenter | undefined;
-	private goalsRoutePresenterInstance: GoalsRoutePresenter | undefined;
 	private dialogPresenterInstance: DialogPresenter;
+	private modelFactory: ModelFactory;
+	private _authModelInstance: AuthModel;
+
+	private get authModelInstance() {
+		return this._authModelInstance;
+	}
 
 	constructor(private serviceFactory: ServiceFactory) {
 		this.dialogPresenterInstance = new DialogPresenter(serviceFactory.createErrorService());
+		this.modelFactory = new ModelFactory(serviceFactory.createAuthService())
+		this._authModelInstance = this.modelFactory.createAuthModel();
 	}
 
 	createRootLayoutPresenter() {
 		return new RootLayoutPresenter(
-			this.serviceFactory.getAuthServiceInstance(),
+			this.authModelInstance,
+			this.serviceFactory.createAuthService(),
 			this.serviceFactory.createErrorService()
 		);
 	}
 
 	createLoginPresenter() {
 		return new LoginPresenter(
-			this.serviceFactory.getAuthServiceInstance(),
+			this.authModelInstance,
+			this.serviceFactory.createAuthService(),
 			this.serviceFactory.createErrorService()
 		);
 	}
 
-	private createNewGoalsRoutePresenter() {
+	createGoalsRoutePresenter() {
 		return new GoalsRoutePresenter(
-			this.serviceFactory.getAuthServiceInstance(),
+			this.authModelInstance,
 			this.serviceFactory.createErrorService(),
 			this.serviceFactory.createGoalService()
 		)
 	}
 
-	getNewGoalsRoutePresenterInstance() {
-		this.goalsRoutePresenterInstance = this.createNewGoalsRoutePresenter();
-		return this.goalsRoutePresenterInstance;
-	}
-
-	createGoalsPagePresenter() {
-		if (!this.goalsRoutePresenterInstance) {
-			throw new Error('Tried to create a GoalsPagePresenter without a GoalsRoutePresenter instance');
-		}
+	createGoalsPagePresenter(goalsRoutePresenter: GoalsRoutePresenter) {
 		return new GoalsPagePresenter(
-			this.serviceFactory.getAuthServiceInstance(),
+			this.serviceFactory.createAuthService(),
 			this.serviceFactory.createErrorService(),
-			this.goalsRoutePresenterInstance
+			goalsRoutePresenter
 		);
 	}
 
-	private createNewGoalRoutePresenter() {
+	createGoalRoutePresenter() {
 		return new GoalRoutePresenter(
 			this.serviceFactory.createGoalService(),
 			this.serviceFactory.createErrorService()
 		);
 	}
 
-	getNewGoalRoutePresenterInstance() {
-		this.goalRoutePresenterInstance = this.createNewGoalRoutePresenter();
-		return this.goalRoutePresenterInstance;
-	}
-
-	createGoalPagePresenter() {
-		if (!this.goalRoutePresenterInstance) {
-			throw new Error('Tried to create a GoalPagePresenter without a GoalRoutePresenter instance');
-		}
-		return new GoalPagePresenter(this.goalRoutePresenterInstance);
+	createGoalPagePresenter(goalRoutePresenter: GoalRoutePresenter) {
+		return new GoalPagePresenter(goalRoutePresenter);
 	}
 
     createShareGoalDialogPresenter(goal: Goal) {
@@ -108,16 +102,14 @@ export class PresenterFactory {
 			goal,
 			this.serviceFactory.createGoalService(),
 			this.serviceFactory.createErrorService(),
-			this.serviceFactory.getAuthServiceInstance(),
+			this.modelFactory.createAuthModel(),
+			this.serviceFactory.createAuthService(),
 			entryGalleryPresenter
 		);
 	}
 
-	createShareGoalPagePresenter() {
-		if (!this.goalRoutePresenterInstance) {
-			throw new Error('Tried to create a ShareGoalPagePresenter without a GoalRoutePresenter instance');
-		}
-		return new ShareGoalPagePresenter(this.goalRoutePresenterInstance);
+	createShareGoalPagePresenter(goalRoutePresenter: GoalRoutePresenter) {
+		return new ShareGoalPagePresenter(goalRoutePresenter);
 	}
 
 	getDialogPresenterInstance() {
@@ -144,13 +136,11 @@ export class PresenterFactory {
 		)
 	}
 
-	createShareRequestsPagePresenter() {
-		if (!this.goalsRoutePresenterInstance) {
-			throw new Error('Tried to create a ShareRequestsPagePresenter without a GoalsRoutePresenter instance');
-		}
+	createShareRequestsPagePresenter(goalsRoutePresenter: GoalsRoutePresenter) {
 		return new ShareRequestsPagePresenter(
 			this.serviceFactory.createErrorService(),
-			this.goalsRoutePresenterInstance
+			this.serviceFactory.createGoalService(),
+			goalsRoutePresenter
 		);
 	}
 }

@@ -1,57 +1,63 @@
-import type { SupabaseUserProfile } from '$lib/model/db/supabase/SupabaseUserProfile';
-import { type SupabaseClient } from '$lib/supabase/supabase';
-import type { User } from '@supabase/supabase-js';
-import { AuthService } from './AuthService.svelte';
 import type { SupabaseDomainConverter } from '$lib/model/converters/supabase/SupabaseDomainConverter';
+import type { UserProfile } from '$lib/model/domain/users';
+import { type SupabaseClient } from '$lib/supabase/supabase';
+import { AuthSessionMissingError } from '@supabase/supabase-js';
+import { type AuthService, type AuthStateEvent, type Subscription } from './AuthService.svelte';
 
-export class SupabaseAuthService extends AuthService {
+export class SupabaseAuthService implements AuthService {
 	private supabase: SupabaseClient;
 
 	constructor(
 		supabase: SupabaseClient,
 		private converter: SupabaseDomainConverter
 	) {
-		super();
 		this.supabase = supabase;
 	}
 
-	private async getUserProfile(userId: string): Promise<SupabaseUserProfile> {
-		const { data, error } = await this.supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+	private async getUserProfile(userId: string): Promise<UserProfile> {
+		const { data, error } = await this.supabase
+			.from('profiles')
+			.select('*')
+			.eq('id', userId)
+			.maybeSingle();
 		if (error) {
 			throw error;
 		}
 		if (!data) {
 			throw new Error('User profile not found');
 		}
-		return data
+		return this.converter.convertUserProfile(data);
 	}
 
-	private async updateUserInfo(user?: User | null) {
-		if (!user) {
-			this.user = undefined;
-			return;
-		} 
-		const profile = await this.getUserProfile(user.id);
-		this.user = this.converter.convertUserProfile(profile);
-	}
-
-	async setupAuthStateListener() {
+	async subscribeToAuthState(handler: (event: AuthStateEvent) => void): Promise<Subscription> {
 		const { data: initialUserData, error } = await this.supabase.auth.getUser();
-		if (error) {
+
+		if (error && !(error instanceof AuthSessionMissingError)) {
 			throw error;
 		}
 
-		if (initialUserData) {
-			await this.updateUserInfo(initialUserData.user)
+		if (initialUserData.user) {
+			handler({
+				type: 'INITIAL_SESSION',
+				user: await this.getUserProfile(initialUserData.user.id)
+			});
 		}
 
-		this.supabase.auth.onAuthStateChange(async (e, session) => {
+		const { data } = this.supabase.auth.onAuthStateChange(async (e, session) => {
 			if (e === 'INITIAL_SESSION' || e === 'SIGNED_IN') {
-				await this.updateUserInfo(session?.user);
+				handler({
+					type: e,
+					user: session ? await this.getUserProfile(session?.user.id) : null
+				});
 			} else if (e === 'SIGNED_OUT') {
-				await this.updateUserInfo(null);
+				handler({
+					type: 'SIGNED_OUT',
+					user: null
+				});
 			}
 		});
+
+		return { unsubscribe: data.subscription.unsubscribe };
 	}
 
 	async login(email: string, password: string) {

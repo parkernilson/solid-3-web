@@ -9,7 +9,6 @@
     {#each presenter.sharedGoalsWithMePending as shareRecord}
         <div>
             <h1>{shareRecord.goalId}</h1>
-            <button></button>
         </div>
     {/each}
 {/if}

@@ -5,7 +5,5 @@ import type { GoalService } from '$lib/services/GoalService.svelte';
 export abstract class ServiceFactory {
 	abstract createGoalService(): GoalService;
 	abstract createErrorService(): ErrorService;
-	protected abstract createAuthService(): AuthService;
-
-	abstract getAuthServiceInstance(): AuthService;
+	abstract createAuthService(): AuthService;
 }

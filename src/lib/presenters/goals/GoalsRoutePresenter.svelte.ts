@@ -1,7 +1,7 @@
 import type { GoalInfo } from '$lib/model/domain/goals';
 import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import type { UserProfile } from '$lib/model/domain/users';
-import type { AuthService } from '$lib/services/AuthService.svelte';
+import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
@@ -36,11 +36,11 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 		return this._sharedGoalsWithMePending;
 	}
 	private get user() {
-		return this.authService.user;
+		return this.authModel.user;
 	}
 
 	constructor(
-		private authService: AuthService,
+		private authModel: AuthModel,
 		errorService: ErrorService,
 		private goalService: GoalService
 	) {
@@ -58,7 +58,7 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 	}
 
 	async loadShareRecords(user: UserProfile) {
-		this.sharedGoalsWithMe = await this.goalService.listShareRecords(user.id);
+		this.sharedGoalsWithMe = await this.goalService.listShareRecords(user);
 	}
 
 	async markShareRequestAsAccepted(goalId: string) {

@@ -1,4 +1,5 @@
-import { UserProfile } from '$lib/model/domain/goals';
+import { UserProfile } from '$lib/model/domain/users';
+import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { ErrorHandlingPresenter } from '../ErrorHandlingPresenter';
@@ -54,6 +55,7 @@ export class UserPickerPresenter extends ErrorHandlingPresenter {
 
 	constructor(
 		errorService: ErrorService,
+		private authModel: AuthModel,
 		private goalService: GoalService,
 		private excludeSelf: boolean,
 		initialSelectedUsers: UserProfile[] = [],
@@ -133,11 +135,11 @@ export class UserPickerPresenter extends ErrorHandlingPresenter {
 						: undefined;
 				const { data: users, hasMore } = await this.goalService.getUsersPaginated(
 					this.searchTerm,
-					this.excludeSelf,
 					{
 						pageSize: 10,
 						exclusiveStartKey
-					}
+					},
+					this.excludeSelf ? this.authModel.user?.id : undefined
 				);
 				this.hasMoreUsers = hasMore;
 				this.displayedUsers = this.displayedUsers ? this.displayedUsers.concat(users) : users;

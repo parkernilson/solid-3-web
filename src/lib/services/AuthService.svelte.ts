@@ -1,17 +1,16 @@
 import type { UserProfile } from "$lib/model/domain/users";
 
-export abstract class AuthService {
-	private _user = $state<UserProfile>();
+export interface Subscription {
+	unsubscribe: () => void;
+}
 
-	public get user() {
-		return this._user;
-	}
+export interface AuthStateEvent {
+	type: "SIGNED_IN" | "SIGNED_OUT" | "INITIAL_SESSION"
+	user: UserProfile | null
+}
 
-	protected set user(u: UserProfile | undefined) {
-		this._user = u;
-	}
-
-	abstract setupAuthStateListener(): Promise<void>;
-    abstract login(email: string, password: string): Promise<void>;
-    abstract logout(): Promise<void>;
+export interface AuthService {
+	subscribeToAuthState(handler: (event: AuthStateEvent) => void): Promise<Subscription>;
+  	login(email: string, password: string): Promise<void>;
+    logout(): Promise<void>;
 }

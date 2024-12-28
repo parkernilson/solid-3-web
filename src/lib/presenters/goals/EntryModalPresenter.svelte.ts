@@ -1,16 +1,17 @@
 import type { EntryUpsert } from '$lib/model/domain/goals';
 import { Entry, Goal } from '$lib/model/domain/goals';
-import { AuthService } from '$lib/services/AuthService.svelte';
+import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { v4 as uuidv4 } from 'uuid';
 import { ErrorHandlingPresenter } from '../ErrorHandlingPresenter';
 import type { EntryGalleryPresenter } from './EntryGalleryPresenter.svelte';
+import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 
 export class EntryModalPresenter extends ErrorHandlingPresenter {
-	private authService = $state<AuthService>();
+	private authModel?: AuthModel;
 	private _isOwner = $derived(
-		this.authService?.user ? this.authService.user.id === this.goal.owner : false
+		this.authModel?.user?.id ? this.authModel.user.id === this.goal.owner : false
 	);
 	private _isEditable = $derived(this.isOwner);
 	private _isEditing = $state(false);
@@ -51,11 +52,12 @@ export class EntryModalPresenter extends ErrorHandlingPresenter {
 		private _goal: Goal,
 		private goalService: GoalService,
 		errorService: ErrorService,
-		authService: AuthService,
+		authModel: AuthModel,
+		private authService: AuthService,
 		private entryGalleryPresenter: EntryGalleryPresenter
 	) {
 		super(errorService);
-		this.authService = authService;
+		this.authModel = authModel;
 		if (_entry) {
 			this.currentTextContent = _entry.textContent;
 			this.currentDateOf = _entry.dateOf;

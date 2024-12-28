@@ -1,3 +1,4 @@
+import type { AuthModel } from "$lib/model/models/AuthModel.svelte";
 import type { AuthService } from "$lib/services/AuthService.svelte";
 import type { ErrorService } from "$lib/services/ErrorService.svelte";
 
@@ -6,7 +7,7 @@ export class LoginPresenter {
 	private _password = $state('');
 
     public get user() {
-        return this.authService.user
+        return this.authModel.user
     }
 
 	public get email() {
@@ -22,7 +23,7 @@ export class LoginPresenter {
 		this._password = p;
 	}
 
-	constructor(private authService: AuthService, private errorService: ErrorService) {}
+	constructor(private authModel: AuthModel, private authService: AuthService, private errorService: ErrorService) {}
 
 	async login() {
 		try {
