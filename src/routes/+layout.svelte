@@ -14,6 +14,10 @@
 
 </script>
 
+<div class="flex justify-between p-2">
+	<p>User: {presenter.user?.id ?? "undefined"}</p>
+	<button class="hover:text-blue-600" onclick={presenter.logout.bind(presenter)}>Log out</button>
+</div>
 {@render children()}
 
 <DialogProvider />

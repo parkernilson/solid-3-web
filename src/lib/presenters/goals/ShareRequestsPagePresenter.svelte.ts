@@ -1,9 +1,9 @@
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
-import { ErrorHandlingPresenter } from '../ErrorHandlingPresenter';
+import { ErrorHandler } from '../../utils/ErrorHandler';
 import type { GoalsRoutePresenter } from './GoalsRoutePresenter.svelte';
 
-export class ShareRequestsPagePresenter extends ErrorHandlingPresenter {
+export class ShareRequestsPagePresenter extends ErrorHandler {
 	get sharedGoalsWithMePending() {
 		return this.goalsRoutePresenter.sharedGoalsWithMePending;
 	}

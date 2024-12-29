@@ -1,9 +1,9 @@
 import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
-import { ErrorHandlingPresenter } from '../ErrorHandlingPresenter';
+import { ErrorHandler } from '../../utils/ErrorHandler';
 import type { GoalsRoutePresenter } from './GoalsRoutePresenter.svelte';
 
-export class GoalsPagePresenter extends ErrorHandlingPresenter {
+export class GoalsPagePresenter extends ErrorHandler {
 
 	public get goals() {
 		return this.goalsRoutePresenter.goals;

@@ -126,6 +126,7 @@ export class PresenterFactory {
 	) {
 		return new UserPickerPresenter(
 			this.serviceFactory.createErrorService(),
+			this.authModelInstance,
 			this.serviceFactory.createGoalService(),
 			excludeSelf,
 			initialSelectedUsers,

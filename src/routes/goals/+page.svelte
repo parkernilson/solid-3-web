@@ -11,7 +11,8 @@
 {#await data.loadingGoalsRoute}
 	<p>Loading goals...</p>
 {:then _}
-	{#if presenter.sharedGoalsWithMePending}
+	{@const sharedGoalsPending = presenter.sharedGoalsWithMePending}
+	{#if sharedGoalsPending && sharedGoalsPending.length > 0}
 		<a class="hover:text-blue-600" href="/goals/share-requests">{presenter.sharedGoalsWithMePending.length} share requests</a>
 	{/if}
 	{#if presenter.goals}

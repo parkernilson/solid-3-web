@@ -1,8 +1,8 @@
-import { ErrorHandlingPresenter } from './ErrorHandlingPresenter';
+import { ErrorHandler } from '../utils/ErrorHandler';
 
 export abstract class LoadablePresenter<
 	LoadArgs extends Record<string, unknown> = Record<string, never>
-> extends ErrorHandlingPresenter {
+> extends ErrorHandler {
 	private _loading = $state(true);
 
 	get loading() {

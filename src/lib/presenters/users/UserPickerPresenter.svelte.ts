@@ -2,7 +2,7 @@ import { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
-import { ErrorHandlingPresenter } from '../ErrorHandlingPresenter';
+import { ErrorHandler } from '../../utils/ErrorHandler';
 
 export class UserSelectCancelError extends Error {
 	constructor() {
@@ -12,7 +12,7 @@ export class UserSelectCancelError extends Error {
 
 export type UserSelectAction = (user: UserProfile) => Promise<void> | void;
 
-export class UserPickerPresenter extends ErrorHandlingPresenter {
+export class UserPickerPresenter extends ErrorHandler {
 	private _selectedUsers = $state<UserProfile[]>();
 	private _displayedUsers = $state<UserProfile[]>();
 	private _searchTerm = $state<string>('');

@@ -23,7 +23,11 @@ export class SupabaseServiceFactory extends ServiceFactory {
 	}
 
 	createAuthService(): SupabaseAuthService {
-		return new SupabaseAuthService(this.supabase, new SupabaseDomainConverter());
+		return new SupabaseAuthService(
+			this.supabase,
+			new SupabaseDomainConverter(),
+			this.createErrorService(),
+		);
 	}
 
 	createErrorService(): ConsoleLoggingErrorService {

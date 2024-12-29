@@ -4,11 +4,11 @@ import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { v4 as uuidv4 } from 'uuid';
-import { ErrorHandlingPresenter } from '../ErrorHandlingPresenter';
+import { ErrorHandler } from '../../utils/ErrorHandler';
 import type { EntryGalleryPresenter } from './EntryGalleryPresenter.svelte';
 import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 
-export class EntryModalPresenter extends ErrorHandlingPresenter {
+export class EntryModalPresenter extends ErrorHandler {
 	private authModel?: AuthModel;
 	private _isOwner = $derived(
 		this.authModel?.user?.id ? this.authModel.user.id === this.goal.owner : false

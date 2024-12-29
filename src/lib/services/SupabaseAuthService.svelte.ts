@@ -1,20 +1,27 @@
 import type { SupabaseDomainConverter } from '$lib/model/converters/supabase/SupabaseDomainConverter';
 import type { UserProfile } from '$lib/model/domain/users';
 import { type SupabaseClient } from '$lib/supabase/supabase';
+import { ErrorHandler } from '$lib/utils/ErrorHandler';
 import { AuthSessionMissingError } from '@supabase/supabase-js';
 import { type AuthService, type AuthStateEvent, type Subscription } from './AuthService.svelte';
+import type { ErrorService } from './ErrorService.svelte';
 
-export class SupabaseAuthService implements AuthService {
+export class SupabaseAuthService extends ErrorHandler implements AuthService {
 	private supabase: SupabaseClient;
 
 	constructor(
 		supabase: SupabaseClient,
-		private converter: SupabaseDomainConverter
+		private converter: SupabaseDomainConverter,
+		errorService: ErrorService
 	) {
+		super(errorService);
 		this.supabase = supabase;
 	}
 
-	private async getUserProfile(userId: string): Promise<UserProfile> {
+	private async getUserProfile(userId?: string): Promise<UserProfile | null> {
+		if (!userId) {
+			return null;
+		}
 		const { data, error } = await this.supabase
 			.from('profiles')
 			.select('*')
@@ -30,31 +37,37 @@ export class SupabaseAuthService implements AuthService {
 	}
 
 	async subscribeToAuthState(handler: (event: AuthStateEvent) => void): Promise<Subscription> {
-		const { data: initialUserData, error } = await this.supabase.auth.getUser();
-
-		if (error && !(error instanceof AuthSessionMissingError)) {
-			throw error;
+		const { data: initialUserData, error: initialUserError } = await this.supabase.auth.getUser();
+		if (initialUserError && !(initialUserError instanceof AuthSessionMissingError)) {
+			throw initialUserError;
 		}
-
-		if (initialUserData.user) {
+		if (!initialUserError) {
+			const userProfile = await this.getUserProfile(initialUserData?.user.id);
 			handler({
 				type: 'INITIAL_SESSION',
-				user: await this.getUserProfile(initialUserData.user.id)
+				user: userProfile
 			});
 		}
 
 		const { data } = this.supabase.auth.onAuthStateChange(async (e, session) => {
-			if (e === 'INITIAL_SESSION' || e === 'SIGNED_IN') {
-				handler({
-					type: e,
-					user: session ? await this.getUserProfile(session?.user.id) : null
-				});
-			} else if (e === 'SIGNED_OUT') {
-				handler({
-					type: 'SIGNED_OUT',
-					user: null
-				});
-			}
+			// NOTE: await was not working in this callback, so we need to
+			// call a promise and make sure that any errors get caught.
+			this.doErrorable({
+				action: async () => {
+					const userProfile = await this.getUserProfile(session?.user.id);
+					if (e === 'SIGNED_IN') {
+						handler({
+							type: e,
+							user: userProfile
+						});
+					} else if (e === 'SIGNED_OUT') {
+						handler({
+							type: 'SIGNED_OUT',
+							user: null
+						});
+					}
+				}
+			});
 		});
 
 		return { unsubscribe: data.subscription.unsubscribe };
