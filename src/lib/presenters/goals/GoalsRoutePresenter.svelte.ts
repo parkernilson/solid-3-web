@@ -42,14 +42,14 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 	protected async loadResource(): Promise<void> {
 		if (!this.user) throw new Error('Tried to load goals route without a signed in user');
 		await this.loadGoals(this.user);
-		await this.loadShareRecords(this.user);
+		await this.loadSharedGoalsWithMe(this.user);
 	}
 
 	async loadGoals(user: UserProfile) {
 		this.goals = await this.goalService.listGoalInfos(user.id);
 	}
 
-	async loadShareRecords(user: UserProfile) {
+	async loadSharedGoalsWithMe(user: UserProfile) {
 		this.sharedGoalsWithMe = await this.goalService.listSharedGoalsWithUser(user);
 	}
 
