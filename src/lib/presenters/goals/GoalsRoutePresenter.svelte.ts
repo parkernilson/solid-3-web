@@ -1,5 +1,4 @@
-import type { GoalInfo } from '$lib/model/domain/goals';
-import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
+import type { GoalInfo, SharedGoal } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
@@ -8,10 +7,9 @@ import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export class GoalsRoutePresenter extends LoadablePresenter {
 	private _goals = $state<GoalInfo[]>();
-	private _sharedGoalsByMe = $state<ShareRecord[]>();
-	private _sharedGoalsWithMe = $state<ShareRecord[]>();
+	private _sharedGoalsWithMe = $state<SharedGoal[]>();
 	private _sharedGoalsWithMePending = $derived(
-		this.sharedGoalsWithMe?.filter((g) => g.status === 'pending')
+		this.sharedGoalsWithMe?.filter((g) => g.shareStatus === 'pending')
 	);
 
 	public get goals() {
@@ -19,12 +17,6 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 	}
 	private set goals(g) {
 		this._goals = g;
-	}
-	public get sharedGoalsByMe() {
-		return this._sharedGoalsByMe;
-	}
-	private set sharedGoalsByMe(s) {
-		this._sharedGoalsByMe = s;
 	}
 	public get sharedGoalsWithMe() {
 		return this._sharedGoalsWithMe;
@@ -58,17 +50,17 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 	}
 
 	async loadShareRecords(user: UserProfile) {
-		this.sharedGoalsWithMe = await this.goalService.listShareRecords(user);
+		this.sharedGoalsWithMe = await this.goalService.listSharedGoalsWithUser(user);
 	}
 
 	async markShareRequestAsAccepted(goalId: string) {
-		this.sharedGoalsWithMe = this.sharedGoalsWithMe?.map((g) =>
-			g.goalId === goalId
-				? ShareRecord.fromJson({
-						...g.toJson(),
-						status: 'accepted'
-					})
-				: g
-		);
+		// TODO: implement this
+		// const i = this.sharedGoalsWithMe?.findIndex((g) => g.goalId === goalId);
+		// if (i && this.sharedGoalsWithMe?.[i]) {
+		// 	this.sharedGoalsWithMe[i] = ShareRecord.fromJson({
+		// 		...this.sharedGoalsWithMe[i].toJson(),
+		// 		status: 'accepted' 
+		// 	});
+		// }
 	}
 }

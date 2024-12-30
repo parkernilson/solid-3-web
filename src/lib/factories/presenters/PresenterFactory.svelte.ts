@@ -58,7 +58,7 @@ export class PresenterFactory {
 
 	createGoalsPagePresenter(goalsRoutePresenter: GoalsRoutePresenter) {
 		return new GoalsPagePresenter(
-			this.serviceFactory.createAuthService(),
+			this.authModelInstance,
 			this.serviceFactory.createErrorService(),
 			goalsRoutePresenter
 		);

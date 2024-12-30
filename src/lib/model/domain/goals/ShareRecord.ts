@@ -1,16 +1,18 @@
 import { UserProfile, type IUserProfile } from '../users/UserProfile';
 
+export type ShareStatus = 'pending' | 'accepted' | 'rejected';
+
 export interface IShareRecord {
     user: IUserProfile;
     goalId: string;
-    status: 'pending' | 'accepted' | 'rejected';
+    status: ShareStatus;
     sharedOn: Date | string;
 }
 
 export class ShareRecord implements IShareRecord {
     private _user: UserProfile;
     private _goalId: string;
-    private _status: 'pending' | 'accepted' | 'rejected';
+    private _status: ShareStatus;
     private _sharedOn: Date | string;
 
     get user(): UserProfile {
@@ -19,7 +21,7 @@ export class ShareRecord implements IShareRecord {
     get goalId(): string {
         return this._goalId;
     }
-    get status(): 'pending' | 'accepted' | 'rejected' {
+    get status(): ShareStatus {
         return this._status;
     }
     private set status(s) {
@@ -32,7 +34,7 @@ export class ShareRecord implements IShareRecord {
 	constructor(
 		user: UserProfile,
 		goalId: string,
-		status: 'pending' | 'accepted' | 'rejected',
+		status: ShareStatus,
 		sharedOn: Date | string
 	) {
         this._user = user;

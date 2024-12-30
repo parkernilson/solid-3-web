@@ -1,4 +1,4 @@
-import type { Entry, GoalInfo } from '$lib/model/domain/goals';
+import type { Entry, GoalInfo, SharedGoal } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
@@ -57,4 +57,5 @@ export interface GoalService {
         excludeUserId?: string,
     ): Promise<PaginatedResponse<UserProfile>>;
     listShareRecords(user: UserProfile): Promise<ShareRecord[]>;
+    listSharedGoalsWithUser(user: UserProfile): Promise<SharedGoal[]>;
 }

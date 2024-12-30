@@ -8,7 +8,8 @@
 {#if presenter.sharedGoalsWithMePending}
     {#each presenter.sharedGoalsWithMePending as shareRecord}
         <div>
-            <h1>{shareRecord.goalId}</h1>
+            <h1>{shareRecord.goalTitle}</h1>
+            <p>{shareRecord.goalOwnerEmail}</p>
         </div>
     {/each}
 {/if}

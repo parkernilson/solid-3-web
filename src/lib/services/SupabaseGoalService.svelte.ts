@@ -3,6 +3,7 @@ import {
 	CurrentStreakInfo,
 	Entry,
 	Goal,
+	SharedGoal,
 	StreakInfo,
 	type GoalInfo
 } from '$lib/model/domain/goals';
@@ -177,7 +178,7 @@ export class SupabaseGoalService implements GoalService {
 
 	async getSharedWithUsers(goalId: string): Promise<ShareRecord[]> {
 		const { data: supabaseShareRecords, error: shareRecordsError } = await this.supabase
-			.from('shared_goals')
+			.from('share_records')
 			.select('*')
 			.eq('goal', goalId);
 		if (shareRecordsError) throw shareRecordsError;
@@ -232,14 +233,29 @@ export class SupabaseGoalService implements GoalService {
 
 	async listShareRecords(user: UserProfile): Promise<ShareRecord[]> {
 		const { data, error } = await this.supabase
+			.from('share_records')
+			.select('*')
+			.eq('shared_with', user.id);
+		if (error) throw error;
+		if (!data) return [];
+		const shareRecords = data.map((shareRecord) =>
+			this.converter.convertShareRecord(user, shareRecord)
+		);
+		return shareRecords;
+	}
+
+	async listSharedGoalsWithUser(user: UserProfile): Promise<SharedGoal[]> {
+		const { data, error } = await this.supabase
 			.from('shared_goals')
 			.select('*')
 			.eq('shared_with', user.id);
 		if (error) throw error;
 		if (!data) return [];
-		const shareRecords = data.map((sharedGoal) =>
-			this.converter.convertShareRecord(user, sharedGoal)
-		);
-		return shareRecords;
+		return data.map((sharedGoalRow) => {
+			if (!isNotNullRow(sharedGoalRow)) {
+				throw new Error('Shared goal row has null values');
+			}
+			return this.converter.convertSharedGoal(sharedGoalRow);
+		})
 	}
 }

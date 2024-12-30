@@ -1,14 +1,15 @@
 import type { SupabaseEntry } from '$lib/model/db/supabase/SupabaseEntry';
 import type { SupabaseGoal } from '$lib/model/db/supabase/SupabaseGoal';
 import type { SupabaseSharedGoal } from '$lib/model/db/supabase/SupabaseSharedGoal';
+import type { SupabaseShareRecord } from '$lib/model/db/supabase/SupabaseShareRecord';
 import type {
 	SupabaseCurrentStreakInfo,
 	SupabaseStreakInfo
 } from '$lib/model/db/supabase/SupabaseStreakInfo';
 import type { SupabaseUserProfile } from '$lib/model/db/supabase/SupabaseUserProfile';
-import { CurrentStreakInfo, Entry, Goal, StreakInfo } from '$lib/model/domain/goals';
-import { UserProfile } from '$lib/model/domain/users';
+import { CurrentStreakInfo, Entry, Goal, SharedGoal, StreakInfo } from '$lib/model/domain/goals';
 import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
+import { UserProfile } from '$lib/model/domain/users';
 
 export class SupabaseDomainConverter {
 	convertGoal(goal: SupabaseGoal): Goal {
@@ -38,13 +39,26 @@ export class SupabaseDomainConverter {
 
 	convertShareRecord(
 		userProfile: SupabaseUserProfile,
-		sharedGoal: SupabaseSharedGoal
+		shareRecord: SupabaseShareRecord
 	): ShareRecord {
 		return new ShareRecord(
 			this.convertUserProfile(userProfile),
-			sharedGoal.goal,
-			sharedGoal.status,
-			sharedGoal.created_at
-		)
+			shareRecord.goal,
+			shareRecord.status,
+			shareRecord.created_at
+		);
+	}
+
+	convertSharedGoal(sharedGoal: SupabaseSharedGoal): SharedGoal {
+		return new SharedGoal(
+			sharedGoal.goal_id,
+			sharedGoal.share_record_id,
+			sharedGoal.goal_title,
+			sharedGoal.goal_owner_id,
+			sharedGoal.goal_owner_email,
+			sharedGoal.share_status,
+			sharedGoal.shared_with,
+			sharedGoal.shared_on
+		);
 	}
 }
