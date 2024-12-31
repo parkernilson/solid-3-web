@@ -1,4 +1,4 @@
-import type { GoalInfo, SharedGoal } from '$lib/model/domain/goals';
+import { type GoalInfo, type SharedGoalDto, type ShareStatus } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
@@ -7,7 +7,7 @@ import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export class GoalsRoutePresenter extends LoadablePresenter {
 	private _goals = $state<GoalInfo[]>();
-	private _sharedGoalsWithMe = $state<SharedGoal[]>();
+	private _sharedGoalsWithMe = $state<SharedGoalDto[]>();
 	private _sharedGoalsWithMePending = $derived(
 		this.sharedGoalsWithMe?.filter((g) => g.shareStatus === 'pending')
 	);
@@ -53,14 +53,10 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 		this.sharedGoalsWithMe = await this.goalService.listSharedGoalsWithUser(user);
 	}
 
-	async markShareRequestAsAccepted(goalId: string) {
-		// TODO: implement this
-		// const i = this.sharedGoalsWithMe?.findIndex((g) => g.goalId === goalId);
-		// if (i && this.sharedGoalsWithMe?.[i]) {
-		// 	this.sharedGoalsWithMe[i] = ShareRecord.fromJson({
-		// 		...this.sharedGoalsWithMe[i].toJson(),
-		// 		status: 'accepted' 
-		// 	});
-		// }
+	async markShareRequestStatus(goalId: string, status: ShareStatus) {
+		const i = this.sharedGoalsWithMe?.findIndex((g) => g.goalId === goalId);
+		if (i !== undefined && this.sharedGoalsWithMe?.[i]) {
+			this.sharedGoalsWithMe[i].shareStatus = status;
+		}
 	}
 }

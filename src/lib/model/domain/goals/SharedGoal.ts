@@ -72,4 +72,30 @@ export class SharedGoal implements ISharedGoal {
 		this._sharedWith = sharedWith;
 		this._sharedOn = sharedOn;
 	}
+
+	toJson(): SharedGoalDto {
+		return {
+			goalId: this.goalId,
+			shareRecordId: this.shareRecordId,
+			goalTitle: this.goalTitle,
+			goalOwnerId: this.goalOwnerId,
+			goalOwnerEmail: this.goalOwnerEmail,
+			shareStatus: this.shareStatus,
+			sharedWith: this.sharedWith,
+			sharedOn: this.sharedOn.toISOString()
+		}
+	}
+
+	static fromJson(dto: SharedGoalDto): SharedGoal {
+		return new SharedGoal(
+			dto.goalId,
+			dto.shareRecordId,
+			dto.goalTitle,
+			dto.goalOwnerId,
+			dto.goalOwnerEmail,
+			dto.shareStatus,
+			dto.sharedWith,
+			dto.sharedOn
+		);
+	}
 }

@@ -3,12 +3,12 @@ import {
 	CurrentStreakInfo,
 	Entry,
 	Goal,
-	SharedGoal,
 	StreakInfo,
-	type GoalInfo
+	type GoalInfo,
+	type SharedGoalDto
 } from '$lib/model/domain/goals';
-import { UserProfile } from '$lib/model/domain/users';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
+import { UserProfile } from '$lib/model/domain/users';
 import type { SupabaseClient } from '$lib/supabase/supabase';
 import { isNotNullRow } from '$lib/utils/types/isNotNullRow';
 import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
@@ -19,6 +19,7 @@ import type {
 	CreateGoalResult,
 	getCurrentStreakParams,
 	GoalService,
+	RejectSharedGoalParams,
 	ShareGoalParams,
 	UnshareGoalParams,
 	UpsertEntryParams,
@@ -143,6 +144,10 @@ export class SupabaseGoalService implements GoalService {
 		await this.supabase.rpc('share_goal', { _goal_id: goalId, _with_user: withUser });
 	}
 
+	async rejectSharedGoal({ goalId }: RejectSharedGoalParams): Promise<void> {
+		await this.supabase.rpc('reject_shared_goal', { _goal_id: goalId });
+	}
+
 	async unshareGoal({ goalId, withUser }: UnshareGoalParams): Promise<void> {
 		await this.supabase.rpc('unshare_goal', { _goal_id: goalId, _with_user: withUser });
 	}
@@ -201,7 +206,7 @@ export class SupabaseGoalService implements GoalService {
 	async getUsersPaginated(
 		searchTerm: string,
 		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>,
-		excludeUserId?: string,
+		excludeUserId?: string
 	): Promise<PaginatedResponse<UserProfile>> {
 		const query = this.supabase
 			.from('profiles')
@@ -244,7 +249,7 @@ export class SupabaseGoalService implements GoalService {
 		return shareRecords;
 	}
 
-	async listSharedGoalsWithUser(user: UserProfile): Promise<SharedGoal[]> {
+	async listSharedGoalsWithUser(user: UserProfile): Promise<SharedGoalDto[]> {
 		const { data, error } = await this.supabase
 			.from('shared_goals')
 			.select('*')
@@ -256,6 +261,6 @@ export class SupabaseGoalService implements GoalService {
 				throw new Error('Shared goal row has null values');
 			}
 			return this.converter.convertSharedGoal(sharedGoalRow);
-		})
+		});
 	}
 }

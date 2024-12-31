@@ -7,7 +7,13 @@ import type {
 	SupabaseStreakInfo
 } from '$lib/model/db/supabase/SupabaseStreakInfo';
 import type { SupabaseUserProfile } from '$lib/model/db/supabase/SupabaseUserProfile';
-import { CurrentStreakInfo, Entry, Goal, SharedGoal, StreakInfo } from '$lib/model/domain/goals';
+import {
+	CurrentStreakInfo,
+	Entry,
+	Goal,
+	StreakInfo,
+	type SharedGoalDto
+} from '$lib/model/domain/goals';
 import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
 
@@ -49,16 +55,16 @@ export class SupabaseDomainConverter {
 		);
 	}
 
-	convertSharedGoal(sharedGoal: SupabaseSharedGoal): SharedGoal {
-		return new SharedGoal(
-			sharedGoal.goal_id,
-			sharedGoal.share_record_id,
-			sharedGoal.goal_title,
-			sharedGoal.goal_owner_id,
-			sharedGoal.goal_owner_email,
-			sharedGoal.share_status,
-			sharedGoal.shared_with,
-			sharedGoal.shared_on
-		);
+	convertSharedGoal(sharedGoal: SupabaseSharedGoal): SharedGoalDto {
+		return {
+			goalId: sharedGoal.goal_id,
+			shareRecordId: sharedGoal.share_record_id,
+			goalTitle: sharedGoal.goal_title,
+			goalOwnerId: sharedGoal.goal_owner_id,
+			goalOwnerEmail: sharedGoal.goal_owner_email,
+			shareStatus: sharedGoal.share_status,
+			sharedWith: sharedGoal.shared_with,
+			sharedOn: sharedGoal.shared_on
+		};
 	}
 }
