@@ -2,6 +2,7 @@
 	import GoalOptionsPopover from '$lib/components/GoalOptionsPopover.svelte';
 	import EntryGallery from '$lib/components/goals/EntryGallery.svelte';
 	import HeaderStats from '$lib/components/goals/HeaderStats.svelte';
+	import HeaderBar from '$lib/components/nav/HeaderBar.svelte';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
@@ -9,6 +10,7 @@
 
 </script>
 
+<HeaderBar rootLayoutPresenter={data.rootLayoutPresenter} />
 {#await data.loadingGoalRoute}
 	<p>loading goal</p>
 {:then _}

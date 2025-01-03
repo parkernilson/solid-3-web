@@ -1,5 +1,6 @@
 <script lang="ts">
 	import GoalListView from '$lib/components/goals/GoalListView.svelte';
+	import HeaderBar from '$lib/components/nav/HeaderBar.svelte';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
@@ -7,6 +8,7 @@
 
 </script>
 
+<HeaderBar rootLayoutPresenter={data.rootLayoutPresenter} />
 <h1>Goals</h1>
 {#await data.loadingGoalsRoute}
 	<p>Loading goals...</p>
