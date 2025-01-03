@@ -12,5 +12,6 @@ export interface AuthStateEvent {
 export interface AuthService {
 	subscribeToAuthState(handler: (event: AuthStateEvent) => void): Promise<Subscription>;
   	login(email: string, password: string): Promise<void>;
+	register(email: string, password: string): Promise<void>;
     logout(): Promise<void>;
 }

@@ -1,18 +1,16 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
-	import { presenterFactory } from "$lib/factories";
+	import { goto } from '$app/navigation';
+	import type { PageData } from './$types';
 
-    const presenter = presenterFactory.createLoginPresenter();
+	const { data }: { data: PageData } = $props();
+	const rootLayoutPresenter = data.rootLayoutPresenter;
 
-    $effect(() => {
-        if (presenter.user) {
-            goto("/goals");
-        }
-    })
-
+	$effect(() => {
+		// TODO: This causes a brief blip on the home screen before navigating to the right place.
+		if (rootLayoutPresenter.user) {
+			goto('/goals');
+		} else {
+			goto('/login');
+		}
+	});
 </script>
-
-<h1>Solid App</h1>
-<input placeholder="email" bind:value={presenter.email} />
-<input placeholder="password" bind:value={presenter.password} />
-<input type="submit" onclick={presenter.login.bind(presenter)} value="Login" />

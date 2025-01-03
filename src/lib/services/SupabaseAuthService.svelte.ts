@@ -80,6 +80,13 @@ export class SupabaseAuthService extends ErrorHandler implements AuthService {
 		}
 	}
 
+	async register(email: string, password: string) {
+		const { error } = await this.supabase.auth.signUp({ email, password });
+		if (error) {
+			throw error
+		}
+	}
+
 	async logout() {
 		const { error } = await this.supabase.auth.signOut();
 		if (error) throw error;

@@ -1,8 +1,9 @@
 import type { AuthModel } from "$lib/model/models/AuthModel.svelte";
 import type { AuthService } from "$lib/services/AuthService.svelte";
 import type { ErrorService } from "$lib/services/ErrorService.svelte";
+import { ErrorHandler } from "$lib/utils/ErrorHandler";
 
-export class LoginPresenter {
+export class LoginPresenter extends ErrorHandler {
 	private _email = $state('');
 	private _password = $state('');
 
@@ -23,13 +24,24 @@ export class LoginPresenter {
 		this._password = p;
 	}
 
-	constructor(private authModel: AuthModel, private authService: AuthService, private errorService: ErrorService) {}
+	constructor(private authModel: AuthModel, private authService: AuthService, errorService: ErrorService) {
+		super(errorService);
+	}
 
 	async login() {
-		try {
-			await this.authService.login(this.email, this.password);
-		} catch (e) {
-			this.errorService.handleError(e);
-		}
+		await this.doErrorable({
+			action: async () => {
+				await this.authService.login(this.email, this.password);
+			}
+		})
 	}
+
+	async register() {
+		await this.doErrorable({
+			action: async () => {
+				await this.authService.register(this.email, this.password);
+			}
+		})
+	}
+
 }
