@@ -35,7 +35,7 @@ export class SupabaseDomainConverter {
 			currentStreakInfo.start_date,
 			currentStreakInfo.end_date,
 			currentStreakInfo.streak_count,
-			currentStreakInfo.current_period_success
+			currentStreakInfo.current_period_success,
 		);
 	}
 

@@ -4,6 +4,7 @@ import {
 	Entry,
 	Goal,
 	StreakInfo,
+	type ActivityInfo,
 	type GoalInfo,
 	type SharedGoalDto
 } from '$lib/model/domain/goals';
@@ -45,8 +46,33 @@ export class SupabaseGoalService implements GoalService {
 		return this.converter.convertGoal(data);
 	}
 
+	private async getLastEntry(goalId: string): Promise<Entry | null> {
+		const { data, error } = await this.supabase
+			.from('entries')
+			.select('*')
+			.eq('goal', goalId)
+			.order('date_of', { ascending: false })
+			.limit(1)
+			.maybeSingle();
+		if (error) throw error;
+		if (!data) return null;
+		return this.converter.convertEntry(data);
+	}
+
+	private async getActivity(goalId: string): Promise<ActivityInfo> {
+		const lastEntry = await this.getLastEntry(goalId);
+		if (!lastEntry) {
+			return {};
+		}
+		return {
+			lastEntry
+		}
+	}
+
 	async getGoalInfo(goalId: string): Promise<GoalInfo> {
 		const goalData = await this.getGoal(goalId);
+
+		const activityInfo = await this.getActivity(goalId);
 
 		const currentStreakInfo = await this.getCurrentStreak({ goalId });
 
@@ -54,6 +80,7 @@ export class SupabaseGoalService implements GoalService {
 
 		return {
 			goal: goalData,
+			activity: activityInfo,
 			streak: currentStreakInfo,
 			record: recordStreakInfo
 		};

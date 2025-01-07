@@ -1,10 +1,11 @@
-import type { Entry, Goal } from '$lib/model/domain/goals';
+import type { Entry, Goal, GoalInfo } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
 import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
 import { EntryModalPresenter } from '$lib/presenters/goals/EntryModalPresenter.svelte';
+import { GoalListViewPresenter } from '$lib/presenters/goals/GoalListViewPresenter.svelte';
 import { GoalPagePresenter } from '$lib/presenters/goals/GoalPagePresenter.svelte';
 import { GoalRoutePresenter } from '$lib/presenters/goals/GoalRoutePresenter.svelte';
 import { GoalsPagePresenter } from '$lib/presenters/goals/GoalsPagePresenter.svelte';
@@ -143,5 +144,9 @@ export class PresenterFactory {
 			this.serviceFactory.createGoalService(),
 			goalsRoutePresenter
 		);
+	}
+
+	createGoalListViewPresenter(goalInfo: GoalInfo) {
+		return new GoalListViewPresenter(goalInfo);
 	}
 }

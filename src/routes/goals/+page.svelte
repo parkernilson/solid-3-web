@@ -5,25 +5,29 @@
 
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalsPagePresenter;
-
 </script>
 
 <HeaderBar rootLayoutPresenter={data.rootLayoutPresenter} />
-<h1>Goals</h1>
-{#await data.loadingGoalsRoute}
-	<p>Loading goals...</p>
-{:then _}
-	{@const sharedGoalsPending = presenter.sharedGoalsWithMePending}
-	{#if sharedGoalsPending && sharedGoalsPending.length > 0}
-		<a class="hover:text-blue-600" href="/goals/share-requests">{presenter.sharedGoalsWithMePending.length} share requests</a>
+<div class="w-full">
+	{#if presenter.sharedGoalsWithMePending && presenter.sharedGoalsWithMePending.length > 0}
+		<a aria-label="view share requests" class="block w-full bg-blue-light" href="/goals/share-requests">
+			<div class="w-full flex justify-between py-1 px-3">
+				<p>{presenter.sharedGoalsWithMePending.length} Share Requests</p>
+				<p>View</p>
+			</div>
+		</a>
 	{/if}
-	{#if presenter.goals}
-		{#each presenter.goals! as goalInfo}
-			<a href="/goals/{goalInfo.goal.id}"><GoalListView goal={goalInfo} /></a>
-		{/each}
-	{:else}
-		<p>Found no error, but goals were not defined</p>
-	{/if}
-{:catch _}
-	<p>Could not load goals</p>
-{/await}
+	<div class="px-3">
+		<div class="mt-10 flex justify-between items-end">
+			<h1 class="text-6xl">Goals</h1>
+			<p class="mb-2">Create new goal</p>
+		</div>
+		{#await data.loadingGoalsRoute}
+			<!-- TODO: create loading ui -->
+		{:then _}
+			{#each presenter.goals! as goalInfo}
+				<a class="" href="/goals/{goalInfo.goal.id}"><GoalListView goal={goalInfo} /></a>
+			{/each}
+		{/await}
+	</div>
+</div>
