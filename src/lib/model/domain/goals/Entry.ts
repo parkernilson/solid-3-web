@@ -23,9 +23,6 @@ export class Entry implements IEntry {
 	get dateOfObject() {
 		return new Date(this._dateOf);
 	}
-	get dateOfFormatted() {
-		return Entry.formatDate(new Date(this._dateOf));
-	}
 	get success() {
 		return this._success;
 	}
