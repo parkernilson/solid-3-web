@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { presenterFactory } from "$lib/factories";
 	import type { Goal } from "$lib/model/domain/goals";
-	import { onMount } from "svelte";
+	import { getContext, onMount } from "svelte";
 	import UserPicker from "./users/UserPicker.svelte";
+	import { PresenterFactory } from "$lib/factories/presenters/PresenterFactory.svelte";
 
     const { goal }: { goal: Goal } = $props();
 
+    const presenterFactory = getContext<PresenterFactory>("PresenterFactory")
     const presenter = presenterFactory.createShareGoalDialogPresenter(goal);
 
     onMount(async () => {

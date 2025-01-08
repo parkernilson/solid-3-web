@@ -3,6 +3,7 @@ import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
+import { CreateGoalModalPresenter } from '$lib/presenters/goals/CreateGoalModalPresenter.svelte';
 import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
 import { EntryModalPresenter } from '$lib/presenters/goals/EntryModalPresenter.svelte';
 import { GoalListViewPresenter } from '$lib/presenters/goals/GoalListViewPresenter.svelte';
@@ -15,6 +16,7 @@ import { ShareGoalPagePresenter } from '$lib/presenters/goals/ShareGoalPagePrese
 import { ShareRequestsPagePresenter } from '$lib/presenters/goals/ShareRequestsPagePresenter.svelte';
 import { RootLayoutPresenter } from '$lib/presenters/root/RootLayoutPresenter.svelte';
 import { UserPickerPresenter, type UserSelectAction } from '$lib/presenters/users/UserPickerPresenter.svelte';
+import type { VisualViewportInspector } from '$lib/presenters/window/VisualViewportInspector.svelte';
 import { ModelFactory } from '../models/ModelFactory.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
 
@@ -27,7 +29,7 @@ export class PresenterFactory {
 		return this._authModelInstance;
 	}
 
-	constructor(private serviceFactory: ServiceFactory) {
+	constructor(private serviceFactory: ServiceFactory, private visualViewportInspector: VisualViewportInspector) {
 		this.dialogPresenterInstance = new DialogPresenter(serviceFactory.createErrorService());
 		this.modelFactory = new ModelFactory(serviceFactory.createAuthService())
 		this._authModelInstance = this.modelFactory.createAuthModel();
@@ -148,5 +150,13 @@ export class PresenterFactory {
 
 	createGoalListViewPresenter(goalInfo: GoalInfo) {
 		return new GoalListViewPresenter(goalInfo);
+	}
+
+	createCreateGoalModalPresenter(goalsRoutePresenter: GoalsRoutePresenter) {
+		return new CreateGoalModalPresenter(
+			this.serviceFactory.createErrorService(),
+			goalsRoutePresenter,
+			this.visualViewportInspector
+		);
 	}
 }

@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { presenterFactory } from '$lib/factories';
 	import type { GoalInfo } from '$lib/model/domain/goals';
-	import { onMount, setContext } from 'svelte';
+	import { getContext, onMount, setContext } from 'svelte';
 	import InfiniteScrollingContainer from '../InfiniteScrollingContainer.svelte';
 	import EntrySquare from './EntrySquare.svelte';
+	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
 
 	const { goal }: { goal: GoalInfo } = $props();
 
+	const presenterFactory = getContext<PresenterFactory>("PresenterFactory");
 	const presenter = presenterFactory.createEntryGalleryPresenter(goal.goal.id);
 
 	setContext('EntryGalleryPresenter', presenter);

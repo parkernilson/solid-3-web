@@ -8,7 +8,7 @@
     
 </script>
 
-<PageNavHeader title="Profile" backLocation="/goals" />
+<PageNavHeader title="Profile" />
 <div class="flex flex-col items-center">
     <i class="fa-solid fa-user text-6xl mt-32"></i>
     <h1 class="mt-6 text-2xl">{data.user.email}</h1>

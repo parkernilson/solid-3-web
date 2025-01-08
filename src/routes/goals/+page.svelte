@@ -5,6 +5,7 @@
 
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalsPagePresenter;
+
 </script>
 
 <HeaderBar rootLayoutPresenter={data.rootLayoutPresenter} />
@@ -20,7 +21,7 @@
 	<div class="px-3">
 		<div class="mt-10 flex justify-between items-end">
 			<h1 class="text-6xl">Goals</h1>
-			<p class="mb-2">Create new goal</p>
+			<a href="/goals/create-goal" class="mb-2">Create new goal</a>
 		</div>
 		{#await data.loadingGoalsRoute}
 			<!-- TODO: create loading ui -->

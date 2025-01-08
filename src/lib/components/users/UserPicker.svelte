@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { presenterFactory } from "$lib/factories";
-	import type { UserProfile } from "$lib/model/domain/goals";
+	import type { UserProfile } from "$lib/model/domain/users";
 	import type { UserSelectAction } from "$lib/presenters/users/UserPickerPresenter.svelte";
+	import { getContext } from "svelte";
 	import InfiniteScrollingContainer from "../InfiniteScrollingContainer.svelte";
+	import { PresenterFactory } from "$lib/factories/presenters/PresenterFactory.svelte";
 
     const {
         initialSelectedUsers,
@@ -20,6 +21,7 @@
         excludeSelf: boolean
     } = $props();
 
+    const presenterFactory = getContext<PresenterFactory>("PresenterFactory")
     const presenter = presenterFactory.createUserPickerPresenter(
         excludeSelf,
         initialSelectedUsers,

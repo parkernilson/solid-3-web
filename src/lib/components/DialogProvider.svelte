@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { presenterFactory } from '$lib/factories';
+	import { getContext } from 'svelte';
 	import Modal from './Modal.svelte';
+	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
 
+    const presenterFactory = getContext<PresenterFactory>("PresenterFactory");
 	const dialogPresenter = presenterFactory.getDialogPresenterInstance();
 </script>
 

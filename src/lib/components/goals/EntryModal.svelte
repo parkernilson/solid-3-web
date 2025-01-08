@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { presenterFactory } from '$lib/factories';
 	import { Entry, Goal } from '$lib/model/domain/goals';
 	import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
 	import { getContext } from 'svelte';
 	import Modal from '../Modal.svelte';
+	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
 
 	let {
 		entry,
@@ -11,6 +11,7 @@
 		showModal = $bindable()
 	}: { entry: Entry | null; goal: Goal; showModal: boolean } = $props();
 
+	const presenterFactory = getContext<PresenterFactory>("PresenterFactory")
 	const entryGalleryPresenter = getContext<EntryGalleryPresenter>('EntryGalleryPresenter');
 	const presenter = presenterFactory.createEntryModalPresenter(
 		entryGalleryPresenter,

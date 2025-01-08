@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { presenterFactory } from "$lib/factories";
+	import { PresenterFactory } from "$lib/factories/presenters/PresenterFactory.svelte";
 	import type { GoalInfo } from "$lib/model/domain/goals";
+	import { getContext } from "svelte";
 
     const { goal }: { goal: GoalInfo } = $props();
+    const presenterFactory = getContext<PresenterFactory>("PresenterFactory")
     const presenter = presenterFactory.createGoalListViewPresenter(goal)   
 
 </script>
