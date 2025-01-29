@@ -22,16 +22,14 @@ import type { ServiceFactory } from '../services/ServiceFactory.svelte';
 
 export class PresenterFactory {
 	private dialogPresenterInstance: DialogPresenter;
-	private modelFactory: ModelFactory;
 	private _authModelInstance: AuthModel;
 
 	private get authModelInstance() {
 		return this._authModelInstance;
 	}
 
-	constructor(private serviceFactory: ServiceFactory, private visualViewportInspector: VisualViewportInspector) {
+	constructor(private serviceFactory: ServiceFactory, private modelFactory: ModelFactory, private visualViewportInspector: VisualViewportInspector) {
 		this.dialogPresenterInstance = new DialogPresenter(serviceFactory.createErrorService());
-		this.modelFactory = new ModelFactory(serviceFactory.createAuthService())
 		this._authModelInstance = this.modelFactory.createAuthModel();
 	}
 
@@ -55,7 +53,8 @@ export class PresenterFactory {
 		return new GoalsRoutePresenter(
 			this.authModelInstance,
 			this.serviceFactory.createErrorService(),
-			this.serviceFactory.createGoalService()
+			this.serviceFactory.createGoalService(),
+			this.modelFactory.createGoalCollectionModel()
 		)
 	}
 
@@ -67,10 +66,10 @@ export class PresenterFactory {
 		);
 	}
 
-	createGoalRoutePresenter() {
+	createGoalRoutePresenter(goalId: string) {
 		return new GoalRoutePresenter(
-			this.serviceFactory.createGoalService(),
-			this.serviceFactory.createErrorService()
+			this.serviceFactory.createErrorService(),
+			this.modelFactory.createGoalModel(goalId)
 		);
 	}
 
@@ -156,7 +155,6 @@ export class PresenterFactory {
 		return new CreateGoalModalPresenter(
 			this.serviceFactory.createErrorService(),
 			goalsRoutePresenter,
-			this.visualViewportInspector
 		);
 	}
 }

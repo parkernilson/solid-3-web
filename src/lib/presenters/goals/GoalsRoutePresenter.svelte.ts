@@ -1,22 +1,19 @@
-import { type GoalInfo, type SharedGoalDto, type ShareStatus } from '$lib/model/domain/goals';
+import { type SharedGoalDto, type ShareStatus } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
+import type { GoalCollectionModel } from '$lib/model/models/GoalCollectionModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export class GoalsRoutePresenter extends LoadablePresenter {
-	private _goals = $state<GoalInfo[]>();
 	private _sharedGoalsWithMe = $state<SharedGoalDto[]>();
 	private _sharedGoalsWithMePending = $derived(
 		this.sharedGoalsWithMe?.filter((g) => g.shareStatus === 'pending')
 	);
 
 	public get goals() {
-		return this._goals;
-	}
-	private set goals(g) {
-		this._goals = g;
+		return this.goalCollectionModel.goals;
 	}
 	public get sharedGoalsWithMe() {
 		return this._sharedGoalsWithMe;
@@ -34,7 +31,8 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 	constructor(
 		private authModel: AuthModel,
 		errorService: ErrorService,
-		private goalService: GoalService
+		private goalService: GoalService,
+		private goalCollectionModel: GoalCollectionModel
 	) {
 		super(errorService);
 	}
@@ -46,7 +44,7 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 	}
 
 	async loadGoals(user: UserProfile) {
-		this.goals = await this.goalService.listGoalInfos(user.id);
+		await this.goalCollectionModel.loadGoals(user.id);
 	}
 
 	async loadSharedGoalsWithMe(user: UserProfile) {

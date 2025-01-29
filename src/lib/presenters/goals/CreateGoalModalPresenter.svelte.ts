@@ -1,17 +1,19 @@
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { ErrorHandler } from '$lib/utils/ErrorHandler';
-import type { VisualViewportInspector } from '../window/VisualViewportInspector.svelte';
 import type { GoalsRoutePresenter } from './GoalsRoutePresenter.svelte';
 
 export class CreateGoalModalPresenter extends ErrorHandler {
-    get viewport() {
-        return this.VisualViewportInspector.viewport;
-    }
+	title = $state<string>();
+
 	constructor(
 		errorService: ErrorService,
 		private goalsRoutePresenter: GoalsRoutePresenter,
-		private VisualViewportInspector: VisualViewportInspector
 	) {
 		super(errorService);
+	}
+
+	async createGoal() {
+		// TODO: use a goal collection model in the goals route and do an optimistic update
+		console.log("create goal ", this.title)
 	}
 }
