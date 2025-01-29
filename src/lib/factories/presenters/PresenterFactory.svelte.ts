@@ -1,4 +1,4 @@
-import type { Entry, Goal, GoalInfo } from '$lib/model/domain/goals';
+import type { Entry, Goal, IGoalInfo } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
@@ -54,7 +54,7 @@ export class PresenterFactory {
 			this.authModelInstance,
 			this.serviceFactory.createErrorService(),
 			this.serviceFactory.createGoalService(),
-			this.modelFactory.createGoalCollectionModel()
+			this.modelFactory
 		)
 	}
 
@@ -147,7 +147,7 @@ export class PresenterFactory {
 		);
 	}
 
-	createGoalListViewPresenter(goalInfo: GoalInfo) {
+	createGoalListViewPresenter(goalInfo: IGoalInfo) {
 		return new GoalListViewPresenter(goalInfo);
 	}
 

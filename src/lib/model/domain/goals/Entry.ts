@@ -64,4 +64,15 @@ export class Entry implements IEntry {
 			json.optimisticLocalOnly
 		);
 	}
+
+	toJson(): IEntry {
+		return {
+			id: this.id,
+			goal: this.goal,
+			textContent: this.textContent,
+			dateOf: this.dateOf,
+			success: this.success,
+			optimisticLocalOnly: this.optimisticLocalOnly
+		}
+	}
 }

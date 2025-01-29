@@ -1,19 +1,19 @@
 import type { GoalService } from '$lib/services/GoalService.svelte';
-import type { GoalInfo } from '../domain/goals';
+import type { IGoalInfo } from '../domain/goals';
+import { DataModel } from './DataModel.svelte';
 
-export class GoalModel {
-	private _goal = $state<GoalInfo>();
-	get goal() {
-		return this._goal;
+export class GoalModel extends DataModel<IGoalInfo> {
+	constructor(private goalService: GoalService, private goalId: string, initialData?: IGoalInfo) {
+		super(initialData);
 	}
-	private set goal(g) {
-		this._goal = g;
+
+	async load(): Promise<void> {
+		const goalInfo = await this.goalService.getGoalInfo(this.goalId);
+		this.setData(goalInfo);
 	}
-	constructor(
-		private goalId: string,
-		private goalService: GoalService
-	) {}
-	async loadGoal() {
-		this.goal = await this.goalService.getGoalInfo(this.goalId);
+
+	protected sendUpdate(data: IGoalInfo): Promise<IGoalInfo> {
+		// TODO: implement me
+		throw new Error('Method not implemented.');
 	}
 }

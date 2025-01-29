@@ -11,10 +11,10 @@ export class ModelFactory {
 	}
 
 	createGoalModel(goalId: string) {
-		return new GoalModel(goalId, this.serviceFactory.createGoalService());
+		return new GoalModel(this.serviceFactory.createGoalService(), goalId);
 	}
 
-	createGoalCollectionModel() {
-		return new GoalCollectionModel(this.serviceFactory.createGoalService());
+	createGoalCollectionModel(userId: string) {
+		return new GoalCollectionModel(this.serviceFactory.createGoalService(), userId);
 	}
 }

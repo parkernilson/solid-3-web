@@ -5,7 +5,7 @@ import {
 	Goal,
 	StreakInfo,
 	type ActivityInfo,
-	type GoalInfo,
+	type IGoalInfo,
 	type SharedGoalDto
 } from '$lib/model/domain/goals';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
@@ -69,7 +69,7 @@ export class SupabaseGoalService implements GoalService {
 		}
 	}
 
-	async getGoalInfo(goalId: string): Promise<GoalInfo> {
+	async getGoalInfo(goalId: string): Promise<IGoalInfo> {
 		const goalData = await this.getGoal(goalId);
 
 		const activityInfo = await this.getActivity(goalId);
@@ -79,10 +79,13 @@ export class SupabaseGoalService implements GoalService {
 		const recordStreakInfo = await this.getRecordStreak({ goalId });
 
 		return {
-			goal: goalData,
-			activity: activityInfo,
-			streak: currentStreakInfo,
-			record: recordStreakInfo
+			id: goalData.id,
+			goal: goalData.toJson(),
+			activity: {
+				lastEntry: activityInfo.lastEntry
+			},
+			streak: currentStreakInfo?.toJson() ?? null,
+			record: recordStreakInfo?.toJson() ?? null
 		};
 	}
 
@@ -90,7 +93,7 @@ export class SupabaseGoalService implements GoalService {
 		return this.supabase.from('goals').select('*').eq('owner', userId);
 	}
 
-	async listGoalInfos(userId: string): Promise<GoalInfo[]> {
+	async listGoalInfos(userId: string): Promise<IGoalInfo[]> {
 		const { data: goalsData, error: goalsError } = await this.listGoals(userId);
 		if (goalsError) {
 			throw goalsError;

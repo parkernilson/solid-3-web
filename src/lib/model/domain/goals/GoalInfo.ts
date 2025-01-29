@@ -1,15 +1,17 @@
-import type { CurrentStreakInfo } from "./CurrentStreakInfo";
-import type { Entry } from "./Entry";
-import type { Goal } from "./Goal";
-import type { StreakInfo } from "./StreakInfo";
+import type { Optimistic } from "$lib/model/domain/Optimistic";
+import type { ICurrentStreakInfo } from "./CurrentStreakInfo";
+import type { IEntry } from "./Entry";
+import type { IGoal } from "./Goal";
+import type { IStreakInfo } from "./StreakInfo";
 
 export interface ActivityInfo {
-    lastEntry?: Entry;
+    lastEntry?: IEntry;
 }
 
-export interface GoalInfo {
-    goal: Goal;
-    streak: CurrentStreakInfo | null;
-    record: StreakInfo | null;
+export type IGoalInfo = {
+    id: string;
+    goal: IGoal;
+    streak: ICurrentStreakInfo | null;
+    record: IStreakInfo | null;
     activity: ActivityInfo;
-}
+} & Optimistic;
