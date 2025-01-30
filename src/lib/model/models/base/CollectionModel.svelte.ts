@@ -20,7 +20,7 @@ export abstract class CollectionModel<
 	protected abstract remove(id: IdType): void;
 	protected abstract update(id: IdType, data: T): void;
 
-	async optimisticCreate(data: T): Promise<void> {
+	protected async optimisticCreate(data: T): Promise<void> {
 		try {
 			this.add({
 				...data,
@@ -34,7 +34,7 @@ export abstract class CollectionModel<
 		}
 	}
 
-	async optimisticDelete(id: IdType): Promise<void> {
+	protected async optimisticDelete(id: IdType): Promise<void> {
 		const originalItem = this.get(id)?.data;
 		try {
 			this.remove(id);

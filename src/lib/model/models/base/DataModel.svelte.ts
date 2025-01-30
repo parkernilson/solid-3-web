@@ -15,7 +15,7 @@ export abstract class DataModel<T extends IOptimistic & Id> extends BaseModel {
         this.data = data;
     }
 
-    async optimisticUpdate(data: T): Promise<void> {
+    protected async optimisticUpdate(data: T): Promise<void> {
         const originalData = this.data;
         try {
             this.setData({ ...data, optimisticLocalOnly: true });
