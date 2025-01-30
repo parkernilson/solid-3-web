@@ -1,6 +1,6 @@
 <script lang="ts">
 	import FieldInput from '$lib/components/FieldInput.svelte';
-import ModalNavHeader from '$lib/components/nav/ModalNavHeader.svelte';
+	import ModalNavHeader from '$lib/components/nav/ModalNavHeader.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import ResponsiveCenterColumn from '$lib/components/ui/ResponsiveCenterColumn.svelte';
 	import type { PageData } from './$types';
