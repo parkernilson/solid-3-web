@@ -1,14 +1,14 @@
 <script lang="ts">
-	import type { GoalInfo } from '$lib/model/domain/goals';
+	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
+	import type { IGoalInfo } from '$lib/model/domain/goals';
 	import { getContext, onMount, setContext } from 'svelte';
 	import InfiniteScrollingContainer from '../InfiniteScrollingContainer.svelte';
 	import EntrySquare from './EntrySquare.svelte';
-	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
 
-	const { goal }: { goal: GoalInfo } = $props();
+	const { goal }: { goal: IGoalInfo } = $props();
 
 	const presenterFactory = getContext<PresenterFactory>("PresenterFactory");
-	const presenter = presenterFactory.createEntryGalleryPresenter(goal.goal.id);
+	const presenter = presenterFactory.createEntryGalleryPresenter(goal.id);
 
 	setContext('EntryGalleryPresenter', presenter);
 
@@ -24,7 +24,7 @@
 >
 	<div class="grid grid-cols-3">
 		{#each presenter.entries as entry}
-		    <EntrySquare {entry} goal={goal.goal} />
+		    <EntrySquare {entry} goal={goal} />
         {/each}
 	</div>
 </InfiniteScrollingContainer>

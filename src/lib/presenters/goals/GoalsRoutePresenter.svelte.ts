@@ -5,6 +5,7 @@ import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import type { GoalCollectionModel } from '$lib/model/models/GoalCollectionModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
+import { filterUndefined } from '$lib/utils/types';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export class GoalsRoutePresenter extends LoadablePresenter {
@@ -15,7 +16,9 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 	public goalCollectionModel: GoalCollectionModel;
 
 	public get goals() {
-		return this.goalCollectionModel.goalModels?.map(m => m.data);
+		return this.goalCollectionModel.models
+			? filterUndefined(this.goalCollectionModel.models?.map((m) => m.data))
+			: undefined;
 	}
 	public get sharedGoalsWithMe() {
 		return this._sharedGoalsWithMe;
@@ -37,7 +40,8 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 		modelFactory: ModelFactory
 	) {
 		super(errorService);
-		if (!this.user) throw new Error('Tried to create goals route presenter without a signed in user');
+		if (!this.user)
+			throw new Error('Tried to create goals route presenter without a signed in user');
 		this.goalCollectionModel = modelFactory.createGoalCollectionModel(this.user.id);
 	}
 

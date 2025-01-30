@@ -1,8 +1,8 @@
 import { BaseModel } from "./BaseModel.svelte";
-import type { Id } from "../domain/Id";
-import type { Optimistic } from "../domain/Optimistic";
+import type { Id } from "../../domain/Id";
+import type { IOptimistic } from "../../domain/Optimistic";
 
-export abstract class DataModel<T extends Optimistic & Id> extends BaseModel {
+export abstract class DataModel<T extends IOptimistic & Id> extends BaseModel {
     public data = $state<T>();
 
     constructor(initialData?: T) {

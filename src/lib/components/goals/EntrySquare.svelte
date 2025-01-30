@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Entry, Goal } from "$lib/model/domain/goals";
+	import { Entry, type IGoal } from "$lib/model/domain/goals";
 	import EntryModal from "./EntryModal.svelte";
 
-    const { entry, goal }: { entry: Entry, goal: Goal } = $props();
+    const { entry, goal }: { entry: Entry, goal: IGoal } = $props();
 
     let showModal = $state(false);
 </script>

@@ -1,6 +1,6 @@
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import type { IGoalInfo } from '../domain/goals';
-import { DataModel } from './DataModel.svelte';
+import { DataModel } from './base/DataModel.svelte';
 
 export class GoalModel extends DataModel<IGoalInfo> {
 	constructor(private goalService: GoalService, private goalId: string, initialData?: IGoalInfo) {
@@ -12,7 +12,7 @@ export class GoalModel extends DataModel<IGoalInfo> {
 		this.setData(goalInfo);
 	}
 
-	protected sendUpdate(data: IGoalInfo): Promise<IGoalInfo> {
+	protected sendUpdate(): Promise<IGoalInfo> {
 		// TODO: implement me
 		throw new Error('Method not implemented.');
 	}

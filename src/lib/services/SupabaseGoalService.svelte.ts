@@ -79,8 +79,7 @@ export class SupabaseGoalService implements GoalService {
 		const recordStreakInfo = await this.getRecordStreak({ goalId });
 
 		return {
-			id: goalData.id,
-			goal: goalData.toJson(),
+			...goalData.toJson(),
 			activity: {
 				lastEntry: activityInfo.lastEntry
 			},

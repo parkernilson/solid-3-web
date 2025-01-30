@@ -27,7 +27,7 @@
 			<!-- TODO: create loading ui -->
 		{:then _}
 			{#each presenter.goals! as goalInfo}
-				<a class="" href="/goals/{goalInfo.goal.id}"><GoalListView goal={goalInfo} /></a>
+				<a class="" href="/goals/{goalInfo.id}"><GoalListView goal={goalInfo} /></a>
 			{/each}
 		{/await}
 	</div>

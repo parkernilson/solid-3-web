@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Entry, Goal } from '$lib/model/domain/goals';
+	import { Entry, type IGoal } from '$lib/model/domain/goals';
 	import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
 	import { getContext } from 'svelte';
 	import Modal from '../Modal.svelte';
@@ -9,7 +9,7 @@
 		entry,
 		goal,
 		showModal = $bindable()
-	}: { entry: Entry | null; goal: Goal; showModal: boolean } = $props();
+	}: { entry: Entry | null; goal: IGoal; showModal: boolean } = $props();
 
 	const presenterFactory = getContext<PresenterFactory>("PresenterFactory")
 	const entryGalleryPresenter = getContext<EntryGalleryPresenter>('EntryGalleryPresenter');

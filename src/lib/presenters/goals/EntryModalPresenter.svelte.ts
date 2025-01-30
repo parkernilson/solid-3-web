@@ -1,12 +1,12 @@
-import type { EntryUpsert } from '$lib/model/domain/goals';
-import { Entry, Goal } from '$lib/model/domain/goals';
+import type { EntryUpsert, IGoal } from '$lib/model/domain/goals';
+import { Entry } from '$lib/model/domain/goals';
+import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { v4 as uuidv4 } from 'uuid';
 import { ErrorHandler } from '../../utils/ErrorHandler';
 import type { EntryGalleryPresenter } from './EntryGalleryPresenter.svelte';
-import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
 
 export class EntryModalPresenter extends ErrorHandler {
 	private authModel?: AuthModel;
@@ -49,7 +49,7 @@ export class EntryModalPresenter extends ErrorHandler {
 
 	constructor(
 		private _entry: Entry | null,
-		private _goal: Goal,
+		private _goal: IGoal,
 		private goalService: GoalService,
 		errorService: ErrorService,
 		authModel: AuthModel,

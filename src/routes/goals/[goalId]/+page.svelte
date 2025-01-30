@@ -15,7 +15,7 @@
 	<p>loading goal</p>
 {:then _}
 	{#if presenter.goal}
-		{@const goal = presenter.goal.goal}
+		{@const goal = presenter.goal}
 		{@const streak = presenter.goal.streak}
 		{@const record = presenter.goal.record}
 		<div class="px-3">
