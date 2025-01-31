@@ -9,16 +9,18 @@
 
 </script>
 
-<div class="flex justify-between items-center mt-4">
-    <div class="flex flex-col">
-        <p class="text-2xl">{presenter.title}</p>
-        <p class="text-sm">{presenter.lastActivityMessage}</p>
-        <!-- TODO: finish implementing this -->
-        {#if presenter.sharedBy}
-            <p>{presenter.sharedBy}</p>
-        {/if}
+<a href="{presenter.goalPageUrl}">
+    <div class="flex justify-between items-center mt-4">
+        <div class="flex flex-col">
+            <p class="text-2xl">{presenter.title}</p>
+            <p class="text-sm">{presenter.lastActivityMessage}</p>
+            <!-- TODO: finish implementing this -->
+            {#if presenter.sharedBy}
+                <p>{presenter.sharedBy}</p>
+            {/if}
+        </div>
+        <div class="">
+            <p class="text-3xl">{presenter.streakString}</p>
+        </div>
     </div>
-    <div class="">
-        <p class="text-3xl">{presenter.streakString}</p>
-    </div>
-</div>
+</a>

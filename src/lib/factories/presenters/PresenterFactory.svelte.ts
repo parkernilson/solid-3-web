@@ -2,6 +2,8 @@ import type { Entry, Goal, IGoal, IGoalInfo } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
+import type { GoalDataModel } from '$lib/model/models/goals/GoalDataModel.svelte';
+import type { SharedGoalDataModel } from '$lib/model/models/goals/SharedGoalDataModel.svelte';
 import type { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
@@ -68,10 +70,10 @@ export class PresenterFactory {
 		);
 	}
 
-	createGoalRoutePresenter(goalId: string) {
+	createGoalRoutePresenter(goalModel: GoalDataModel | SharedGoalDataModel) {
 		return new GoalRoutePresenter(
 			this.serviceFactory.createErrorService(),
-			this.modelFactory.createGoalModel(goalId)
+			goalModel
 		);
 	}
 

@@ -23,5 +23,9 @@ export class GoalListViewPresenter {
         return isSharedGoalInfo(this.goalInfo) ? this.goalInfo.ownerEmail : undefined;
     }
 
+    get goalPageUrl() {
+        return isSharedGoalInfo(this.goalInfo) ? `/goals/shared/${this.goalInfo.id}` : `/goals/${this.goalInfo.id}`;
+    }
+
     constructor(private goalInfo: IGoalInfo | ISharedGoalInfo) {}
 }

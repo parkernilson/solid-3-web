@@ -44,6 +44,7 @@ export interface getCurrentStreakParams {
 
 export interface GoalService {
 	getGoalInfo(goalId: string): Promise<IGoalInfo>;
+    getSharedGoalInfo(goalId: string): Promise<ISharedGoalInfo>;
 	listGoalInfos(userId: string): Promise<IGoalInfo[]>;
 	getEntriesPaginated(
 		goalId: string,

@@ -5,6 +5,11 @@
 
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalsPagePresenter;
+
+	$effect(() => {
+		$inspect(presenter.sharedGoalsWithMe)
+	})
+
 </script>
 
 <HeaderBar rootLayoutPresenter={data.rootLayoutPresenter} />
@@ -28,7 +33,7 @@
 		{:then _}
 		 	{#if presenter.displayedGoals}
 				{#each presenter.displayedGoals as goalInfo}
-					<a class="" href="/goals/{goalInfo.id}"><GoalListView goal={goalInfo} /></a>
+					<GoalListView goal={goalInfo} />
 				{/each}
 			{/if}
 		{/await}

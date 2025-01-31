@@ -20,7 +20,7 @@ export class SharedGoalCollectionModel extends ListCollectionModel<ISharedGoalIn
 	}
 
 	protected makeConstituentDataModel(data: ISharedGoalInfo): DataModel<ISharedGoalInfo> {
-        return this.modelFactory.createSharedGoalDataModel(data);
+        return this.modelFactory.createSharedGoalDataModel(data.id, data);
     }
 
 	protected sendCreate(): Promise<ISharedGoalInfo> {

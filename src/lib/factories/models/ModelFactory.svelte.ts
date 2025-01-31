@@ -29,12 +29,16 @@ export class ModelFactory {
 		return new SharedGoalCollectionModel(this.serviceFactory.createGoalService(), this, user);
 	}
 
-	createSharedGoalDataModel(initialData: ISharedGoalInfo) {
-		return new SharedGoalDataModel(initialData);
+	createSharedGoalDataModel(goalId: string, initialData?: ISharedGoalInfo) {
+		return new SharedGoalDataModel(this.serviceFactory.createGoalService(), goalId, initialData);
 	}
 
 	createSharedGoalPreviewCollectionModel(user: UserProfile) {
-		return new SharedGoalPreviewCollectionModel(this.serviceFactory.createGoalService(), this, user);
+		return new SharedGoalPreviewCollectionModel(
+			this.serviceFactory.createGoalService(),
+			this,
+			user
+		);
 	}
 
 	createSharedGoalPreviewDataModel(initialData: ISharedGoalPreview) {
