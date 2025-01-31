@@ -6,7 +6,8 @@ import {
 	StreakInfo,
 	type ActivityInfo,
 	type IGoalInfo,
-	type SharedGoalDto
+	type ISharedGoal,
+	type ISharedGoalPreview
 } from '$lib/model/domain/goals';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
@@ -278,7 +279,22 @@ export class SupabaseGoalService implements GoalService {
 		return shareRecords;
 	}
 
-	async listSharedGoalsWithUser(user: UserProfile): Promise<SharedGoalDto[]> {
+	async listSharedGoalPreviewsWithUser(user: UserProfile): Promise<ISharedGoalPreview[]> {
+		const { data, error } = await this.supabase
+			.from('shared_goal_previews')
+			.select('*')
+			.eq('shared_with', user.id);
+		if (error) throw error;
+		if (!data) return [];
+		return data.map((sharedGoalRow) => {
+			if (!isNotNullRow(sharedGoalRow)) {
+				throw new Error('Shared goal row has null values');
+			}
+			return this.converter.convertSharedGoalPreview(sharedGoalRow);
+		});
+	}
+
+	async listSharedGoalsWithUser(user: UserProfile): Promise<ISharedGoal[]> {
 		const { data, error } = await this.supabase
 			.from('shared_goals')
 			.select('*')

@@ -1,6 +1,6 @@
 import type { EntryUpsert, IGoal } from '$lib/model/domain/goals';
 import { Entry } from '$lib/model/domain/goals';
-import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
+import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';

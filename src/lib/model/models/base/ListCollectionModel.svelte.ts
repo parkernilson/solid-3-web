@@ -1,9 +1,26 @@
+import { filterUndefined } from '$lib/utils/types';
 import type { Id, IdType } from '../../domain/Id';
 import { CollectionModel } from './CollectionModel.svelte';
 import type { DataModel } from './DataModel.svelte';
 
 export abstract class ListCollectionModel<T extends Id> extends CollectionModel<T> {
-	public models = $state<DataModel<T>[]>();
+	private _models = $state<DataModel<T>[]>();
+	private _data = $derived(
+		this.models ? filterUndefined(this.models.map((m) => m.data)) : undefined
+	);
+
+	get models() {
+		return this._models;
+	}
+	private set models(models: DataModel<T>[] | undefined) {
+		this._models = models;
+	}
+	get data() {
+		return this._data;
+	}
+	private set data(data: T[] | undefined) {
+		this._data = data;
+	}
 
 	constructor(initialData?: T[]) {
 		super(initialData);

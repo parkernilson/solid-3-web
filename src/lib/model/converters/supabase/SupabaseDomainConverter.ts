@@ -1,6 +1,7 @@
 import type { SupabaseEntry } from '$lib/model/db/supabase/SupabaseEntry';
 import type { SupabaseGoal } from '$lib/model/db/supabase/SupabaseGoal';
 import type { SupabaseSharedGoal } from '$lib/model/db/supabase/SupabaseSharedGoal';
+import type { SupabaseSharedGoalPreview } from '$lib/model/db/supabase/SupabaseSharedGoalPreview';
 import type { SupabaseShareRecord } from '$lib/model/db/supabase/SupabaseShareRecord';
 import type {
 	SupabaseCurrentStreakInfo,
@@ -12,8 +13,9 @@ import {
 	Entry,
 	Goal,
 	StreakInfo,
-	type SharedGoalDto
+	type ISharedGoalPreview,
 } from '$lib/model/domain/goals';
+import type { ISharedGoal } from '$lib/model/domain/goals/SharedGoal';
 import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
 
@@ -55,16 +57,28 @@ export class SupabaseDomainConverter {
 		);
 	}
 
-	convertSharedGoal(sharedGoal: SupabaseSharedGoal): SharedGoalDto {
+	convertSharedGoal(sharedGoal: SupabaseSharedGoal): ISharedGoal {
 		return {
-			goalId: sharedGoal.goal_id,
-			shareRecordId: sharedGoal.share_record_id,
-			goalTitle: sharedGoal.goal_title,
-			goalOwnerId: sharedGoal.goal_owner_id,
-			goalOwnerEmail: sharedGoal.goal_owner_email,
-			shareStatus: sharedGoal.share_status,
-			sharedWith: sharedGoal.shared_with,
+			id: sharedGoal.goal_id,
+			title: sharedGoal.title,
+			owner: sharedGoal.owner,
+			ownerEmail: sharedGoal.owner_email,
+			startDate: sharedGoal.created_at,
 			sharedOn: sharedGoal.shared_on
 		};
+	}
+
+	convertSharedGoalPreview(sharedGoalPreview: SupabaseSharedGoalPreview): ISharedGoalPreview {
+		return {
+			id: sharedGoalPreview.goal_id,
+			goalId: sharedGoalPreview.goal_id,
+			shareRecordId: sharedGoalPreview.share_record_id,
+			goalTitle: sharedGoalPreview.goal_title,
+			goalOwnerId: sharedGoalPreview.goal_owner_id,
+			goalOwnerEmail: sharedGoalPreview.goal_owner_email,
+			shareStatus: sharedGoalPreview.share_status,
+			sharedWith: sharedGoalPreview.shared_with,
+			sharedOn: sharedGoalPreview.shared_on
+		}
 	}
 }

@@ -1,14 +1,14 @@
 import { goto } from '$app/navigation';
+import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { ErrorHandler } from '$lib/utils/ErrorHandler';
-import type { GoalsRoutePresenter } from './GoalsRoutePresenter.svelte';
 
 export class CreateGoalModalPresenter extends ErrorHandler {
 	title = $state<string>();
 
 	constructor(
 		errorService: ErrorService,
-		private goalsRoutePresenter: GoalsRoutePresenter,
+		private goalCollectionModel: GoalCollectionModel
 	) {
 		super(errorService);
 	}
@@ -20,7 +20,7 @@ export class CreateGoalModalPresenter extends ErrorHandler {
 					throw new Error('Title must be at least 3 characters long');
 				}
 				await goto('/goals');
-				return this.goalsRoutePresenter.goalCollectionModel.createGoal(this.title)
+				return this.goalCollectionModel.createGoal(this.title);
 			}
 		})
 	}

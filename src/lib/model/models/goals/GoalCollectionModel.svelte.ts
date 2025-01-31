@@ -1,11 +1,13 @@
+import type { ModelFactory } from "$lib/factories/models/ModelFactory.svelte";
 import type { GoalService } from "$lib/services/GoalService.svelte";
-import { GoalInfo, type IGoalInfo } from "../domain/goals";
-import { GoalModel } from "./GoalModel.svelte";
-import { ListCollectionModel } from "./base/ListCollectionModel.svelte";
+import { GoalInfo, type IGoalInfo } from "../../domain/goals";
+import { GoalDataModel } from "./GoalDataModel.svelte";
+import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
 
 export class GoalCollectionModel extends ListCollectionModel<IGoalInfo> {
     constructor(
         private goalService: GoalService,
+        private modelFactory: ModelFactory,
         private userId: string
     ) {
         super();
@@ -16,8 +18,8 @@ export class GoalCollectionModel extends ListCollectionModel<IGoalInfo> {
         this.setItems(goalInfos);
     }
 
-    protected makeConstituentDataModel(data: IGoalInfo): GoalModel {
-        return new GoalModel(this.goalService, data.id, data);
+    protected makeConstituentDataModel(data: IGoalInfo): GoalDataModel {
+        return this.modelFactory.createGoalModel(data.id, data);
     }
 
     protected async sendCreate(data: IGoalInfo): Promise<IGoalInfo> {

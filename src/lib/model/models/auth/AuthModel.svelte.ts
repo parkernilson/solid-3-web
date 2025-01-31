@@ -1,5 +1,5 @@
 import type { AuthService, Subscription } from '$lib/services/AuthService.svelte';
-import { UserProfile } from '../domain/users';
+import { UserProfile } from '$lib/model/domain/users';
 
 export class AuthModel {
 	private _user = $state<UserProfile>();

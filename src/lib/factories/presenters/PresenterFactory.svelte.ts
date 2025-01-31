@@ -1,6 +1,8 @@
 import type { Entry, Goal, IGoal, IGoalInfo } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
-import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
+import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
+import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
+import type { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
 import { CreateGoalModalPresenter } from '$lib/presenters/goals/CreateGoalModalPresenter.svelte';
@@ -49,20 +51,20 @@ export class PresenterFactory {
 		);
 	}
 
-	createGoalsRoutePresenter() {
+	createGoalsRoutePresenter(goalCollectionModel: GoalCollectionModel, sharedGoalsModel: SharedGoalsModel) {
 		return new GoalsRoutePresenter(
-			this.authModelInstance,
 			this.serviceFactory.createErrorService(),
-			this.serviceFactory.createGoalService(),
-			this.modelFactory
+			goalCollectionModel,
+			sharedGoalsModel
 		)
 	}
 
-	createGoalsPagePresenter(goalsRoutePresenter: GoalsRoutePresenter) {
+	createGoalsPagePresenter(goalCollectionModel: GoalCollectionModel, sharedGoalsModel: SharedGoalsModel) {
 		return new GoalsPagePresenter(
 			this.authModelInstance,
 			this.serviceFactory.createErrorService(),
-			goalsRoutePresenter
+			goalCollectionModel,
+			sharedGoalsModel
 		);
 	}
 
@@ -151,10 +153,10 @@ export class PresenterFactory {
 		return new GoalListViewPresenter(goalInfo);
 	}
 
-	createCreateGoalModalPresenter(goalsRoutePresenter: GoalsRoutePresenter) {
+	createCreateGoalModalPresenter(goalCollectionModel: GoalCollectionModel) {
 		return new CreateGoalModalPresenter(
 			this.serviceFactory.createErrorService(),
-			goalsRoutePresenter,
+			goalCollectionModel,
 		);
 	}
 }

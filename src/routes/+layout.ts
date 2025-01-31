@@ -16,6 +16,7 @@ export const load = async () => {
     await presenter.load({});
     return {
         presenterFactory,
+        modelFactory,
         rootLayoutPresenter: presenter
     }
 }

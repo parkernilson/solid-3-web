@@ -5,7 +5,6 @@
 
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalsPagePresenter;
-
 </script>
 
 <HeaderBar rootLayoutPresenter={data.rootLayoutPresenter} />
@@ -24,6 +23,7 @@
 			<a href="/goals/create-goal" class="mb-2">Create new goal</a>
 		</div>
 		{#await data.loadingGoalsRoute}
+			<p>Loading Goals Route</p>
 			<!-- TODO: create loading ui -->
 		{:then _}
 			{#each presenter.goals! as goalInfo}

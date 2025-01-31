@@ -1,8 +1,8 @@
 import type { GoalService } from '$lib/services/GoalService.svelte';
-import type { IGoalInfo } from '../domain/goals';
-import { DataModel } from './base/DataModel.svelte';
+import type { IGoalInfo } from '../../domain/goals';
+import { DataModel } from '../base/DataModel.svelte';
 
-export class GoalModel extends DataModel<IGoalInfo> {
+export class GoalDataModel extends DataModel<IGoalInfo> {
 	constructor(private goalService: GoalService, private goalId: string, initialData?: IGoalInfo) {
 		super(initialData);
 	}

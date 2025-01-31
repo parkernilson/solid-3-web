@@ -1,5 +1,5 @@
 import { UserProfile } from '$lib/model/domain/users';
-import type { AuthModel } from '$lib/model/models/AuthModel.svelte';
+import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { ErrorHandler } from '../../utils/ErrorHandler';

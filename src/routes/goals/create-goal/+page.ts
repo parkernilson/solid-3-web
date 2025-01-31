@@ -1,5 +1,5 @@
 export const load = async ({ parent }) => {
-    const { goalsRoutePresenter, presenterFactory } = await parent();
-    const createGoalModalPresenter = presenterFactory.createCreateGoalModalPresenter(goalsRoutePresenter);
+    const { presenterFactory, goalCollectionModel } = await parent();
+    const createGoalModalPresenter = presenterFactory.createCreateGoalModalPresenter(goalCollectionModel);
     return { createGoalModalPresenter };
 }
