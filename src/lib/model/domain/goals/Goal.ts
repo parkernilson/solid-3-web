@@ -5,24 +5,15 @@ export interface IGoal {
     startDate: string;
 }
 
-export class Goal {
+export class Goal implements IGoal {
     constructor(
-        private _id: string,
-        private _owner: string,
-        private _title: string,
-        private _startDate: Date | string,
+        public id: string,
+        public owner: string,
+        public title: string,
+        public startDate: string,
     ) {}
-    get id(): string {
-        return this._id;
-    }
-    get owner(): string {
-        return this._owner;
-    }
-    get title(): string {
-        return this._title;
-    }
-    get startDate(): Date {
-        return new Date(this._startDate);
+    get startDateObj(): Date {
+        return new Date(this.startDate);
     }
 
     toJson(): IGoal {
@@ -30,7 +21,7 @@ export class Goal {
             id: this.id,
             owner: this.owner,
             title: this.title,
-            startDate: this.startDate.toISOString(),
+            startDate: this.startDate,
         }
     }
 

@@ -1,4 +1,4 @@
-import type { IGoalInfo, ISharedGoal, ISharedGoalPreview } from '$lib/model/domain/goals';
+import type { IGoalInfo, ISharedGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
@@ -29,7 +29,7 @@ export class ModelFactory {
 		return new SharedGoalCollectionModel(this.serviceFactory.createGoalService(), this, user);
 	}
 
-	createSharedGoalDataModel(initialData: ISharedGoal) {
+	createSharedGoalDataModel(initialData: ISharedGoalInfo) {
 		return new SharedGoalDataModel(initialData);
 	}
 

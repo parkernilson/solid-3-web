@@ -7,3 +7,4 @@ export * from './EntryUpsert';
 export * from './ShareRecord';
 export * from './SharedGoalPreview';
 export * from './SharedGoal';
+export * from './SharedGoalInfo'

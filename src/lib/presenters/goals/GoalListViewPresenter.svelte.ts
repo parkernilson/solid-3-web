@@ -1,9 +1,9 @@
-import type { IGoalInfo } from "$lib/model/domain/goals";
+import { GoalInfo, type IGoalInfo } from "$lib/model/domain/goals";
+import { isSharedGoalInfo, type ISharedGoalInfo } from "$lib/model/domain/goals/SharedGoalInfo";
 import { diffDays, today } from "$lib/utils/dates";
 
 export class GoalListViewPresenter {
     
-
     get title() {
         return this.goalInfo.title;
     }
@@ -13,11 +13,15 @@ export class GoalListViewPresenter {
     }
 
     get lastActivityMessage() {
-        return this.goalInfo.activity?.lastEntry?.dateOf ?
-        // TODO: Convert the goal info JSON object to a class object and use the dateOf property
-        `Last activity ${diffDays(today(), new Date(this.goalInfo.activity.lastEntry.dateOf))} days ago`
+        const goalInfoObj = GoalInfo.fromJson(this.goalInfo);
+        return goalInfoObj.lastEntryDate ?
+        `Last activity ${diffDays(today(), goalInfoObj.lastEntryDate)} days ago`
         : "No activity yet";
     }
 
-    constructor(private goalInfo: IGoalInfo) {}
+    get sharedBy() {
+        return isSharedGoalInfo(this.goalInfo) ? this.goalInfo.ownerEmail : undefined;
+    }
+
+    constructor(private goalInfo: IGoalInfo | ISharedGoalInfo) {}
 }

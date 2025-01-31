@@ -26,9 +26,11 @@
 			<p>Loading Goals Route</p>
 			<!-- TODO: create loading ui -->
 		{:then _}
-			{#each presenter.goals! as goalInfo}
-				<a class="" href="/goals/{goalInfo.id}"><GoalListView goal={goalInfo} /></a>
-			{/each}
+		 	{#if presenter.displayedGoals}
+				{#each presenter.displayedGoals as goalInfo}
+					<a class="" href="/goals/{goalInfo.id}"><GoalListView goal={goalInfo} /></a>
+				{/each}
+			{/if}
 		{/await}
 	</div>
 </div>
