@@ -1,10 +1,12 @@
 export const load = async ({ params, parent }) => {
-    const { rootLayoutPresenter } = await parent()
-    if (!params.userId || params.userId !== rootLayoutPresenter.user?.id) {
-        throw new Error("Not implemented yet: you cannot view other users' profiles")
-    }
+	const { modelFactory, presenterFactory, rootLayoutPresenter } = await parent();
+	const { userId } = params;
+	const profileModel = modelFactory.createUserProfileDataModel(userId, rootLayoutPresenter.user);
+    const profilePagePresenter = presenterFactory.createProfilePagePresenter(profileModel);
 
-    return {
-        user: rootLayoutPresenter.user,
-    }
-}
+	return {
+		user: rootLayoutPresenter.user,
+        profilePagePresenter,
+        loadingProfilePage: profilePagePresenter.load({})
+	};
+};

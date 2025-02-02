@@ -8,6 +8,7 @@ import { SharedGoalDataModel } from '$lib/model/models/goals/SharedGoalDataModel
 import { SharedGoalPreviewCollectionModel } from '$lib/model/models/goals/SharedGoalPreviewCollectionModel.svelte';
 import { SharedGoalPreviewDataModel } from '$lib/model/models/goals/SharedGoalPreviewDataModel.svelte';
 import { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
+import { UserProfileDataModel } from '$lib/model/models/profile/UserProfileDataModel.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
 
 export class ModelFactory {
@@ -47,5 +48,9 @@ export class ModelFactory {
 
 	createSharedGoalsModel(user: UserProfile) {
 		return new SharedGoalsModel(this, user);
+	}
+
+	createUserProfileDataModel(userId: string, initialData?: UserProfile) {
+		return new UserProfileDataModel(this.serviceFactory.createAuthService(), userId, initialData);
 	}
 }

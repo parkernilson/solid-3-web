@@ -5,7 +5,9 @@ import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollection
 import type { GoalDataModel } from '$lib/model/models/goals/GoalDataModel.svelte';
 import type { SharedGoalDataModel } from '$lib/model/models/goals/SharedGoalDataModel.svelte';
 import type { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
+import type { UserProfileDataModel } from '$lib/model/models/profile/UserProfileDataModel.svelte';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
+import { ProfilePagePresenter } from '$lib/presenters/auth/ProfilePagePresenter.svelte';
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
 import { CreateGoalModalPresenter } from '$lib/presenters/goals/CreateGoalModalPresenter.svelte';
 import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
@@ -159,6 +161,14 @@ export class PresenterFactory {
 		return new CreateGoalModalPresenter(
 			this.serviceFactory.createErrorService(),
 			goalCollectionModel,
+		);
+	}
+
+	createProfilePagePresenter(userProfileDataModel: UserProfileDataModel) {
+		return new ProfilePagePresenter(
+			this.serviceFactory.createErrorService(),
+			this.serviceFactory.createAuthService(),
+			userProfileDataModel
 		);
 	}
 }

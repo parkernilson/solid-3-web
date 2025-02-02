@@ -18,7 +18,7 @@ export class SupabaseAuthService extends ErrorHandler implements AuthService {
 		this.supabase = supabase;
 	}
 
-	private async getUserProfile(userId?: string): Promise<UserProfile | null> {
+	public async getUserProfile(userId: string): Promise<UserProfile | null> {
 		if (!userId) {
 			return null;
 		}
@@ -54,7 +54,7 @@ export class SupabaseAuthService extends ErrorHandler implements AuthService {
 			// call a promise and make sure that any errors get caught.
 			this.doErrorable({
 				action: async () => {
-					const userProfile = await this.getUserProfile(session?.user.id);
+					const userProfile = session?.user.id ? await this.getUserProfile(session.user.id) : null;
 					if (e === 'SIGNED_IN') {
 						handler({
 							type: e,
@@ -83,7 +83,7 @@ export class SupabaseAuthService extends ErrorHandler implements AuthService {
 	async register(email: string, password: string) {
 		const { error } = await this.supabase.auth.signUp({ email, password });
 		if (error) {
-			throw error
+			throw error;
 		}
 	}
 

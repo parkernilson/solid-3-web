@@ -7,7 +7,7 @@ export abstract class DataModel<T extends IOptimistic & Id> extends BaseModel {
 
     constructor(initialData?: T) {
         super();
-        if (initialData) this.data = initialData;
+        if (initialData) this.setData(initialData);
     }
 
     protected abstract sendUpdate(data: T): Promise<T>;
