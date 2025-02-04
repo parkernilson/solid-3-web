@@ -13,7 +13,7 @@ import {
 	Entry,
 	Goal,
 	StreakInfo,
-	type ISharedGoalPreview,
+	type ISharedGoalPreview
 } from '$lib/model/domain/goals';
 import type { ISharedGoal } from '$lib/model/domain/goals/SharedGoal';
 import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
@@ -37,20 +37,24 @@ export class SupabaseDomainConverter {
 			currentStreakInfo.start_date,
 			currentStreakInfo.end_date,
 			currentStreakInfo.streak_count,
-			currentStreakInfo.current_period_success,
+			currentStreakInfo.current_period_success
 		);
 	}
 
 	convertUserProfile(userProfile: SupabaseUserProfile): UserProfile {
-		return new UserProfile(userProfile.id, userProfile.email);
+		return new UserProfile(
+			userProfile.id,
+			userProfile.email,
+			userProfile.profile_image_url ?? undefined
+		);
 	}
 
 	convertShareRecord(
-		userProfile: SupabaseUserProfile,
+		userProfile: UserProfile,
 		shareRecord: SupabaseShareRecord
 	): ShareRecord {
 		return new ShareRecord(
-			this.convertUserProfile(userProfile),
+			userProfile,
 			shareRecord.goal,
 			shareRecord.status,
 			shareRecord.created_at
@@ -79,6 +83,6 @@ export class SupabaseDomainConverter {
 			shareStatus: sharedGoalPreview.share_status,
 			sharedWith: sharedGoalPreview.shared_with,
 			sharedOn: sharedGoalPreview.shared_on
-		}
+		};
 	}
 }

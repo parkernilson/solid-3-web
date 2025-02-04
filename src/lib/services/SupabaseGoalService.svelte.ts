@@ -265,7 +265,8 @@ export class SupabaseGoalService implements GoalService {
 		const shareRecords = supabaseShareRecords.map((record) => {
 			const user = usersData.find((user) => user.id === record.shared_with);
 			if (!user) throw new Error('User not found');
-			return this.converter.convertShareRecord(user, record);
+			const userProfile = this.converter.convertUserProfile(user);
+			return this.converter.convertShareRecord(userProfile, record);
 		});
 		return shareRecords;
 	}
