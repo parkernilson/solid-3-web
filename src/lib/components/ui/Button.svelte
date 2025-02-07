@@ -1,5 +1,6 @@
 <script lang="ts">
-	const { title, onClick }: { title: string; onClick: () => void | Promise<void> } = $props();
+	const { title, onClick, disabled }: { title: string; onClick: () => void | Promise<void>; disabled?: boolean; } = $props();
 </script>
 
-<button onclick={onClick} class="text-2xl">{title}</button>
+<!-- TODO: add accesibility labels to buttons -->
+<button disabled={disabled} onclick={onClick} class="text-2xl">{title}</button>

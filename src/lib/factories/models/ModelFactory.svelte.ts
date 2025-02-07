@@ -51,6 +51,11 @@ export class ModelFactory {
 	}
 
 	createUserProfileDataModel(userId: string, initialData?: UserProfile) {
-		return new UserProfileDataModel(this.serviceFactory.createAuthService(), userId, initialData);
+		return new UserProfileDataModel(
+			this.serviceFactory.createAuthService(),
+			this.serviceFactory.createProfileService(),
+			userId,
+			initialData
+		);
 	}
 }

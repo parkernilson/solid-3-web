@@ -10,6 +10,7 @@ export interface AuthStateEvent {
 }
 
 export interface AuthService {
+	// TODO: move profile related methods to the profile service
 	getUserProfile(userId: string): Promise<UserProfile | null>;
 	subscribeToAuthState(handler: (event: AuthStateEvent) => void): Promise<Subscription>;
   	login(email: string, password: string): Promise<void>;

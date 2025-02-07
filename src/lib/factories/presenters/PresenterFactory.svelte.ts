@@ -164,11 +164,13 @@ export class PresenterFactory {
 		);
 	}
 
-	createProfilePagePresenter(userProfileDataModel: UserProfileDataModel) {
+	createProfilePagePresenter(userProfileDataModel: UserProfileDataModel, userId: string) {
 		return new ProfilePagePresenter(
 			this.serviceFactory.createErrorService(),
 			this.serviceFactory.createAuthService(),
-			userProfileDataModel
+			this.authModelInstance,
+			userProfileDataModel,
+			userId
 		);
 	}
 }

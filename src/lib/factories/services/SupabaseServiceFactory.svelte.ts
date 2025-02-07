@@ -1,7 +1,9 @@
 import { SupabaseDomainConverter } from '$lib/model/converters/supabase/SupabaseDomainConverter';
 import { ConsoleLoggingErrorService } from '$lib/services/ConsoleLoggingErrorService.svelte';
+import type { ProfileService } from '$lib/services/ProfileService.svelte';
 import { SupabaseAuthService } from '$lib/services/SupabaseAuthService.svelte';
 import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
+import { SupabaseProfileService } from '$lib/services/SupabaseProfileService.svelte';
 import type { SupabaseClient } from '$lib/supabase/supabase';
 import type { SupabaseFactory } from '../supabase/SupabaseFactory.svelte';
 import { ServiceFactory } from './ServiceFactory.svelte';
@@ -32,5 +34,9 @@ export class SupabaseServiceFactory extends ServiceFactory {
 
 	createErrorService(): ConsoleLoggingErrorService {
 		return new ConsoleLoggingErrorService();
+	}
+
+	createProfileService(): ProfileService {
+		return new SupabaseProfileService(this.supabase, new SupabaseDomainConverter());
 	}
 }

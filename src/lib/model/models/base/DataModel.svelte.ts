@@ -6,7 +6,7 @@ export abstract class DataModel<T extends IOptimistic & Id> extends BaseModel {
     public data = $state<T>();
 
     constructor(initialData?: T) {
-        super();
+        super()
         if (initialData) this.setData(initialData);
     }
 

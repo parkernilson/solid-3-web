@@ -25,8 +25,7 @@ export class UserProfile implements IUserProfile {
     }
 
     static defaultProfileImageUrl(): string {
-        // TODO: Make this work in production
-        return "http://127.0.0.1:54321/storage/v1/object/sign/profile_pictures/default/default-user.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJwcm9maWxlX3BpY3R1cmVzL2RlZmF1bHQvZGVmYXVsdC11c2VyLnBuZyIsImlhdCI6MTczODYyOTAxNiwiZXhwIjoxNzQxMjIxMDE2fQ.xT14GSCfQbB2fdjEEMZ6rQ_nZC9hEvoOFX_0Jh_cGYI&t=2025-02-04T00%3A30%3A16.663Z";
+        return "/default-user.png";
     }
 
     toJson(): IUserProfile {

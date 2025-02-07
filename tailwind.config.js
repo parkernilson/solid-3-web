@@ -17,7 +17,8 @@ export default {
       blue: {
         DEFAULT: "#4BC0EC",
         light: "#7CD7F8"
-      }
+      },
+      black: colors.black,
     }
   },
   plugins: [],
