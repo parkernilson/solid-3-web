@@ -1,4 +1,4 @@
-import type { Entry, Goal, IGoal, IGoalInfo } from '$lib/model/domain/goals';
+import type { Entry, Goal, IGoal, IGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
@@ -19,6 +19,7 @@ import { GoalsPagePresenter } from '$lib/presenters/goals/GoalsPagePresenter.sve
 import { GoalsRoutePresenter } from '$lib/presenters/goals/GoalsRoutePresenter.svelte';
 import { ShareGoalDialogPresenter } from '$lib/presenters/goals/ShareGoalDialogPresenter.svelte';
 import { ShareGoalPagePresenter } from '$lib/presenters/goals/ShareGoalPagePresenter.svelte';
+import { ShareRequestListViewPresenter } from '$lib/presenters/goals/ShareRequestListViewPresenter.svelte';
 import { ShareRequestsPagePresenter } from '$lib/presenters/goals/ShareRequestsPagePresenter.svelte';
 import { RootLayoutPresenter } from '$lib/presenters/root/RootLayoutPresenter.svelte';
 import { UserPickerPresenter, type UserSelectAction } from '$lib/presenters/users/UserPickerPresenter.svelte';
@@ -145,11 +146,18 @@ export class PresenterFactory {
 		)
 	}
 
-	createShareRequestsPagePresenter(goalsRoutePresenter: GoalsRoutePresenter) {
+	createShareRequestsPagePresenter(sharedGoalsModel: SharedGoalsModel) {
 		return new ShareRequestsPagePresenter(
 			this.serviceFactory.createErrorService(),
-			this.serviceFactory.createGoalService(),
-			goalsRoutePresenter
+			sharedGoalsModel
+		);
+	}
+
+	createShareRequestListViewPresenter(sharedGoalsModel: SharedGoalsModel, sharedGoalPreview: ISharedGoalPreview) {
+		return new ShareRequestListViewPresenter(
+			this.serviceFactory.createErrorService(),
+			sharedGoalsModel,
+			sharedGoalPreview
 		);
 	}
 

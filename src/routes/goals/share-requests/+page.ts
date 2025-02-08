@@ -1,6 +1,6 @@
 export const load = async ({ parent }) => {
-    const { goalsRoutePresenter, presenterFactory } = await parent();
-    const presenter = presenterFactory.createShareRequestsPagePresenter(goalsRoutePresenter);
+    const { sharedGoalsModel, presenterFactory } = await parent();
+    const presenter = presenterFactory.createShareRequestsPagePresenter(sharedGoalsModel);
     return {
         presenter
     }

@@ -1,50 +1,48 @@
+import type { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
-import type { GoalService } from '$lib/services/GoalService.svelte';
 import { ErrorHandler } from '../../utils/ErrorHandler';
-import type { GoalsRoutePresenter } from './GoalsRoutePresenter.svelte';
 
 export class ShareRequestsPagePresenter extends ErrorHandler {
 	get sharedGoalsWithMePending() {
-		return this.goalsRoutePresenter.sharedGoalsWithMePending;
+		return this.sharedGoalsModel.sharedGoalsWithMePending;
 	}
 
 	constructor(
 		errorService: ErrorService,
-		private goalService: GoalService,
-		private goalsRoutePresenter: GoalsRoutePresenter
+		private sharedGoalsModel: SharedGoalsModel,
 	) {
 		super(errorService);
 	}
 
-	private async doShareRequestAcceptOrReject(goalId: string, accept: boolean) {
-		const prevStatus = this.goalsRoutePresenter.sharedGoalsWithMe?.find(
-			(g) => g.goalId === goalId
-		)?.shareStatus;
+	// private async doShareRequestAcceptOrReject(goalId: string, accept: boolean) {
+	// 	const prevStatus = this.goalsRoutePresenter.sharedGoalsWithMe?.find(
+	// 		(g) => g.goalId === goalId
+	// 	)?.shareStatus;
 
-		await this.doErrorable({
-			action: async () => {
-				if (accept) {
-					await this.goalService.acceptSharedGoal({ goalId });
-					this.goalsRoutePresenter.markShareRequestStatus(goalId, 'accepted');
-				} else {
-					await this.goalService.rejectSharedGoal({ goalId });
-					this.goalsRoutePresenter.markShareRequestStatus(goalId, 'rejected');
-				}
-			},
-			onError: async () => {
-				if (prevStatus) {
-					this.goalsRoutePresenter.markShareRequestStatus(goalId, prevStatus);
-				}
-			}
-		});
-	}
+	// 	await this.doErrorable({
+	// 		action: async () => {
+	// 			if (accept) {
+	// 				await this.goalService.acceptSharedGoal({ goalId });
+	// 				this.goalsRoutePresenter.markShareRequestStatus(goalId, 'accepted');
+	// 			} else {
+	// 				await this.goalService.rejectSharedGoal({ goalId });
+	// 				this.goalsRoutePresenter.markShareRequestStatus(goalId, 'rejected');
+	// 			}
+	// 		},
+	// 		onError: async () => {
+	// 			if (prevStatus) {
+	// 				this.goalsRoutePresenter.markShareRequestStatus(goalId, prevStatus);
+	// 			}
+	// 		}
+	// 	});
+	// }
 
-	async acceptShareRequest(goalId: string) {
-		await this.doShareRequestAcceptOrReject(goalId, true);
-	}
+	// async acceptShareRequest(goalId: string) {
+	// 	await this.doShareRequestAcceptOrReject(goalId, true);
+	// }
 
-	async rejectShareRequest(goalId: string) {
-		await this.doShareRequestAcceptOrReject(goalId, false);
-	}
+	// async rejectShareRequest(goalId: string) {
+	// 	await this.doShareRequestAcceptOrReject(goalId, false);
+	// }
 
 }
