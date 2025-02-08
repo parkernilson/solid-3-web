@@ -12,6 +12,18 @@ export class ShareRequestListViewPresenter extends ErrorHandler {
 		return this.sharedGoalPreview.goalOwnerEmail;
 	}
 
+	get goalOwnerId() {
+		return this.sharedGoalPreview.goalOwnerId;
+	}
+
+	get goalOwnerProfileImagePath() {
+		return this.sharedGoalPreview.goalOwnerProfileImagePath;
+	}
+
+	get shareMessage() {
+		return `${this.goalOwnerEmail} wants to share their goal "${this.goalTitle}" with you.`;
+	}
+
 	private async acceptOrReject(status: "accept" | "reject") {
 		await this.doErrorable({
 			action: async () => {

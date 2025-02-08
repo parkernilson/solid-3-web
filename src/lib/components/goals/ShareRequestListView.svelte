@@ -3,6 +3,7 @@
 	import type { ISharedGoalPreview } from '$lib/model/domain/goals';
 	import type { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
 	import { getContext } from 'svelte';
+	import ProfilePicture from '../users/ProfilePicture.svelte';
 
 	const {
 		sharedGoalPreview,
@@ -19,15 +20,30 @@
 	);
 </script>
 
-<div>
-    <h1>{presenter.goalTitle}</h1>
-    <p>{presenter.goalOwnerEmail}</p>
-    <button
-        onclick={async () => { await presenter.accept(); }}
-        class="block mx-2">Accept</button
-    >
-    <button
-        onclick={async () => { await presenter.reject(); }}
-        class="block mx-2">Reject</button
-    >
+<div class="m-2 flex flex-col items-center">
+	<div class="flex items-center">
+		<div class="w-12 h-12 mr-2">
+			<ProfilePicture
+				userId={presenter.goalOwnerId}
+				profileImagePath={presenter.goalOwnerProfileImagePath}
+			/>
+		</div>
+		<div class="flex-1">
+			<p>{presenter.shareMessage}</p>
+		</div>
+	</div>
+	<div class="flex items-center justify-around w-full max-w-[300px]">
+		<button
+			onclick={async () => {
+				await presenter.accept();
+			}}
+			class="mx-2 text-xl">Accept</button
+		>
+		<button
+			onclick={async () => {
+				await presenter.reject();
+			}}
+			class="mx-2 text-xl">Reject</button
+		>
+	</div>
 </div>
