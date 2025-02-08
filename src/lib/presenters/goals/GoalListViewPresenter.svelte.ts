@@ -1,31 +1,54 @@
-import { GoalInfo, type IGoalInfo } from "$lib/model/domain/goals";
-import { isSharedGoalInfo, type ISharedGoalInfo } from "$lib/model/domain/goals/SharedGoalInfo";
-import { diffDays, today } from "$lib/utils/dates";
+import { GoalInfo, type IGoalInfo } from '$lib/model/domain/goals';
+import { isSharedGoalInfo, type ISharedGoalInfo } from '$lib/model/domain/goals/SharedGoalInfo';
+import { UserProfile } from '$lib/model/domain/users';
+import type { ProfileService } from '$lib/services/ProfileService.svelte';
+import { diffDays, today } from '$lib/utils/dates';
 
 export class GoalListViewPresenter {
-    
-    get title() {
-        return this.goalInfo.title;
-    }
+	get title() {
+		return this.goalInfo.title;
+	}
 
-    get streakString() {
-        return `${this.goalInfo.streak?.streakCount ?? 0} days`;
-    }
+	get streakString() {
+		return `${this.goalInfo.streak?.streakCount ?? 0} days`;
+	}
 
-    get lastActivityMessage() {
-        const goalInfoObj = GoalInfo.fromJson(this.goalInfo);
-        return goalInfoObj.lastEntryDate ?
-        `Last activity ${diffDays(today(), goalInfoObj.lastEntryDate)} days ago`
-        : "No activity yet";
-    }
+	get lastActivityMessage() {
+		const goalInfoObj = GoalInfo.fromJson(this.goalInfo);
+		return goalInfoObj.lastEntryDate
+			? `Last activity ${diffDays(today(), goalInfoObj.lastEntryDate)} days ago`
+			: 'No activity yet';
+	}
 
-    get sharedBy() {
-        return isSharedGoalInfo(this.goalInfo) ? this.goalInfo.ownerEmail : undefined;
-    }
+	get isSharedGoal() {
+		return isSharedGoalInfo(this.goalInfo);
+	}
 
-    get goalPageUrl() {
-        return isSharedGoalInfo(this.goalInfo) ? `/goals/shared/${this.goalInfo.id}` : `/goals/${this.goalInfo.id}`;
-    }
+	get sharedBy() {
+		return isSharedGoalInfo(this.goalInfo) ? this.goalInfo.ownerEmail : undefined;
+	}
 
-    constructor(private goalInfo: IGoalInfo | ISharedGoalInfo) {}
+	get goalPageUrl() {
+		return isSharedGoalInfo(this.goalInfo)
+			? `/goals/shared/${this.goalInfo.id}`
+			: `/goals/${this.goalInfo.id}`;
+	}
+
+	get goalOwnerProfileImageUrl(): string | undefined {
+		if (isSharedGoalInfo(this.goalInfo)) {
+			return this.goalInfo.ownerProfileImagePath
+				? this.profileService.getImageUrlFromPath(
+						this.goalInfo.owner,
+						this.goalInfo.ownerProfileImagePath!
+					)
+				: UserProfile.defaultProfileImagePath();
+		} else {
+			return undefined;
+		}
+	}
+
+	constructor(
+		private goalInfo: IGoalInfo | ISharedGoalInfo,
+		private profileService: ProfileService
+	) {}
 }

@@ -154,7 +154,7 @@ export class PresenterFactory {
 	}
 
 	createGoalListViewPresenter(goalInfo: IGoalInfo) {
-		return new GoalListViewPresenter(goalInfo);
+		return new GoalListViewPresenter(goalInfo, this.serviceFactory.createProfileService());
 	}
 
 	createCreateGoalModalPresenter(goalCollectionModel: GoalCollectionModel) {

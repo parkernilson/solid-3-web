@@ -67,6 +67,7 @@ export class SupabaseDomainConverter {
 			title: sharedGoal.title,
 			owner: sharedGoal.owner,
 			ownerEmail: sharedGoal.owner_email,
+			ownerProfileImagePath: sharedGoal.owner_profile_image_path,
 			startDate: sharedGoal.created_at,
 			sharedOn: sharedGoal.shared_on
 		};
@@ -80,6 +81,7 @@ export class SupabaseDomainConverter {
 			goalTitle: sharedGoalPreview.goal_title,
 			goalOwnerId: sharedGoalPreview.goal_owner_id,
 			goalOwnerEmail: sharedGoalPreview.goal_owner_email,
+			goalOwnerProfileImagePath: sharedGoalPreview.goal_owner_profile_image_path,
 			shareStatus: sharedGoalPreview.share_status,
 			sharedWith: sharedGoalPreview.shared_with,
 			sharedOn: sharedGoalPreview.shared_on

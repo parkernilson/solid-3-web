@@ -7,6 +7,7 @@ export interface ISharedGoalPreview {
 	goalTitle: string;
 	goalOwnerId: string;
 	goalOwnerEmail: string;
+	goalOwnerProfileImagePath?: string;
 	shareStatus: ShareStatus;
 	sharedWith: string;
 	sharedOn: string;
@@ -26,7 +27,8 @@ export class SharedGoalPreview implements ISharedGoalPreview {
 		public goalOwnerEmail: string,
 		public shareStatus: ShareStatus,
 		public sharedWith: string,
-		public sharedOn: string
+		public sharedOn: string,
+		public goalOwnerProfileImagePath?: string
 	){}
 
 	toJson(): ISharedGoalPreview {
@@ -39,7 +41,8 @@ export class SharedGoalPreview implements ISharedGoalPreview {
 			goalOwnerEmail: this.goalOwnerEmail,
 			shareStatus: this.shareStatus,
 			sharedWith: this.sharedWith,
-			sharedOn: this.sharedOn
+			sharedOn: this.sharedOn,
+			goalOwnerProfileImagePath: this.goalOwnerProfileImagePath
 		}
 	}
 
@@ -53,7 +56,8 @@ export class SharedGoalPreview implements ISharedGoalPreview {
 			json.goalOwnerEmail,
 			json.shareStatus,
 			json.sharedWith,
-			json.sharedOn
+			json.sharedOn,
+			json.goalOwnerProfileImagePath
 		);
 	}
 }

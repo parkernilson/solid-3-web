@@ -18,6 +18,7 @@ export class SharedGoalInfo extends GoalInfo {
         startDate: string,
         public sharedOn: string,
         public ownerEmail: string,
+        public ownerProfileImagePath?: string,
         streak?: ICurrentStreakInfo | null,
         record?: IStreakInfo | null,
         activity?: ActivityInfo,
