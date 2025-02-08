@@ -22,8 +22,8 @@ export abstract class DataModel<T extends IOptimistic & Id> extends BaseModel {
             const result = await this.sendUpdate(data);
             this.setData(result);
         } catch (e) {
-            console.error(e);
             this.setData(originalData);
+            throw e;
         }
     }
 }
