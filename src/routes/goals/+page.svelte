@@ -6,10 +6,6 @@
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalsPagePresenter;
 
-	$effect(() => {
-		$inspect(presenter.sharedGoalsWithMe)
-	})
-
 </script>
 
 <HeaderBar rootLayoutPresenter={data.rootLayoutPresenter} />
