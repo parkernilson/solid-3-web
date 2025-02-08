@@ -1,6 +1,5 @@
 import { GoalInfo, type IGoalInfo } from '$lib/model/domain/goals';
 import { isSharedGoalInfo, type ISharedGoalInfo } from '$lib/model/domain/goals/SharedGoalInfo';
-import { UserProfile } from '$lib/model/domain/users';
 import type { ProfileService } from '$lib/services/ProfileService.svelte';
 import { diffDays, today } from '$lib/utils/dates';
 
@@ -34,14 +33,17 @@ export class GoalListViewPresenter {
 			: `/goals/${this.goalInfo.id}`;
 	}
 
-	get goalOwnerProfileImageUrl(): string | undefined {
+	get goalOwnerId(): string | undefined {
 		if (isSharedGoalInfo(this.goalInfo)) {
-			return this.goalInfo.ownerProfileImagePath
-				? this.profileService.getImageUrlFromPath(
-						this.goalInfo.owner,
-						this.goalInfo.ownerProfileImagePath!
-					)
-				: UserProfile.defaultProfileImagePath();
+			return this.goalInfo.owner;
+		} else {
+			return undefined;
+		}
+	}
+
+	get ownerProfileImagePath(): string | undefined {
+		if (isSharedGoalInfo(this.goalInfo)) {
+			return this.goalInfo.ownerProfileImagePath;
 		} else {
 			return undefined;
 		}

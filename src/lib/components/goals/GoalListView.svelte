@@ -2,6 +2,7 @@
 	import { PresenterFactory } from "$lib/factories/presenters/PresenterFactory.svelte";
 	import type { IGoalInfo, ISharedGoal } from "$lib/model/domain/goals";
 	import { getContext } from "svelte";
+	import ProfilePicture from "../users/ProfilePicture.svelte";
 
     const { goal }: { goal: IGoalInfo | ISharedGoal } = $props();
     const presenterFactory = getContext<PresenterFactory>("PresenterFactory")
@@ -14,7 +15,9 @@
         <div class="flex items-center">
             {#if presenter.isSharedGoal} 
                 <div class="h-full flex items-center align-center">
-                    <img class="w-12 h-12 aspect-square rounded-full mr-2 object-cover" alt="Profile of {presenter.sharedBy}" src={presenter.goalOwnerProfileImageUrl} />
+                    <div class="w-12 h-12 mr-2">
+                        <ProfilePicture userId={presenter.goalOwnerId!} profileImagePath={presenter.ownerProfileImagePath} />
+                    </div>
                 </div>
             {/if}
             <div class="flex-1 flex flex-col">

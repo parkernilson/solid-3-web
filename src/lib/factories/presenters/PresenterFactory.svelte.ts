@@ -8,6 +8,7 @@ import type { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.
 import type { UserProfileDataModel } from '$lib/model/models/profile/UserProfileDataModel.svelte';
 import { LoginPresenter } from '$lib/presenters/auth/LoginPresenter.svelte';
 import { ProfilePagePresenter } from '$lib/presenters/auth/ProfilePagePresenter.svelte';
+import { ProfilePicturePresenter } from '$lib/presenters/auth/ProfilePicturePresenter.svelte';
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
 import { CreateGoalModalPresenter } from '$lib/presenters/goals/CreateGoalModalPresenter.svelte';
 import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
@@ -180,6 +181,14 @@ export class PresenterFactory {
 			userProfileDataModel,
 			userId,
 			this.serviceFactory.createProfileService()
+		);
+	}
+
+	createProfilePicturePresenter(userId: string, imagePath?: string) {
+		return new ProfilePicturePresenter(
+			this.serviceFactory.createProfileService(),
+			userId,
+			imagePath
 		);
 	}
 }
