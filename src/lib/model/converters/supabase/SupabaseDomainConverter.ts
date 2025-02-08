@@ -45,7 +45,7 @@ export class SupabaseDomainConverter {
 		return new UserProfile(
 			userProfile.id,
 			userProfile.email,
-			userProfile.profile_image_url ?? undefined
+			userProfile.profile_image_path ?? undefined
 		);
 	}
 

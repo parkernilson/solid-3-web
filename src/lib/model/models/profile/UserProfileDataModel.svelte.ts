@@ -13,17 +13,10 @@ export class UserProfileDataModel extends DataModel<IUserProfile> {
         super(initialData);
     }
 
-    public async optimisticUpdateProfilePicture(file: Blob): Promise<void> {
-        // TODO: make this use the generic update method (make it accept a function as param)
+    public async updateProfilePicture(file: Blob): Promise<void> {
         if (!this.data) throw new Error("No user profile data to update");
-        const oldProfileImageUrl = this.data.profileImageUrl;
-        try {
-            const { imageUrl } = await this.profileService.updateProfileImage(this.userId, file);
-            this.data.profileImageUrl = imageUrl;
-        } catch(e) {
-            this.data.profileImageUrl = oldProfileImageUrl;
-            throw e;
-        } 
+        const { imagePath } = await this.profileService.updateProfileImage(file);
+        this.data.profileImagePath = imagePath;
     }
 
     protected sendUpdate(): Promise<IUserProfile> {

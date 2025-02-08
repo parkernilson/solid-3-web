@@ -1,7 +1,7 @@
 export interface IUserProfile {
     id: string;
     email: string;
-    profileImageUrl?: string;
+    profileImagePath?: string;
 }
 
 export class UserProfile implements IUserProfile {
@@ -18,13 +18,13 @@ export class UserProfile implements IUserProfile {
     constructor(
         id: string,
         email: string,
-        public profileImageUrl?: string
+        public profileImagePath?: string
     ) {
         this._id = id;
         this._email = email;
     }
 
-    static defaultProfileImageUrl(): string {
+    static defaultProfileImagePath(): string {
         return "/default-user.png";
     }
 
@@ -32,7 +32,7 @@ export class UserProfile implements IUserProfile {
         return {
             id: this.id,
             email: this.email,
-            profileImageUrl: this.profileImageUrl
+            profileImagePath: this.profileImagePath
         }
     }
 
@@ -40,7 +40,7 @@ export class UserProfile implements IUserProfile {
         return new UserProfile(
             json.id,
             json.email,
-            json.profileImageUrl
+            json.profileImagePath
         )
     }
 }

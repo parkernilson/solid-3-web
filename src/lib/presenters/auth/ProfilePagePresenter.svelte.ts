@@ -3,6 +3,7 @@ import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { UserProfileDataModel } from '$lib/model/models/profile/UserProfileDataModel.svelte';
 import type { AuthService } from '$lib/services/AuthService.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
+import type { ProfileService } from '$lib/services/ProfileService.svelte';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export class ProfilePagePresenter extends LoadablePresenter {
@@ -21,26 +22,26 @@ export class ProfilePagePresenter extends LoadablePresenter {
 		this._authModel.user && this.profile ? this._authModel.user.id === this.profile.id : false
 	);
 
-    private _hasEditedProfileImage = $state(false)
-    private _updatingProfileImage = $state(false)
-    public get hasEditedProfileImage() {
-        return this._hasEditedProfileImage;
-    }
-    private set hasEditedProfileImage(value: boolean) {
-        this._hasEditedProfileImage = value;
-    }
-    public get updatingProfileImage() {
-        return this._updatingProfileImage;
-    }
-    private set updatingProfileImage(value: boolean) {
-        this._updatingProfileImage = value;
-    }
+	private _hasEditedProfileImage = $state(false);
+	private _updatingProfileImage = $state(false);
+	public get hasEditedProfileImage() {
+		return this._hasEditedProfileImage;
+	}
+	private set hasEditedProfileImage(value: boolean) {
+		this._hasEditedProfileImage = value;
+	}
+	public get updatingProfileImage() {
+		return this._updatingProfileImage;
+	}
+	private set updatingProfileImage(value: boolean) {
+		this._updatingProfileImage = value;
+	}
 
 	async onImageSelected(event: Event) {
 		if (event.type !== 'change') return;
 		if (!this.profileImgFile) return;
 
-        this.hasEditedProfileImage = true;
+		this.hasEditedProfileImage = true;
 		if (this.selectedImgUrl) {
 			URL.revokeObjectURL(this.selectedImgUrl);
 		}
@@ -57,7 +58,13 @@ export class ProfilePagePresenter extends LoadablePresenter {
 	}
 
 	get profileImageUrl() {
-		return this.profileDataModel.data?.profileImageUrl ?? UserProfile.defaultProfileImageUrl();
+		if (!this.profile) throw new Error('Profile not loaded');
+		return this.profileDataModel.data?.profileImagePath
+			? this.profileService.getImageUrlFromPath(
+					this.profile.id,
+					this.profileDataModel.data.profileImagePath
+				)
+			: UserProfile.defaultProfileImagePath();
 	}
 
 	async logout() {
@@ -73,10 +80,11 @@ export class ProfilePagePresenter extends LoadablePresenter {
 		private authService: AuthService,
 		private authModel: AuthModel,
 		private profileDataModel: UserProfileDataModel,
-		private userId: string
+		private userId: string,
+		private profileService: ProfileService
 	) {
 		super(errorService);
-        this._authModel = authModel;
+		this._authModel = authModel;
 	}
 
 	protected async loadResource(): Promise<void> {
@@ -87,13 +95,13 @@ export class ProfilePagePresenter extends LoadablePresenter {
 		await this.doErrorable({
 			action: async () => {
 				if (!this.profileImgFile) throw new Error('There was no file to upload');
-                this.updatingProfileImage = true;
-				await this.profileDataModel.optimisticUpdateProfilePicture(this.profileImgFile);
-                this.hasEditedProfileImage = false;
+				this.updatingProfileImage = true;
+				await this.profileDataModel.updateProfilePicture(this.profileImgFile);
+				this.hasEditedProfileImage = false;
 			},
-            onFinally: () => {
-                this.updatingProfileImage = false;
-            }
+			onFinally: () => {
+				this.updatingProfileImage = false;
+			}
 		});
 	}
 }

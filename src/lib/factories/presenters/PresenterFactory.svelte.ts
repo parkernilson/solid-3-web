@@ -170,7 +170,8 @@ export class PresenterFactory {
 			this.serviceFactory.createAuthService(),
 			this.authModelInstance,
 			userProfileDataModel,
-			userId
+			userId,
+			this.serviceFactory.createProfileService()
 		);
 	}
 }

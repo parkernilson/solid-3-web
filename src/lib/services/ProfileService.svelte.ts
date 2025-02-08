@@ -1,7 +1,8 @@
 export interface UpdateProfileImageResponse {
-    imageUrl: string;
+    imagePath: string;
 }
 
 export interface ProfileService {
-    updateProfileImage(userId: string, file: Blob): Promise<UpdateProfileImageResponse>;
+    updateProfileImage(file: Blob): Promise<UpdateProfileImageResponse>;
+    getImageUrlFromPath(userId: string, imagePath: string): string;
 }
