@@ -3,8 +3,8 @@ import type { Id, IdType } from '../../domain/Id';
 import { CollectionModel } from './CollectionModel.svelte';
 import type { DataModel } from './DataModel.svelte';
 
-export abstract class ListCollectionModel<T extends Id> extends CollectionModel<T> {
-	private _models = $state<DataModel<T>[]>();
+export abstract class ListCollectionModel<T extends Id, DM extends DataModel<T> = DataModel<T>> extends CollectionModel<T, DM> {
+	private _models = $state<DM[]>();
 	private _data = $derived(
 		this.models ? filterUndefined(this.models.map((m) => m.data)) : undefined
 	);
@@ -12,7 +12,7 @@ export abstract class ListCollectionModel<T extends Id> extends CollectionModel<
 	get models() {
 		return this._models;
 	}
-	private set models(models: DataModel<T>[] | undefined) {
+	private set models(models: DM[] | undefined) {
 		this._models = models;
 	}
 	get data() {
@@ -26,7 +26,7 @@ export abstract class ListCollectionModel<T extends Id> extends CollectionModel<
 		super(initialData);
 	}
 
-	protected get(id: IdType): DataModel<T> | undefined {
+	protected get(id: IdType): DM | undefined {
 		return this.models?.find((model) => model.data && model.data.id === id);
 	}
 	protected add(data: T): void {

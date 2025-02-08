@@ -5,16 +5,17 @@ import type { DataModel } from './DataModel.svelte';
 
 export abstract class CollectionModel<
 	T extends Id & IOptimistic,
+	DM extends DataModel<T> = DataModel<T>
 > extends BaseModel {
 	constructor(initialData?: T[]) {
 		super();
 		if (initialData) this.setItems(initialData);
 	}
 
-	protected abstract makeConstituentDataModel(data: T): DataModel<T>;
+	protected abstract makeConstituentDataModel(data: T): DM;
 	protected abstract sendCreate(data: T): Promise<T>;
 	protected abstract sendDelete(id: IdType): Promise<void>;
-	protected abstract get(id: IdType): DataModel<T> | undefined;
+	protected abstract get(id: IdType): DM | undefined;
 	protected abstract add(data: T): void;
 	protected abstract setItems(data: T[]): void;
 	protected abstract remove(id: IdType): void;

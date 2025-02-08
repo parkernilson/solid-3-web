@@ -12,6 +12,26 @@ export class ShareRequestListViewPresenter extends ErrorHandler {
 		return this.sharedGoalPreview.goalOwnerEmail;
 	}
 
+	private async acceptOrReject(status: "accept" | "reject") {
+		await this.doErrorable({
+			action: async () => {
+				if (status === "accept") {
+					await this.sharedGoalsModel.acceptSharedGoal(this.sharedGoalPreview.id);
+				} else {
+					await this.sharedGoalsModel.rejectSharedGoal(this.sharedGoalPreview.id);
+				}
+			}
+		})
+	}
+
+	async accept() {
+		await this.acceptOrReject("accept");
+	}
+
+	async reject() {
+		await this.acceptOrReject("reject");
+	}
+
 	constructor(
 		errorService: ErrorService,
 		private sharedGoalsModel: SharedGoalsModel,

@@ -1,11 +1,11 @@
 import type { ModelFactory } from "$lib/factories/models/ModelFactory.svelte";
 import type { GoalService } from "$lib/services/GoalService.svelte";
-import type { ISharedGoalPreview } from "../../domain/goals";
+import type { ISharedGoalPreview, ShareStatus } from "../../domain/goals";
 import type { UserProfile } from "../../domain/users";
-import type { DataModel } from "../base/DataModel.svelte";
 import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
+import type { SharedGoalPreviewDataModel } from "./SharedGoalPreviewDataModel.svelte";
 
-export class SharedGoalPreviewCollectionModel extends ListCollectionModel<ISharedGoalPreview> {
+export class SharedGoalPreviewCollectionModel extends ListCollectionModel<ISharedGoalPreview, SharedGoalPreviewDataModel> {
     constructor(
         private goalService: GoalService,
         private modelFactory: ModelFactory,
@@ -19,8 +19,14 @@ export class SharedGoalPreviewCollectionModel extends ListCollectionModel<IShare
         this.setItems(sharedGoalPreviews);
     }
 
-    protected makeConstituentDataModel(data: ISharedGoalPreview): DataModel<ISharedGoalPreview> {
+    protected makeConstituentDataModel(data: ISharedGoalPreview): SharedGoalPreviewDataModel {
         return this.modelFactory.createSharedGoalPreviewDataModel(data);
+    }
+
+    markRequestStatus(goalId: string, status: ShareStatus): ShareStatus {
+        const goal = this.get(goalId);
+        if (!goal) throw new Error("Tried to mark shared goal preview as accepted, but it was not found.");
+        return goal.markRequestStatus(status);
     }
 
     protected sendCreate(): Promise<ISharedGoalPreview> {

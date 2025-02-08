@@ -19,6 +19,10 @@ export class SharedGoalCollectionModel extends ListCollectionModel<ISharedGoalIn
 		this.setItems(sharedGoals);
 	}
 
+	async reload(): Promise<void> {
+		await this.load();
+	}
+
 	protected makeConstituentDataModel(data: ISharedGoalInfo): DataModel<ISharedGoalInfo> {
         return this.modelFactory.createSharedGoalDataModel(data.id, data);
     }

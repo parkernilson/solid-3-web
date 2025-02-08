@@ -23,15 +23,11 @@
     <h1>{presenter.goalTitle}</h1>
     <p>{presenter.goalOwnerEmail}</p>
     <button
-        onclick={() => {
-            // presenter.acceptShareRequest(shareRecord.goalId)
-        }}
+        onclick={async () => { await presenter.accept(); }}
         class="block mx-2">Accept</button
     >
     <button
-        onclick={() => {
-            // presenter.rejectShareRequest(shareRecord.goalId)
-        }}
+        onclick={async () => { await presenter.reject(); }}
         class="block mx-2">Reject</button
     >
 </div>

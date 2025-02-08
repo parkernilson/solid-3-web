@@ -47,7 +47,7 @@ export class ModelFactory {
 	}
 
 	createSharedGoalsModel(user: UserProfile) {
-		return new SharedGoalsModel(this, user);
+		return new SharedGoalsModel(this, user, this.serviceFactory.createGoalService());
 	}
 
 	createUserProfileDataModel(userId: string, initialData?: UserProfile) {
