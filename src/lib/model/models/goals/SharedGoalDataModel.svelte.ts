@@ -8,7 +8,7 @@ export class SharedGoalDataModel extends DataModel<ISharedGoalInfo> {
 		private goalId: string,
 		initialData?: ISharedGoalInfo
 	) {
-		super(initialData);
+		super(goalId, initialData);
 	}
 
 	protected sendUpdate(): Promise<ISharedGoalInfo> {

@@ -1,25 +1,45 @@
-import type { Id, IdType } from '../../domain/Id';
+import type { HasId, IdType } from '../../domain/Id';
 import { OptimisticType, type IOptimistic } from '../../domain/Optimistic';
 import { BaseModel } from './BaseModel.svelte';
 import type { DataModel } from './DataModel.svelte';
+import type { DataStructure } from './DataStructure.svelte';
 
 export abstract class CollectionModel<
-	T extends Id & IOptimistic,
-	DM extends DataModel<T> = DataModel<T>
+	T extends HasId & IOptimistic,
+	DM extends DataModel<T> = DataModel<T>,
+	DS extends DataStructure<DM> = DataStructure<DM>
 > extends BaseModel {
-	constructor(initialData?: T[]) {
+	constructor(
+		protected dataStructure: DS,
+		initialData?: T[]
+	) {
 		super();
-		if (initialData) this.setItems(initialData);
+		if (initialData)
+			this.dataStructure.setItems(initialData.map(this.makeConstituentDataModel.bind(this)));
 	}
 
 	protected abstract makeConstituentDataModel(data: T): DM;
 	protected abstract sendCreate(data: T): Promise<T>;
 	protected abstract sendDelete(id: IdType): Promise<void>;
-	protected abstract get(id: IdType): DM | undefined;
-	protected abstract add(data: T): void;
-	protected abstract setItems(data: T[]): void;
-	protected abstract remove(id: IdType): void;
-	protected abstract update(id: IdType, data: T): void;
+
+	protected get(id: IdType): DM | undefined {
+		return this.dataStructure.get(id);
+	}
+	protected add(data: T) {
+		this.dataStructure.add(this.makeConstituentDataModel(data));
+	}
+	protected setItems(data: T[]) {
+		this.dataStructure.setItems(data.map(this.makeConstituentDataModel.bind(this)));
+	}
+	protected addItems(data: T[]) {
+		this.dataStructure.addItems(data.map(this.makeConstituentDataModel.bind(this)));
+	}
+	protected remove(id: IdType) {
+		this.dataStructure.remove(id);
+	}
+	protected update(id: IdType, data: T) {
+		this.dataStructure.update(id, this.makeConstituentDataModel(data));
+	}
 
 	protected async optimisticCreate(data: T): Promise<void> {
 		try {
@@ -30,19 +50,19 @@ export abstract class CollectionModel<
 			const result = await this.sendCreate(data);
 			this.update(data.id, result);
 		} catch (e) {
-			console.error(e);
 			this.remove(data.id);
+			throw e;
 		}
 	}
 
 	protected async optimisticDelete(id: IdType): Promise<void> {
-		const originalItem = this.get(id)?.data;
+		const originalItem = this.get(id);
+		this.remove(id);
 		try {
-			this.remove(id);
 			await this.sendDelete(id);
 		} catch (e) {
-			console.error(e);
-			if (originalItem) this.add(originalItem as T);
+			if (originalItem) this.dataStructure.add(originalItem);
+			throw e;
 		}
 	}
 }

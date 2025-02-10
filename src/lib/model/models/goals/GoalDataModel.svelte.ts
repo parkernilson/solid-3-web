@@ -4,7 +4,7 @@ import { DataModel } from '../base/DataModel.svelte';
 
 export class GoalDataModel extends DataModel<IGoalInfo> {
 	constructor(private goalService: GoalService, private goalId: string, initialData?: IGoalInfo) {
-		super(initialData);
+		super(goalId, initialData);
 	}
 
 	async load(): Promise<void> {

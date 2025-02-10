@@ -43,7 +43,7 @@ export class ModelFactory {
 	}
 
 	createSharedGoalPreviewDataModel(initialData: ISharedGoalPreview) {
-		return new SharedGoalPreviewDataModel(initialData);
+		return new SharedGoalPreviewDataModel(initialData.id, initialData);
 	}
 
 	createSharedGoalsModel(user: UserProfile) {

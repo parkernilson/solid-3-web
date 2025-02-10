@@ -1,5 +1,5 @@
 export type IdType = string | number;
 
-export interface Id {
+export interface HasId {
     id: IdType;
 }
