@@ -3,14 +3,16 @@ import type { GoalService } from "$lib/services/GoalService.svelte";
 import { GoalInfo, type IGoalInfo } from "../../domain/goals";
 import { GoalDataModel } from "./GoalDataModel.svelte";
 import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
+import type { ListDataStructure } from "../base/ListDataStructure.svelte";
 
-export class GoalCollectionModel extends ListCollectionModel<IGoalInfo> {
+export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalDataModel> {
     constructor(
         private goalService: GoalService,
         private modelFactory: ModelFactory,
+        dataStructure: ListDataStructure<GoalDataModel>,
         private userId: string
     ) {
-        super();
+        super(dataStructure);
     }
 
     async load(): Promise<void> {

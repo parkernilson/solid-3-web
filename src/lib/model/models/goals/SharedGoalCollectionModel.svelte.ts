@@ -2,16 +2,18 @@ import type { ModelFactory } from '$lib/factories/models/ModelFactory.svelte';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import type { ISharedGoalInfo } from '../../domain/goals';
 import type { UserProfile } from '../../domain/users';
-import type { DataModel } from '../base/DataModel.svelte';
 import { ListCollectionModel } from '../base/ListCollectionModel.svelte';
+import type { ListDataStructure } from '../base/ListDataStructure.svelte';
+import type { SharedGoalDataModel } from './SharedGoalDataModel.svelte';
 
-export class SharedGoalCollectionModel extends ListCollectionModel<ISharedGoalInfo> {
+export class SharedGoalCollectionModel extends ListCollectionModel<ISharedGoalInfo, SharedGoalDataModel> {
 	constructor(
 		private goalService: GoalService,
 		private modelFactory: ModelFactory,
+		dataStructure: ListDataStructure<SharedGoalDataModel>,
 		private user: UserProfile
 	) {
-		super();
+		super(dataStructure);
 	}
 
 	async load(): Promise<void> {
@@ -23,7 +25,7 @@ export class SharedGoalCollectionModel extends ListCollectionModel<ISharedGoalIn
 		await this.load();
 	}
 
-	protected makeConstituentDataModel(data: ISharedGoalInfo): DataModel<ISharedGoalInfo> {
+	protected makeConstituentDataModel(data: ISharedGoalInfo): SharedGoalDataModel {
         return this.modelFactory.createSharedGoalDataModel(data.id, data);
     }
 

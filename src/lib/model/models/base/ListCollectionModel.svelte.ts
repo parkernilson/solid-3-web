@@ -21,8 +21,7 @@ export abstract class ListCollectionModel<
 		this._data = data;
 	}
 
-	constructor(initialData?: T[]) {
-		const dataStructure = new ListDataStructure<DM>((m) => m.id);
+	constructor(dataStructure: ListDataStructure<DM>, initialData?: T[]) {
 		super(dataStructure, initialData);
 	}
 }

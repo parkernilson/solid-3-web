@@ -3,15 +3,17 @@ import type { GoalService } from "$lib/services/GoalService.svelte";
 import type { ISharedGoalPreview, ShareStatus } from "../../domain/goals";
 import type { UserProfile } from "../../domain/users";
 import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
+import type { ListDataStructure } from "../base/ListDataStructure.svelte";
 import type { SharedGoalPreviewDataModel } from "./SharedGoalPreviewDataModel.svelte";
 
 export class SharedGoalPreviewCollectionModel extends ListCollectionModel<ISharedGoalPreview, SharedGoalPreviewDataModel> {
     constructor(
         private goalService: GoalService,
         private modelFactory: ModelFactory,
+        dataStructure: ListDataStructure<SharedGoalPreviewDataModel>,
         private user: UserProfile
     ) {
-        super();
+        super(dataStructure);
     }
 
     async load(): Promise<void> {
