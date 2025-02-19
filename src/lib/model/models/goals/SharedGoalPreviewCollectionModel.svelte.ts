@@ -16,7 +16,7 @@ export class SharedGoalPreviewCollectionModel extends ListCollectionModel<IShare
         super(dataStructure);
     }
 
-    async load(): Promise<void> {
+    async sendLoad(): Promise<void> {
         const sharedGoalPreviews = await this.goalService.listSharedGoalPreviewsWithUser(this.user);
         this.setItems(sharedGoalPreviews);
     }
@@ -26,7 +26,7 @@ export class SharedGoalPreviewCollectionModel extends ListCollectionModel<IShare
     }
 
     markRequestStatus(goalId: string, status: ShareStatus): ShareStatus {
-        const goal = this.get(goalId);
+        const goal = this.getModel(goalId);
         if (!goal) throw new Error("Tried to mark shared goal preview as accepted, but it was not found.");
         return goal.markRequestStatus(status);
     }

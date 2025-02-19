@@ -16,13 +16,13 @@ export class SharedGoalCollectionModel extends ListCollectionModel<ISharedGoalIn
 		super(dataStructure);
 	}
 
-	async load(): Promise<void> {
+	async sendLoad(): Promise<void> {
 		const sharedGoals = await this.goalService.listSharedGoalInfosWithUser(this.user);
 		this.setItems(sharedGoals);
 	}
 
 	async reload(): Promise<void> {
-		await this.load();
+		await this.sendLoad();
 	}
 
 	protected makeConstituentDataModel(data: ISharedGoalInfo): SharedGoalDataModel {

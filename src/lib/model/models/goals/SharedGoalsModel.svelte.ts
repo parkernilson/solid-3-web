@@ -35,10 +35,10 @@ export class SharedGoalsModel extends BaseModel {
 		);
 	}
 
-	async load(): Promise<void> {
+	async sendLoad(): Promise<void> {
         await Promise.all([
-            this.sharedGoalsCollectionModel.load(),
-            this.sharedGoalPreviewsCollectionModel.load()
+            this.sharedGoalsCollectionModel.sendLoad(),
+            this.sharedGoalPreviewsCollectionModel.sendLoad()
         ])
     }
 

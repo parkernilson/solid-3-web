@@ -46,7 +46,7 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
         throw new Error('Method not implemented.');
     }
     
-	async load(): Promise<void> {
+	async sendLoad(): Promise<void> {
         const { data, hasMore } = await this.goalService.getEntriesPaginated(this.goalId, {
             pageSize: 50,
             exclusiveStartKey: null

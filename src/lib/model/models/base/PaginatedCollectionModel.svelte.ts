@@ -21,14 +21,14 @@ export abstract class PaginatedCollectionModel<
 	DS extends ListDataStructure<DM> = ListDataStructure<DM>
 > extends CollectionModel<T, DM, DS> {
 	/** Undefined until initial data is loaded */
-	public hasMore = $state();
+	public hasMore?: boolean = $state();
 	private defaultPageSize = 10;
 
 	protected abstract sendGetMoreItems(request: PaginatedRequest): Promise<PaginatedResponse<T>>;
 
 	protected abstract getLastKey(): IdType;
 
-	protected async loadMoreItems(pageSize?: number) {
+	protected async loadMoreItems(pageSize?: number): Promise<void> {
 		const curLastKey = this.getLastKey();
 		const { hasMore, items } = await this.sendGetMoreItems({
 			pageSize: pageSize ?? this.defaultPageSize,

@@ -13,7 +13,7 @@ export class SharedGoalPreviewDataModel extends DataModel<ISharedGoalPreview> {
     protected sendUpdate(): Promise<ISharedGoalPreview> {
         throw new Error("Method not implemented.");
     }
-    load(): Promise<void> {
+    sendLoad(): Promise<void> {
         throw new Error("Method not implemented.");
     }
 }

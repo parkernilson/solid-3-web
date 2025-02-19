@@ -3,17 +3,14 @@ import { compareDates } from '$lib/utils/compare/compare-dates';
 import type { ICurrentStreakInfo } from './CurrentStreakInfo';
 import type { IEntry } from './Entry';
 import { Goal, type IGoal } from './Goal';
+import type { IGoalStats } from './GoalStats';
 import type { IStreakInfo } from './StreakInfo';
 
 export interface ActivityInfo {
 	lastEntry?: IEntry;
 }
 
-export type IGoalInfo = IGoal & {
-	streak?: ICurrentStreakInfo | null;
-	record?: IStreakInfo | null;
-	activity?: ActivityInfo;
-} & IOptimistic;
+export type IGoalInfo = IGoal & IGoalStats & IOptimistic;
 
 export class GoalInfo extends Goal implements IGoalInfo {
 	constructor(

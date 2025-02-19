@@ -1,29 +1,42 @@
-import { BaseModel } from "./BaseModel.svelte";
-import type { HasId, IdType } from "../../domain/Id";
-import type { IOptimistic } from "../../domain/Optimistic";
+import type { IdType } from '../../domain/Id';
+import { BaseModel } from './BaseModel.svelte';
 
-export abstract class DataModel<T extends IOptimistic & HasId, Id extends IdType = IdType> extends BaseModel {
-    public data = $state<T>();
+export interface DataModelInit<T> {
+    optimistic?: boolean;
+    initialData?: T;
+}
 
-    constructor(public id: Id, initialData?: T) {
-        super()
-        if (initialData) this.setData(initialData);
-    }
+interface SetDataOptions {
+	optimistic?: boolean;
+}
 
-    protected abstract sendUpdate(data: T): Promise<T>;
-    protected setData(data?: T) {
-        this.data = data;
-    }
+export abstract class DataModel<T, Id extends IdType = IdType> extends BaseModel {
+	public data = $state<T>();
+	/**
+	 * True if the current data is an optimistic representation of the expected result of some
+	 * transformation that is not yet completed.
+	 * For example, this object may have been created or updated, but the server has not
+	 * yet confirmed the change.
+	 */
+	public optimistic = $state<boolean>(false);
 
-    protected async optimisticUpdate(data: T): Promise<void> {
-        const originalData = this.data;
-        try {
-            this.setData({ ...data, optimisticLocalOnly: true });
-            const result = await this.sendUpdate(data);
-            this.setData(result);
-        } catch (e) {
-            this.setData(originalData);
-            throw e;
-        }
-    }
+	constructor(
+		public id: Id,
+		{ initialData, optimistic = false }: DataModelInit<T> = {}
+	) {
+		super();
+		if (initialData) this.setData(initialData);
+		this.optimistic = optimistic;
+	}
+
+	public setData(data?: T, { optimistic = false }: SetDataOptions = {}): void {
+		this.data = data;
+		this.optimistic = optimistic;
+	}
+
+	abstract loadData(): Promise<T>;
+	async sendLoad(): Promise<void> {
+		const data = await this.loadData();
+		this.setData(data);
+	}
 }

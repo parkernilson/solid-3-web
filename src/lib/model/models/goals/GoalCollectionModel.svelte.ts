@@ -15,7 +15,7 @@ export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalData
         super(dataStructure);
     }
 
-    async load(): Promise<void> {
+    async sendLoad(): Promise<void> {
         const goalInfos = await this.goalService.listGoalInfos(this.userId);
         this.setItems(goalInfos);
     }

@@ -9,7 +9,7 @@ export class EntryDataModel extends DataModel<IEntry> {
     protected sendUpdate(): Promise<IEntry> {
         throw new Error("Method not implemented.");
     }
-    load(): Promise<void> {
+    sendLoad(): Promise<void> {
         throw new Error("Method not implemented.");
     }
 }

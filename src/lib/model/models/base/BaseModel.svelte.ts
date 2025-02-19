@@ -1,3 +1,13 @@
 export abstract class BaseModel {
-    abstract load(): Promise<void>;
+    public loading = $state<boolean>(false);
+
+    protected abstract sendLoad(): Promise<void>;
+    async load() {
+        this.loading = true;
+        try {
+            await this.sendLoad();
+        } finally {
+            this.loading = false;
+        }
+    }
 }

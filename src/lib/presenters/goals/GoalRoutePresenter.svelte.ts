@@ -11,6 +11,6 @@ export class GoalRoutePresenter extends LoadablePresenter {
     }
 
     protected async loadResource(): Promise<void> {
-        await this.goalModel.load();
+        await this.goalModel.sendLoad();
     }
 }

@@ -14,7 +14,7 @@ export class SharedGoalDataModel extends DataModel<ISharedGoalInfo> {
 	protected sendUpdate(): Promise<ISharedGoalInfo> {
 		throw new Error('Method not implemented.');
 	}
-	async load(): Promise<void> {
+	async sendLoad(): Promise<void> {
 		const sharedGoal = await this.goalService.getSharedGoalInfo(this.goalId)
 		this.setData(sharedGoal);
 	}

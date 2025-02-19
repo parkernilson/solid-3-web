@@ -1,7 +1,7 @@
 import type { IdType } from "$lib/model/domain/Id";
 
 export abstract class DataStructure<T, Id extends IdType = IdType> {
-    protected key: (data: T) => Id;
+    public key: (data: T) => Id;
 
     constructor(key: (data: T) => Id) {
         this.key = key;

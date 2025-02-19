@@ -23,7 +23,7 @@ export class UserProfileDataModel extends DataModel<IUserProfile> {
         throw new Error("Method not implemented.");
     }
 
-    async load(): Promise<void> {
+    async sendLoad(): Promise<void> {
         const userProfile = await this.authService.getUserProfile(this.userId);
         this.setData(userProfile?.toJson());
     }
