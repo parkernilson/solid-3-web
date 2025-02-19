@@ -8,14 +8,10 @@ export class SharedGoalDataModel extends DataModel<ISharedGoalInfo> {
 		private goalId: string,
 		initialData?: ISharedGoalInfo
 	) {
-		super(goalId, initialData);
+		super(goalId, { initialData });
 	}
 
-	protected sendUpdate(): Promise<ISharedGoalInfo> {
-		throw new Error('Method not implemented.');
-	}
-	async sendLoad(): Promise<void> {
-		const sharedGoal = await this.goalService.getSharedGoalInfo(this.goalId)
-		this.setData(sharedGoal);
+	protected loadData(): Promise<ISharedGoalInfo> {
+		return this.goalService.getSharedGoalInfo(this.goalId);
 	}
 }

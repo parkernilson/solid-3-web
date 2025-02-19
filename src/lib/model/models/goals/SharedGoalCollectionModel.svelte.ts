@@ -16,9 +16,8 @@ export class SharedGoalCollectionModel extends ListCollectionModel<ISharedGoalIn
 		super(dataStructure);
 	}
 
-	async sendLoad(): Promise<void> {
-		const sharedGoals = await this.goalService.listSharedGoalInfosWithUser(this.user);
-		this.setItems(sharedGoals);
+	protected loadData(): Promise<ISharedGoalInfo[]> {
+		return this.goalService.listSharedGoalInfosWithUser(this.user);
 	}
 
 	async reload(): Promise<void> {

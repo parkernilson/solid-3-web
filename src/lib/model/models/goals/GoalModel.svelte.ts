@@ -4,6 +4,7 @@ import { BaseModel } from "../base/BaseModel.svelte";
 import type { EntryCollectionModel } from "./EntryCollectionModel.svelte";
 import type { GoalDataModel } from "./GoalDataModel.svelte";
 
+// TODO: Finish this class
 export class GoalModel extends BaseModel {
     private goalDataModel: GoalDataModel;
     private entryCollectionModel: EntryCollectionModel;

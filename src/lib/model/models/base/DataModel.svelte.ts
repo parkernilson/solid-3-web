@@ -34,8 +34,8 @@ export abstract class DataModel<T, Id extends IdType = IdType> extends BaseModel
 		this.optimistic = optimistic;
 	}
 
-	abstract loadData(): Promise<T>;
-	async sendLoad(): Promise<void> {
+	protected abstract loadData(): Promise<T>;
+	protected async sendLoad(): Promise<void> {
 		const data = await this.loadData();
 		this.setData(data);
 	}

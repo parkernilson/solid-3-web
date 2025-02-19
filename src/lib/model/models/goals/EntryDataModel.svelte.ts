@@ -4,12 +4,12 @@ import { DataModel } from "../base/DataModel.svelte";
 
 export class EntryDataModel extends DataModel<IEntry> {
     constructor(private goalService: GoalService, entryId: string, initialData?: IEntry) {
-        super(entryId, initialData);
+        super(entryId, { initialData });
     }
-    protected sendUpdate(): Promise<IEntry> {
+    protected loadData(): Promise<IEntry> {
         throw new Error("Method not implemented.");
     }
-    sendLoad(): Promise<void> {
+    protected sendUpdate(): Promise<IEntry> {
         throw new Error("Method not implemented.");
     }
 }

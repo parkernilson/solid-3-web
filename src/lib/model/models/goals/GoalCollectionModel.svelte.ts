@@ -15,9 +15,8 @@ export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalData
         super(dataStructure);
     }
 
-    async sendLoad(): Promise<void> {
-        const goalInfos = await this.goalService.listGoalInfos(this.userId);
-        this.setItems(goalInfos);
+    protected loadData(): Promise<IGoalInfo[]> {
+        return this.goalService.listGoalInfos(this.userId);
     }
 
     protected makeConstituentDataModel(data: IGoalInfo): GoalDataModel {

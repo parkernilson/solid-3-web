@@ -10,10 +10,7 @@ export class SharedGoalPreviewDataModel extends DataModel<ISharedGoalPreview> {
         return previousStatus;
     }
 
-    protected sendUpdate(): Promise<ISharedGoalPreview> {
-        throw new Error("Method not implemented.");
-    }
-    sendLoad(): Promise<void> {
+    protected async loadData(): Promise<ISharedGoalPreview> {
         throw new Error("Method not implemented.");
     }
 }

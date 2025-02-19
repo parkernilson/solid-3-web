@@ -16,9 +16,8 @@ export class SharedGoalPreviewCollectionModel extends ListCollectionModel<IShare
         super(dataStructure);
     }
 
-    async sendLoad(): Promise<void> {
-        const sharedGoalPreviews = await this.goalService.listSharedGoalPreviewsWithUser(this.user);
-        this.setItems(sharedGoalPreviews);
+    protected loadData(): Promise<ISharedGoalPreview[]> {
+        return this.goalService.listSharedGoalPreviewsWithUser(this.user);
     }
 
     protected makeConstituentDataModel(data: ISharedGoalPreview): SharedGoalPreviewDataModel {
