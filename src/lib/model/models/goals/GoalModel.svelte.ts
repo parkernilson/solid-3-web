@@ -1,21 +1,33 @@
-import type { ModelFactory } from "$lib/factories/models/ModelFactory.svelte";
-import type { IGoalInfo } from "$lib/model/domain/goals";
-import { BaseModel } from "../base/BaseModel.svelte";
-import type { EntryCollectionModel } from "./EntryCollectionModel.svelte";
-import type { GoalDataModel } from "./GoalDataModel.svelte";
+import type { IGoal, IGoalStats, ISharedGoal } from '$lib/model/domain/goals';
+import { BaseModel } from '../base/BaseModel.svelte';
+import type { EntryCollectionModel } from './EntryCollectionModel.svelte';
+import { GoalDataModel } from './GoalDataModel.svelte';
+import type { GoalStatsDataModel } from './GoalStatsDataModel.svelte';
+import { SharedGoalDataModel } from './SharedGoalDataModel.svelte';
 
-// TODO: Finish this class
 export class GoalModel extends BaseModel {
-    private goalDataModel: GoalDataModel;
-    private entryCollectionModel: EntryCollectionModel;
 
-    constructor(modelFactory: ModelFactory, private goalId: string, initialGoalInfo?: IGoalInfo) {
-        super();
-        this.goalDataModel = modelFactory.createGoalModel(goalId, initialGoalInfo);
-        this.entryCollectionModel = modelFactory.createEntryCollectionModel(goalId);
+    public get goalData(): IGoal | ISharedGoal | undefined {
+        return this.goalDataModel.data;
     }
 
-    sendLoad(): Promise<void> {
-        throw new Error("Method not implemented.");
+    public get goalStats(): IGoalStats | undefined {
+        return this.goalStatsModel.data;
     }
+
+    public get isSharedGoal() {
+        return this.goalDataModel instanceof SharedGoalDataModel;
+    }
+
+	constructor(
+        private goalDataModel: GoalDataModel | SharedGoalDataModel,
+        private goalStatsModel: GoalStatsDataModel,
+        public entryCollectionModel: EntryCollectionModel,
+	) {
+		super();
+	}
+
+	async sendLoad(): Promise<void> {
+		await Promise.all([this.goalDataModel.load(), this.goalStatsModel.load()]);
+	}
 }

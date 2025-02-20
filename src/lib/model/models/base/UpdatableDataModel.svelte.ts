@@ -1,4 +1,4 @@
-import type { IdType } from '$lib/model/domain/Id';
+import type { IdType } from '$lib/model/domain/HasId';
 import { DataModel, type DataModelInit } from './DataModel.svelte';
 import type { UpdateParams, UpdateRunner, UpdateRunnerConstructor } from './update-runners';
 

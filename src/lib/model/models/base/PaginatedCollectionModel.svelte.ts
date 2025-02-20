@@ -1,5 +1,4 @@
-import type { HasId, IdType } from '$lib/model/domain/Id';
-import type { IOptimistic } from '$lib/model/domain/Optimistic';
+import type { HasId, IdType } from '$lib/model/domain/HasId';
 import { CollectionModel } from './CollectionModel.svelte';
 import type { DataModel } from './DataModel.svelte';
 import type { ListDataStructure } from './ListDataStructure.svelte';
@@ -16,7 +15,7 @@ export interface PaginatedResponse<T extends HasId, Key extends IdType = IdType>
 }
 
 export abstract class PaginatedCollectionModel<
-	T extends HasId & IOptimistic,
+	T extends HasId,
 	DM extends DataModel<T> = DataModel<T>,
 	DS extends ListDataStructure<DM> = ListDataStructure<DM>
 > extends CollectionModel<T, DM, DS> {

@@ -1,6 +1,7 @@
 export * from './CurrentStreakInfo';
 export * from './Goal';
 export * from './GoalInfo';
+export * from './GoalStats';
 export * from './Entry';
 export * from './StreakInfo';
 export * from './EntryUpsert';

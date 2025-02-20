@@ -1,5 +1,6 @@
+import type { KeyFn } from '$lib/model/domain/KeyFn';
 import { filterUndefined } from '$lib/utils/types';
-import type { HasId } from '../../domain/Id';
+import type { HasId } from '../../domain/HasId';
 import { CollectionModel } from './CollectionModel.svelte';
 import type { DataModel } from './DataModel.svelte';
 import { ListDataStructure } from './ListDataStructure.svelte';
@@ -21,7 +22,7 @@ export abstract class ListCollectionModel<
 		this._data = data;
 	}
 
-	constructor(dataStructure: ListDataStructure<DM>, initialData?: T[]) {
-		super(dataStructure, initialData);
+	constructor(dataStructure: ListDataStructure<DM>, key: KeyFn<T>, initialData?: T[]) {
+		super(dataStructure, key, initialData);
 	}
 }

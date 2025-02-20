@@ -4,7 +4,7 @@ import {
 	Entry,
 	Goal,
 	StreakInfo,
-	type ActivityInfo,
+	type IActivityInfo,
 	type ICurrentStreakInfo,
 	type IGoalInfo,
 	type ISharedGoal,
@@ -75,7 +75,7 @@ export class SupabaseGoalService implements GoalService {
 		return this.converter.convertEntry(data);
 	}
 
-	private async getActivity(goalId: string): Promise<ActivityInfo> {
+	private async getActivity(goalId: string): Promise<IActivityInfo> {
 		const lastEntry = await this.getLastEntry(goalId);
 		if (!lastEntry) {
 			return {};
@@ -86,7 +86,7 @@ export class SupabaseGoalService implements GoalService {
 	}
 
 	private async getRelatedGoalData(goalId: string): Promise<{
-		activity: ActivityInfo,
+		activity: IActivityInfo,
 		streak: ICurrentStreakInfo | null,
 		record: IStreakInfo | null
 	}> {

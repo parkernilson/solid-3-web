@@ -4,7 +4,6 @@ export interface IEntry {
 	textContent: string | null;
 	dateOf: string;
 	success: boolean;
-	optimisticLocalOnly?: boolean;
 }
 
 export class Entry implements IEntry {
@@ -26,9 +25,6 @@ export class Entry implements IEntry {
 	get success() {
 		return this._success;
 	}
-	get optimisticLocalOnly() {
-		return this._optimisticLocalOnly;
-	}
 
 	constructor(
 		private _id: string,
@@ -36,7 +32,6 @@ export class Entry implements IEntry {
 		private _textContent: string | null,
 		private _dateOf: string,
 		private _success: boolean,
-		private _optimisticLocalOnly?: boolean
 	) {}
 
 	private static formatDate(date: Date): string {
@@ -61,7 +56,6 @@ export class Entry implements IEntry {
 			json.textContent,
 			json.dateOf,
 			json.success,
-			json.optimisticLocalOnly
 		);
 	}
 
@@ -72,7 +66,6 @@ export class Entry implements IEntry {
 			textContent: this.textContent,
 			dateOf: this.dateOf,
 			success: this.success,
-			optimisticLocalOnly: this.optimisticLocalOnly
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import type { IdType } from '$lib/model/domain/Id';
+import type { IdType } from '$lib/model/domain/HasId';
 import { DataStructure } from './DataStructure.svelte';
 
 export class ListDataStructure<T, Id extends IdType = IdType> extends DataStructure<T, Id> {

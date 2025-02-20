@@ -13,7 +13,7 @@ export class SharedGoalPreviewCollectionModel extends ListCollectionModel<IShare
         dataStructure: ListDataStructure<SharedGoalPreviewDataModel>,
         private user: UserProfile
     ) {
-        super(dataStructure);
+        super(dataStructure, (g) => g.goalId);
     }
 
     protected loadData(): Promise<ISharedGoalPreview[]> {

@@ -1,5 +1,5 @@
 import type { IEntry } from '$lib/model/domain/goals';
-import type { IdType } from '$lib/model/domain/Id';
+import type { IdType } from '$lib/model/domain/HasId';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { filterUndefined } from '$lib/utils/types';
 import { ListDataStructure } from '../base/ListDataStructure.svelte';

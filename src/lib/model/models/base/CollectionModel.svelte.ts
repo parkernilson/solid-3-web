@@ -1,6 +1,7 @@
-import type { IdType } from '../../domain/Id';
+import type { KeyFn } from '$lib/model/domain/KeyFn';
+import type { IdType } from '../../domain/HasId';
 import { BaseModel } from './BaseModel.svelte';
-import type { DataModel } from './DataModel.svelte';
+import type { DataModel, DataModelInit } from './DataModel.svelte';
 import type { DataStructure } from './DataStructure.svelte';
 
 export abstract class CollectionModel<
@@ -10,14 +11,23 @@ export abstract class CollectionModel<
 > extends BaseModel {
 	constructor(
 		protected dataStructure: DS,
+		private key: KeyFn<T>,
 		initialData?: T[]
 	) {
 		super();
 		if (initialData)
-			this.dataStructure.setItems(initialData.map(this.makeConstituentDataModel.bind(this)));
+			this.setItems(initialData)
 	}
 
-	protected abstract makeConstituentDataModel(data: T): DM;
+	protected abstract makeConstituentDataModel(
+		data: T,
+		init?: Omit<DataModelInit<T>, 'initialData'>
+	): DM;
+
+	private mapToModels(data: T[]): DM[] {
+		return data.map((t) => this.makeConstituentDataModel(t));
+	}
+
 	protected abstract sendCreate(data: T): Promise<T>;
 	protected abstract sendDelete(id: IdType): Promise<void>;
 
@@ -31,13 +41,13 @@ export abstract class CollectionModel<
 		this.dataStructure.add(model);
 	}
 	protected setItems(data: T[]) {
-		this.dataStructure.setItems(data.map(this.makeConstituentDataModel.bind(this)));
+		this.dataStructure.setItems(this.mapToModels(data));
 	}
 	protected setModels(models: DM[]) {
 		this.dataStructure.setItems(models);
 	}
 	protected addItems(data: T[]) {
-		this.dataStructure.addItems(data.map(this.makeConstituentDataModel.bind(this)));
+		this.dataStructure.addItems(this.mapToModels(data));
 	}
 	protected addModels(models: DM[]) {
 		this.dataStructure.addItems(models);
@@ -46,6 +56,11 @@ export abstract class CollectionModel<
 		this.dataStructure.remove(id);
 	}
 	protected update(id: IdType, data: T) {
+		if (this.key(data) !== id) {
+			throw new Error(
+				`CollectionModel: update called with id ${id} but data has id ${this.key(data)}`
+			);
+		}
 		this.dataStructure.update(id, this.makeConstituentDataModel(data));
 	}
 	protected updateModel(id: IdType, model: DM) {
@@ -59,8 +74,7 @@ export abstract class CollectionModel<
 	}
 
 	protected async optimisticCreate(data: T): Promise<void> {
-		const model = this.makeConstituentDataModel(data);
-		const id = this.dataStructure.key(model);
+		const id = this.key(data);
 		this.add(data);
 		try {
 			const result = await this.sendCreate(data);

@@ -1,26 +1,26 @@
 import type { ModelFactory } from "$lib/factories/models/ModelFactory.svelte";
 import type { GoalService } from "$lib/services/GoalService.svelte";
 import { GoalInfo, type IGoalInfo } from "../../domain/goals";
-import { GoalDataModel } from "./GoalDataModel.svelte";
+import { GoalInfoDataModel } from "./GoalInfoDataModel.svelte";
 import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
 import type { ListDataStructure } from "../base/ListDataStructure.svelte";
 
-export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalDataModel> {
+export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalInfoDataModel> {
     constructor(
         private goalService: GoalService,
         private modelFactory: ModelFactory,
-        dataStructure: ListDataStructure<GoalDataModel>,
+        dataStructure: ListDataStructure<GoalInfoDataModel>,
         private userId: string
     ) {
-        super(dataStructure);
+        super(dataStructure, (data) => data.id);
     }
 
     protected loadData(): Promise<IGoalInfo[]> {
         return this.goalService.listGoalInfos(this.userId);
     }
 
-    protected makeConstituentDataModel(data: IGoalInfo): GoalDataModel {
-        return this.modelFactory.createGoalModel(data.id, data);
+    protected makeConstituentDataModel(data: IGoalInfo): GoalInfoDataModel {
+        return this.modelFactory.createGoalInfoDataModel(data.id, data);
     }
 
     protected async sendCreate(data: IGoalInfo): Promise<IGoalInfo> {

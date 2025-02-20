@@ -1,4 +1,4 @@
-import type { IdType } from '../../domain/Id';
+import type { IdType } from '../../domain/HasId';
 import { BaseModel } from './BaseModel.svelte';
 
 export interface DataModelInit<T> {

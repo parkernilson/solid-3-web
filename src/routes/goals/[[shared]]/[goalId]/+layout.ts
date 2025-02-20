@@ -11,11 +11,8 @@ export const load = async ({ parent, params }) => {
 	}
 
 	const goalModel = shared
-		? modelFactory.createSharedGoalDataModel(params.goalId)
+		? modelFactory.createSharedGoalModel(params.goalId)
 		: modelFactory.createGoalModel(params.goalId);
-
-	// TODO: use the entry collection model instead of storing state in parent presenters
-	// const entryCollectionModel = modelFactory.createEntryCollectionModel(params.goalId);
 
 	const goalRoutePresenter = presenterFactory.createGoalRoutePresenter(goalModel);
 	return {

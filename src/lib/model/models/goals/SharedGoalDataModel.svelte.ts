@@ -1,17 +1,17 @@
-import type { ISharedGoalInfo } from '$lib/model/domain/goals/SharedGoalInfo';
-import type { GoalService } from '$lib/services/GoalService.svelte';
-import { DataModel } from '../base/DataModel.svelte';
+import type { ISharedGoal, ISharedGoalInfo } from "$lib/model/domain/goals";
+import type { GoalService } from "$lib/services/GoalService.svelte";
+import { DataModel } from "../base/DataModel.svelte";
 
-export class SharedGoalDataModel extends DataModel<ISharedGoalInfo> {
-	constructor(
-		private goalService: GoalService,
-		private goalId: string,
-		initialData?: ISharedGoalInfo
-	) {
-		super(goalId, { initialData });
-	}
+export class SharedGoalDataModel extends DataModel<ISharedGoal> {
+    constructor(
+        private goalService: GoalService,
+        id: string,
+        initialData?: ISharedGoalInfo,
+    ) {
+        super(id, { initialData });
+    }
 
-	protected loadData(): Promise<ISharedGoalInfo> {
-		return this.goalService.getSharedGoalInfo(this.goalId);
-	}
+    protected async loadData(): Promise<ISharedGoalInfo> {
+        throw new Error("Method not implemented."); 
+    }
 }

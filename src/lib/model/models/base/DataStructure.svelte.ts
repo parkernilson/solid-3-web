@@ -1,4 +1,4 @@
-import type { IdType } from "$lib/model/domain/Id";
+import type { IdType } from "$lib/model/domain/HasId";
 
 export abstract class DataStructure<T, Id extends IdType = IdType> {
     public key: (data: T) => Id;
