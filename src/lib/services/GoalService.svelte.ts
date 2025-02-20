@@ -1,4 +1,4 @@
-import type { Entry, IGoalInfo, ISharedGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
+import type { Entry, IGoal, IGoalInfo, IGoalStats, ISharedGoal, ISharedGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
@@ -45,6 +45,9 @@ export interface getCurrentStreakParams {
 export interface GoalService {
 	getGoalInfo(goalId: string): Promise<IGoalInfo>;
     getSharedGoalInfo(goalId: string): Promise<ISharedGoalInfo>;
+    getGoalData(goalId: string): Promise<IGoal>;
+    getGoalStats(goalId: string): Promise<IGoalStats>;
+    getSharedGoalData(goalId: string): Promise<ISharedGoal>;
 	listGoalInfos(userId: string): Promise<IGoalInfo[]>;
 	getEntriesPaginated(
 		goalId: string,

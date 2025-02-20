@@ -11,8 +11,8 @@ import type { SupabaseUserProfile } from '$lib/model/db/supabase/SupabaseUserPro
 import {
 	CurrentStreakInfo,
 	Entry,
-	Goal,
 	StreakInfo,
+	type IGoal,
 	type ISharedGoalPreview
 } from '$lib/model/domain/goals';
 import type { ISharedGoal } from '$lib/model/domain/goals/SharedGoal';
@@ -20,8 +20,13 @@ import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
 
 export class SupabaseDomainConverter {
-	convertGoal(goal: SupabaseGoal): Goal {
-		return new Goal(goal.id, goal.owner, goal.title, goal.created_at);
+	convertGoal(goal: SupabaseGoal): IGoal {
+		return {
+			id: goal.id,
+			title: goal.title,
+			startDate: goal.created_at,
+			owner: goal.owner
+		}
 	}
 
 	convertEntry(entry: SupabaseEntry): Entry {

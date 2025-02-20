@@ -5,12 +5,12 @@ import {
 	Goal,
 	StreakInfo,
 	type IActivityInfo,
-	type ICurrentStreakInfo,
+	type IGoal,
 	type IGoalInfo,
+	type IGoalStats,
 	type ISharedGoal,
 	type ISharedGoalInfo,
-	type ISharedGoalPreview,
-	type IStreakInfo
+	type ISharedGoalPreview
 } from '$lib/model/domain/goals';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
@@ -47,10 +47,21 @@ export class SupabaseGoalService implements GoalService {
 			.maybeSingle();
 		if (error) throw error;
 		if (!data) throw new Error('Goal not found');
+		return Goal.fromJson(this.converter.convertGoal(data));
+	}
+
+	public async getGoalData(goalId: string): Promise<IGoal> {
+		const { data, error } = await this.supabase
+			.from('goals')
+			.select('*')
+			.eq('id', goalId)
+			.maybeSingle();
+		if (error) throw error;
+		if (!data) throw new Error('Goal not found');
 		return this.converter.convertGoal(data);
 	}
 
-	private async getSharedGoal(goalId: string): Promise<ISharedGoal> {
+	public async getSharedGoalData(goalId: string): Promise<ISharedGoal> {
 		const { data, error } = await this.supabase
 			.from('shared_goals')
 			.select('*')
@@ -82,14 +93,10 @@ export class SupabaseGoalService implements GoalService {
 		}
 		return {
 			lastEntry
-		}
+		};
 	}
 
-	private async getRelatedGoalData(goalId: string): Promise<{
-		activity: IActivityInfo,
-		streak: ICurrentStreakInfo | null,
-		record: IStreakInfo | null
-	}> {
+	public async getGoalStats(goalId: string): Promise<IGoalStats> {
 		const activityInfo = await this.getActivity(goalId);
 
 		const currentStreakInfo = await this.getCurrentStreak({ goalId });
@@ -100,14 +107,13 @@ export class SupabaseGoalService implements GoalService {
 			activity: activityInfo,
 			streak: currentStreakInfo?.toJson() ?? null,
 			record: recordStreakInfo?.toJson() ?? null
-		}
+		};
 	}
-
 
 	async getGoalInfo(goalId: string): Promise<IGoalInfo> {
 		const goalData = await this.getGoal(goalId);
 
-		const relatedGoalData = await this.getRelatedGoalData(goalId);
+		const relatedGoalData = await this.getGoalStats(goalId);
 
 		return {
 			...goalData.toJson(),
@@ -116,14 +122,14 @@ export class SupabaseGoalService implements GoalService {
 	}
 
 	async getSharedGoalInfo(goalId: string): Promise<ISharedGoalInfo> {
-		const goalData = await this.getSharedGoal(goalId)
+		const goalData = await this.getSharedGoalData(goalId);
 
-		const relatedGoalData = await this.getRelatedGoalData(goalId);
+		const relatedGoalData = await this.getGoalStats(goalId);
 
 		return {
 			...goalData,
 			...relatedGoalData
-		}
+		};
 	}
 
 	private async listGoals(userId: string) {
@@ -349,8 +355,6 @@ export class SupabaseGoalService implements GoalService {
 
 	async listSharedGoalInfosWithUser(user: UserProfile): Promise<ISharedGoalInfo[]> {
 		const sharedGoals = await this.listSharedGoalsWithUser(user);
-		return Promise.all(
-			sharedGoals.map((sharedGoal) => this.getSharedGoalInfo(sharedGoal.id))
-		);
+		return Promise.all(sharedGoals.map((sharedGoal) => this.getSharedGoalInfo(sharedGoal.id)));
 	}
 }

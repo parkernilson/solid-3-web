@@ -2,7 +2,7 @@ import type { IGoalStats } from "$lib/model/domain/goals/GoalStats";
 import type { GoalService } from "$lib/services/GoalService.svelte";
 import { DataModel } from "../base/DataModel.svelte";
 
-export class GoalStatsDataModel extends DataModel<IGoalStats> {
+export class GoalStatsDataModel extends DataModel<IGoalStats, string> {
     constructor(
         private goalService: GoalService,
         goalId: string,
@@ -12,6 +12,6 @@ export class GoalStatsDataModel extends DataModel<IGoalStats> {
     }
 
     protected loadData(): Promise<IGoalStats> {
-        throw new Error("Method not implemented.");
+        return this.goalService.getGoalStats(this.id);
     }
 }

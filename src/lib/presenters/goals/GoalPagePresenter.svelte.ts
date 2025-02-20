@@ -1,7 +1,7 @@
 import type { GoalRoutePresenter } from "./GoalRoutePresenter.svelte";
 
 export class GoalPagePresenter {
-    get goal() { return this.goalRoutePresenter.goal }
+    get goalInfo() { return this.goalRoutePresenter.goalInfo }
 
 	constructor(private goalRoutePresenter: GoalRoutePresenter) {}
 }

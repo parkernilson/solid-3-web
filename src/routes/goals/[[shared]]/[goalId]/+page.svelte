@@ -14,10 +14,10 @@
 {#await data.loadingGoalRoute}
 	<p>loading goal</p>
 {:then _}
-	{#if presenter.goal}
-		{@const goal = presenter.goal}
-		{@const streak = presenter.goal.streak}
-		{@const record = presenter.goal.record}
+	{#if presenter.goalInfo}
+		{@const goal = presenter.goalInfo}
+		{@const streak = presenter.goalInfo.streak}
+		{@const record = presenter.goalInfo.record}
 		<div class="px-3">
 			<div class="flex mt-4">
 				<a aria-label="Back" href="/goals" class="mr-6"
@@ -31,7 +31,7 @@
 				record={record?.streakCount || 0}
 				startDate={goal.startDate}
 			/>
-			<EntryGallery goal={presenter.goal} />
+			<EntryGallery goal={presenter.goalInfo} />
 		</div>
 	{:else}
 		<p>Found no error, but goal was not defined</p>
