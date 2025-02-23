@@ -1,8 +1,7 @@
-import type { Entry, IGoal, IGoalInfo, IGoalStats, ISharedGoal, ISharedGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
+import type { Entry, IEntry, IGoal, IGoalInfo, IGoalStats, ISharedGoal, ISharedGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import type { UserProfile } from '$lib/model/domain/users';
-import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
-import type { PaginatedRequest } from '$lib/utils/types/pagination/PaginatedRequest';
+import type { PaginatedRequest, PaginatedResponse } from '$lib/utils/types';
 
 export interface CreateGoalParams {
     title: string;
@@ -13,6 +12,7 @@ export interface CreateGoalResult {
     title: string;
 }
 
+// TODO: remove all the upsert entry stuff, if it is no longer used in refactor
 export interface UpsertEntryParams {
     goalId: string;
     entryId?: string;
@@ -52,8 +52,9 @@ export interface GoalService {
 	getEntriesPaginated(
 		goalId: string,
 		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>
-	): Promise<PaginatedResponse<Entry>>;
+	): Promise<PaginatedResponse<IEntry, string>>;
     createGoal(params: CreateGoalParams): Promise<CreateGoalResult>;
+    // TODO: remove upsert entry stuff if it is no longer used in refactor
     upsertEntry(params: UpsertEntryParams): Promise<UpsertEntryResult>;
     shareGoal(params: ShareGoalParams): Promise<void>;
     rejectSharedGoal(params: RejectSharedGoalParams): Promise<void>;

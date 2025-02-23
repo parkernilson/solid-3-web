@@ -7,6 +7,7 @@
 
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalPagePresenter;
+	const goalModel = data.goalModel;
 
 </script>
 
@@ -31,7 +32,7 @@
 				record={record?.streakCount || 0}
 				startDate={goal.startDate}
 			/>
-			<EntryGallery goal={presenter.goalInfo} />
+			<EntryGallery goal={presenter.goalInfo} {goalModel} />
 		</div>
 	{:else}
 		<p>Found no error, but goal was not defined</p>

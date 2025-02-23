@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { Entry, type IGoal } from '$lib/model/domain/goals';
+	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
+	import { type IEntry, type IGoal } from '$lib/model/domain/goals';
 	import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
 	import { getContext } from 'svelte';
 	import Modal from '../Modal.svelte';
-	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
 
 	let {
 		entry,
 		goal,
 		showModal = $bindable()
-	}: { entry: Entry | null; goal: IGoal; showModal: boolean } = $props();
+	}: { entry: IEntry | null; goal: IGoal; showModal: boolean } = $props();
 
 	const presenterFactory = getContext<PresenterFactory>("PresenterFactory")
 	const entryGalleryPresenter = getContext<EntryGalleryPresenter>('EntryGalleryPresenter');
@@ -20,7 +20,8 @@
 	);
 
 	async function updateEntry() {
-		await presenter.optimisticallyUpsertEntry(presenter.newEntry);
+		// TODO: Finish fixing the entry update operation
+		// await presenter.optimisticallyUpsertEntry(presenter.newEntry);
 		showModal = false;
 	}
 </script>

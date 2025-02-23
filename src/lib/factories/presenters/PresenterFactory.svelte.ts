@@ -1,4 +1,4 @@
-import type { Entry, Goal, IGoal, IGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
+import type { Goal, IEntry, IGoal, IGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
@@ -93,9 +93,10 @@ export class PresenterFactory {
         )
     }
 
-	createEntryGalleryPresenter(goalId: string) {
+	createEntryGalleryPresenter(goalId: string, goalModel: GoalModel) {
 		return new EntryGalleryPresenter(
 			goalId,
+			goalModel,
 			this.serviceFactory.createGoalService(),
 			this.serviceFactory.createErrorService()
 		);
@@ -104,7 +105,7 @@ export class PresenterFactory {
 	createEntryModalPresenter(
 		entryGalleryPresenter: EntryGalleryPresenter,
 		goal: IGoal,
-		entry?: Entry
+		entry?: IEntry
 	) {
 		return new EntryModalPresenter(
 			entry ?? null,

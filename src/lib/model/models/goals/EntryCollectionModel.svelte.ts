@@ -1,13 +1,13 @@
 import type { IEntry } from '$lib/model/domain/goals';
-import type { IdType } from '$lib/model/domain/HasId';
 import type { GoalService } from '$lib/services/GoalService.svelte';
-import { filterUndefined } from '$lib/utils/types';
+import { filterUndefined, type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
 import { ListDataStructure } from '../base/ListDataStructure.svelte';
-import { PaginatedCollectionModel, type PaginatedRequest, type PaginatedResponse } from '../base/PaginatedCollectionModel.svelte';
+import { PaginatedCollectionModel } from '../base/PaginatedCollectionModel.svelte';
 import { EntryDataModel } from './EntryDataModel.svelte';
 
 export class EntryCollectionModel extends PaginatedCollectionModel<
 	IEntry,
+	string,
 	EntryDataModel,
 	ListDataStructure<EntryDataModel>
 > {
@@ -26,7 +26,7 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
         private goalId: string,
 		initialData?: IEntry[]
 	) {
-		super(dataStructure, initialData);
+		super(dataStructure, (t) => t.id, initialData);
 	}
 
 	protected makeConstituentDataModel(data: IEntry): EntryDataModel {
@@ -38,12 +38,11 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 	protected sendDelete(): Promise<void> {
 		throw new Error('Method not implemented.');
 	}
-    protected sendGetMoreItems(request: PaginatedRequest<IdType>): Promise<PaginatedResponse<IEntry>> {
-        console.log(request);
-        throw new Error('Method not implemented.');
+    protected async sendGetMoreItems(request: PaginatedRequest<string>): Promise<PaginatedResponse<IEntry, string>> {
+		return this.goalService.getEntriesPaginated(this.goalId, request);
     }
-    protected getLastKey(): IdType {
-        throw new Error('Method not implemented.');
+    protected getLastKey(): string | undefined {
+		return this.dataStructure.items?.[this.dataStructure.items.length - 1]?.data?.dateOf;
     }
     
 }

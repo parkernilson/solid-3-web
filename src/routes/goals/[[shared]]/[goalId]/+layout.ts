@@ -17,6 +17,7 @@ export const load = async ({ parent, params }) => {
 	const goalRoutePresenter = presenterFactory.createGoalRoutePresenter(goalModel);
 	return {
 		loadingGoalRoute: goalRoutePresenter.load({}),
+		goalModel,
 		goalRoutePresenter
 	};
 };

@@ -5,6 +5,7 @@ import {
 	Goal,
 	StreakInfo,
 	type IActivityInfo,
+	type IEntry,
 	type IGoal,
 	type IGoalInfo,
 	type IGoalStats,
@@ -15,9 +16,8 @@ import {
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
 import type { SupabaseClient } from '$lib/supabase/supabase';
+import type { PaginatedRequest, PaginatedResponse } from '$lib/utils/types';
 import { isNotNullRow } from '$lib/utils/types/isNotNullRow';
-import type { PaginatedResponse } from '$lib/utils/types/pagination/PaginatedReponse';
-import type { PaginatedRequest } from '$lib/utils/types/pagination/PaginatedRequest';
 import type {
 	AcceptSharedGoalParams,
 	CreateGoalParams,
@@ -73,7 +73,7 @@ export class SupabaseGoalService implements GoalService {
 		return this.converter.convertSharedGoal(data);
 	}
 
-	private async getLastEntry(goalId: string): Promise<Entry | null> {
+	private async getLastEntry(goalId: string): Promise<IEntry | null> {
 		const { data, error } = await this.supabase
 			.from('entries')
 			.select('*')
@@ -155,7 +155,7 @@ export class SupabaseGoalService implements GoalService {
 	async getEntriesPaginated(
 		goalId: string,
 		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>
-	): Promise<PaginatedResponse<Entry>> {
+	): Promise<PaginatedResponse<IEntry, string>> {
 		const query = this.supabase
 			.from('entries')
 			.select('*')
@@ -176,8 +176,9 @@ export class SupabaseGoalService implements GoalService {
 		const requestedPage = data.slice(0, pageSize).map(this.converter.convertEntry);
 
 		return {
-			data: requestedPage,
-			hasMore
+			items: requestedPage,
+			hasMore,
+			lastKey: requestedPage[requestedPage.length - 1]?.dateOf ?? undefined
 		};
 	}
 
@@ -189,6 +190,7 @@ export class SupabaseGoalService implements GoalService {
 		return { id: data?.id, title };
 	}
 
+	// TODO: remove me if no longer used in refactor
 	async upsertEntry({
 		goalId,
 		entryId,
@@ -209,7 +211,7 @@ export class SupabaseGoalService implements GoalService {
 		if (!data) {
 			throw new Error('No data returned from upsert_entry');
 		}
-		return this.converter.convertEntry(data);
+		return Entry.fromJson(this.converter.convertEntry(data));
 	}
 
 	async shareGoal({ goalId, withUser }: ShareGoalParams): Promise<void> {
@@ -305,7 +307,7 @@ export class SupabaseGoalService implements GoalService {
 		const requestedPage = data.slice(0, pageSize).map(this.converter.convertUserProfile);
 
 		return {
-			data: requestedPage,
+			items: requestedPage,
 			hasMore
 		};
 	}

@@ -1,4 +1,4 @@
-import type { EntryUpsert, IGoal } from '$lib/model/domain/goals';
+import type { EntryUpsert, IEntry, IGoal } from '$lib/model/domain/goals';
 import { Entry } from '$lib/model/domain/goals';
 import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { AuthService } from '$lib/services/AuthService.svelte';
@@ -48,7 +48,7 @@ export class EntryModalPresenter extends ErrorHandler {
 	}
 
 	constructor(
-		private _entry: Entry | null,
+		private _entry: IEntry | null,
 		private _goal: IGoal,
 		private goalService: GoalService,
 		errorService: ErrorService,
@@ -74,38 +74,37 @@ export class EntryModalPresenter extends ErrorHandler {
 			textContent: entry.textContent,
 			dateOf: entry.dateOf,
 			success: entry.success,
-			optimisticLocalOnly: true
 		});
 	}
 
-	async optimisticallyUpsertEntry(entry: EntryUpsert) {
-		const oldEntry = $state.snapshot(
-			this.entryGalleryPresenter.entries.find((e) => e.id === entry.id)
-		);
+	// async optimisticallyUpsertEntry(entry: EntryUpsert) {
+	// 	const oldEntry = $state.snapshot(
+	// 		this.entryGalleryPresenter.entries?.find((e) => e.id === entry.id)
+	// 	);
 
-		const optimisticEntry = this.createOptimisticEntry(entry);
+	// 	const optimisticEntry = this.createOptimisticEntry(entry);
 
-		// Create an optimistically estimation for the object that will be created
-		await this.doErrorable({
-			action: async () => {
-				this.entryGalleryPresenter.upsertEntryLocal(optimisticEntry);
-				const resultingEntry = await this.goalService.upsertEntry({
-					goalId: entry.goal,
-					entryId: entry.id,
-					dateOf: entry.dateOf,
-					success: entry.success,
-					textContent: entry.textContent ?? undefined
-				});
-				if (!resultingEntry) throw new Error('No data returned from upsert_entry');
-				this.entryGalleryPresenter.upsertEntryLocal(resultingEntry);
-			},
-			onError: () => {
-				// Rollback optimistic update
-				if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(Entry.fromJson(oldEntry));
-				else this.entryGalleryPresenter.removeEntryLocal(optimisticEntry.id);
-			}
-		});
-	}
+	// 	// Create an optimistically estimation for the object that will be created
+	// 	await this.doErrorable({
+	// 		action: async () => {
+	// 			this.entryGalleryPresenter.upsertEntryLocal(optimisticEntry);
+	// 			const resultingEntry = await this.goalService.upsertEntry({
+	// 				goalId: entry.goal,
+	// 				entryId: entry.id,
+	// 				dateOf: entry.dateOf,
+	// 				success: entry.success,
+	// 				textContent: entry.textContent ?? undefined
+	// 			});
+	// 			if (!resultingEntry) throw new Error('No data returned from upsert_entry');
+	// 			this.entryGalleryPresenter.upsertEntryLocal(resultingEntry);
+	// 		},
+	// 		onError: () => {
+	// 			// Rollback optimistic update
+	// 			if (oldEntry) this.entryGalleryPresenter.upsertEntryLocal(Entry.fromJson(oldEntry));
+	// 			else this.entryGalleryPresenter.removeEntryLocal(optimisticEntry.id);
+	// 		}
+	// 	});
+	// }
 
 	startEditing() {
 		this.isEditing = true;

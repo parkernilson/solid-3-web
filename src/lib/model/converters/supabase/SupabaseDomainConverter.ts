@@ -10,8 +10,8 @@ import type {
 import type { SupabaseUserProfile } from '$lib/model/db/supabase/SupabaseUserProfile';
 import {
 	CurrentStreakInfo,
-	Entry,
 	StreakInfo,
+	type IEntry,
 	type IGoal,
 	type ISharedGoalPreview
 } from '$lib/model/domain/goals';
@@ -29,8 +29,14 @@ export class SupabaseDomainConverter {
 		}
 	}
 
-	convertEntry(entry: SupabaseEntry): Entry {
-		return new Entry(entry.id, entry.goal, entry.text_content, entry.date_of, entry.success);
+	convertEntry(entry: SupabaseEntry): IEntry {
+		return {
+			id: entry.id,
+			goal: entry.goal,
+			textContent: entry.text_content,
+			dateOf: entry.date_of,
+			success: entry.success
+		}
 	}
 
 	convertStreakInfo(streakInfo: SupabaseStreakInfo): StreakInfo {

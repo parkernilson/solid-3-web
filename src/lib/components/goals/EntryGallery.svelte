@@ -4,11 +4,12 @@
 	import { getContext, onMount, setContext } from 'svelte';
 	import InfiniteScrollingContainer from '../InfiniteScrollingContainer.svelte';
 	import EntrySquare from './EntrySquare.svelte';
+	import type { GoalModel } from '$lib/model/models/goals/GoalModel.svelte';
 
-	const { goal }: { goal: IGoalInfo } = $props();
+	const { goal, goalModel }: { goal: IGoalInfo, goalModel: GoalModel } = $props();
 
 	const presenterFactory = getContext<PresenterFactory>("PresenterFactory");
-	const presenter = presenterFactory.createEntryGalleryPresenter(goal.id);
+	const presenter = presenterFactory.createEntryGalleryPresenter(goal.id, goalModel);
 
 	setContext('EntryGalleryPresenter', presenter);
 
@@ -23,8 +24,10 @@
     loading={presenter.loadingMoreEntries}
 >
 	<div class="grid grid-cols-3">
-		{#each presenter.entries as entry}
-		    <EntrySquare {entry} goal={goal} />
-        {/each}
+		{#if presenter.entries}
+			{#each presenter.entries as entry}
+				<EntrySquare {entry} goal={goal} />
+			{/each}
+		{/if}
 	</div>
 </InfiniteScrollingContainer>
