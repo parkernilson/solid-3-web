@@ -5,8 +5,8 @@ import type { PaginatedRequest } from '$lib/utils/types/pagination';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export class EntryGalleryPresenter extends LoadablePresenter {
-	get entries() {
-		return this.goalModel.entryCollectionModel.data;
+	get entryModels() {
+		return this.goalModel.entryCollectionModel.models;
 	}
 	get hasMoreEntries() {
 		return this.goalModel.entryCollectionModel.hasMore;

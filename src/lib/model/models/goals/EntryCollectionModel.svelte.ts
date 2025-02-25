@@ -19,6 +19,9 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
     public get data() {
         return this._data;
     }
+	public get models() {
+		return this.dataStructure.items;
+	}
 
 	constructor(
 		private goalService: GoalService,

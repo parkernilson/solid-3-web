@@ -1,22 +1,23 @@
 <script lang="ts">
 	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
-	import { type IEntry, type IGoal } from '$lib/model/domain/goals';
-	import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
+	import type { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svelte';
 	import { getContext } from 'svelte';
 	import Modal from '../Modal.svelte';
 
 	let {
-		entry,
-		goal,
+		entryModel,
+		isOwner,
 		showModal = $bindable()
-	}: { entry: IEntry | null; goal: IGoal; showModal: boolean } = $props();
+	}: {
+		entryModel: EntryDataModel;
+		isOwner: boolean;
+		showModal: boolean;
+	} = $props();
 
-	const presenterFactory = getContext<PresenterFactory>("PresenterFactory")
-	const entryGalleryPresenter = getContext<EntryGalleryPresenter>('EntryGalleryPresenter');
+	const presenterFactory = getContext<PresenterFactory>('PresenterFactory');
 	const presenter = presenterFactory.createEntryModalPresenter(
-		entryGalleryPresenter,
-		goal,
-		entry ?? undefined
+		entryModel,
+		isOwner
 	);
 
 	async function updateEntry() {
@@ -27,7 +28,7 @@
 </script>
 
 <Modal bind:showModal>
-	{#snippet header()}<h1>{presenter.entry?.dateOf}</h1>{/snippet}
+	{#snippet header()}<h1>{presenter.currentDateOf}</h1>{/snippet}
 	<div>
 		{#if presenter.isEditing}
 			<button onclick={presenter.cancelEditing.bind(presenter)}>Cancel</button>
@@ -39,6 +40,6 @@
 		<textarea bind:value={presenter.currentTextContent}></textarea>
 		<button class="block" onclick={updateEntry}>Update</button>
 	{:else}
-		<p>{presenter.entry?.textContent}</p>
+		<p>{presenter.currentTextContent}</p>
 	{/if}
 </Modal>

@@ -1,6 +1,7 @@
-import type { Goal, IEntry, IGoal, IGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
+import type { Goal, IGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
+import type { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svelte';
 import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
 import type { GoalModel } from '$lib/model/models/goals/GoalModel.svelte';
 import type { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
@@ -103,18 +104,12 @@ export class PresenterFactory {
 	}
 
 	createEntryModalPresenter(
-		entryGalleryPresenter: EntryGalleryPresenter,
-		goal: IGoal,
-		entry?: IEntry
+		entryModel: EntryDataModel,
+		isOwner: boolean
 	) {
 		return new EntryModalPresenter(
-			entry ?? null,
-			goal,
-			this.serviceFactory.createGoalService(),
-			this.serviceFactory.createErrorService(),
-			this.modelFactory.createAuthModel(),
-			this.serviceFactory.createAuthService(),
-			entryGalleryPresenter
+			entryModel,
+			isOwner
 		);
 	}
 

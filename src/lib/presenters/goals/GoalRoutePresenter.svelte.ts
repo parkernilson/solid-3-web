@@ -19,6 +19,10 @@ export class GoalRoutePresenter extends LoadablePresenter {
 		return this._goalInfo;
 	}
 
+	get isOwner() {
+		return !this._goalModel.isSharedGoal;
+	}
+
 	constructor(
 		errorService: ErrorService,
 		private goalModel: GoalModel

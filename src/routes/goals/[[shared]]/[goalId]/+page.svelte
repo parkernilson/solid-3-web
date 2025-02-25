@@ -19,6 +19,7 @@
 		{@const goal = presenter.goalInfo}
 		{@const streak = presenter.goalInfo.streak}
 		{@const record = presenter.goalInfo.record}
+		{@const isOwner = presenter.isOwner}
 		<div class="px-3">
 			<div class="flex mt-4">
 				<a aria-label="Back" href="/goals" class="mr-6"
@@ -32,7 +33,7 @@
 				record={record?.streakCount || 0}
 				startDate={goal.startDate}
 			/>
-			<EntryGallery goal={presenter.goalInfo} {goalModel} />
+			<EntryGallery goal={presenter.goalInfo} {goalModel} {isOwner} />
 		</div>
 	{:else}
 		<p>Found no error, but goal was not defined</p>
