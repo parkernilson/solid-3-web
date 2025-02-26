@@ -67,7 +67,7 @@ export class ModelFactory {
 		return new GoalModel(
 			this.createGoalDataModel(goalId, initialData),
 			this.createGoalStatsDataModel(goalId, initialData),
-			this.createEntryCollectionModel(goalId)
+			this.createEntryCollectionModel(goalId, false)
 		)
 	}
 
@@ -75,7 +75,7 @@ export class ModelFactory {
 		return new GoalModel(
 			this.createSharedGoalDataModel(goalId, initialData),
 			this.createGoalStatsDataModel(goalId, initialData),
-			this.createEntryCollectionModel(goalId)
+			this.createEntryCollectionModel(goalId, true)
 		)
 	}
 
@@ -131,12 +131,13 @@ export class ModelFactory {
 		)
 	}
 
-	createEntryCollectionModel(goalId: string, initialData?: IEntry[]) {
+	createEntryCollectionModel(goalId: string, shared: boolean, initialData?: IEntry[]) {
 		return new EntryCollectionModel(
 			this.serviceFactory.createGoalService(),
 			this,
 			this.dataStructureFactory.createEntryCollectionModelDataStructure(),
 			goalId,
+			shared,
 			initialData
 		);
 	}
