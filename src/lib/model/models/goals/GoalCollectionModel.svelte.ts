@@ -30,6 +30,7 @@ export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalInfo
     }
 
     async createGoal(title: string): Promise<void> {
+        // TODO: use the create runner
         const optimisticGoal = GoalInfo.createOptimisticJson(this.userId, new Date(), title);
         await this.optimisticCreate(optimisticGoal);
     }

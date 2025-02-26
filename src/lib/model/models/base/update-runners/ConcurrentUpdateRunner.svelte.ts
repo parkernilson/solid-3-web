@@ -1,4 +1,4 @@
-import { UpdateRunner, type UpdateParams } from "./UpdateRunner.svelte";
+import { UpdateRunner, type ExecuteUpdateParams } from "./UpdateRunner.svelte";
 
 /**
  * Runs asynchronous optimistic updates by immediately applying the optimistic value
@@ -11,7 +11,7 @@ import { UpdateRunner, type UpdateParams } from "./UpdateRunner.svelte";
  * value.
  */
 export class ConcurrentUpdateRunner<T> extends UpdateRunner<T> {
-	async executeUpdate(operation: UpdateParams<T>): Promise<T> {
+	async executeUpdate(operation: ExecuteUpdateParams<T>): Promise<T> {
 		this.initUpdate(operation.optimisticValue);
 
 		try {

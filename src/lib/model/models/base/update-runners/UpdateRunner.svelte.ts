@@ -4,10 +4,11 @@ interface SendUpdateParams<T> {
 	optimisticValue?: T;
 }
 
+export type SendUpdateFn<T> = (params: SendUpdateParams<T>) => Promise<T>;
 
-export interface UpdateParams<T> {
+export interface ExecuteUpdateParams<T> {
 	optimisticValue?: T;
-	sendUpdate: (params: SendUpdateParams<T>) => Promise<T>;
+	sendUpdate: SendUpdateFn<T>;
 }
 
 export abstract class UpdateRunner<T> {
@@ -37,7 +38,7 @@ export abstract class UpdateRunner<T> {
 		this.updateRollbackValue(model.data);
 	}
 
-	abstract executeUpdate(params: UpdateParams<T>): Promise<T>;
+	abstract executeUpdate(params: ExecuteUpdateParams<T>): Promise<T>;
 
 	protected setData(data: T | undefined, optimistic = false) {
 		this.model.setData(data, { optimistic });
@@ -48,7 +49,7 @@ export abstract class UpdateRunner<T> {
 		if (optimisticValue) this.model.setData(optimisticValue, { optimistic: true });
 	}
 
-	protected async performUpdateSendSequence(operation: UpdateParams<T>): Promise<T> {
+	protected async performUpdateSendSequence(operation: ExecuteUpdateParams<T>): Promise<T> {
 		return operation.sendUpdate({
 			optimisticValue: operation.optimisticValue
 		});

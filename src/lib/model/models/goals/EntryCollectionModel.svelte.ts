@@ -1,5 +1,5 @@
 import type { ModelFactory } from '$lib/factories/models/ModelFactory.svelte';
-import type { IEntry } from '$lib/model/domain/goals';
+import { type IEntry } from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { filterUndefined, type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
 import { ListDataStructure } from '../base/ListDataStructure.svelte';
@@ -36,12 +36,6 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 
 	protected makeConstituentDataModel(data: IEntry): EntryDataModel {
 		return this.modelFactory.createEntryDataModel(data.id, { initialData: data })
-	}
-	protected sendCreate(): Promise<IEntry> {
-		throw new Error('Method not implemented.');
-	}
-	protected sendDelete(): Promise<void> {
-		throw new Error('Method not implemented.');
 	}
     protected async sendGetMoreItems(request: PaginatedRequest<string>): Promise<PaginatedResponse<IEntry, string>> {
 		return this.goalService.getEntriesPaginated(this.goalId, request);

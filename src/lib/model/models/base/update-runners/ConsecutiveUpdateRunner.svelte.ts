@@ -1,4 +1,4 @@
-import { UpdateRunner, type UpdateParams } from "./UpdateRunner.svelte";
+import { UpdateRunner, type ExecuteUpdateParams } from "./UpdateRunner.svelte";
 
 /**
  * Runs asynchronous optimistic updates by immediately applying the optimistic value,
@@ -14,7 +14,7 @@ import { UpdateRunner, type UpdateParams } from "./UpdateRunner.svelte";
 export class ConsecutiveUpdateRunner<T> extends UpdateRunner<T> {
 	private queue: QueuedUpdate<T>[] = [];
 
-	private getQueuedUpdate(params: UpdateParams<T>, promiseFns: PromiseFns<T>): QueuedUpdate<T> {
+	private getQueuedUpdate(params: ExecuteUpdateParams<T>, promiseFns: PromiseFns<T>): QueuedUpdate<T> {
 		return {
 			optimisticValue: params.optimisticValue,
 			performUpdateSendSequence: () => this.performUpdateSendSequence(params),
@@ -45,7 +45,7 @@ export class ConsecutiveUpdateRunner<T> extends UpdateRunner<T> {
 		}
 	}
 
-	executeUpdate(operation: UpdateParams<T>): Promise<T> {
+	executeUpdate(operation: ExecuteUpdateParams<T>): Promise<T> {
 		this.initUpdate(operation.optimisticValue);
 		return new Promise<T>((resolve, reject) => {
 			this.queue.push(this.getQueuedUpdate(operation, { resolve, reject }));

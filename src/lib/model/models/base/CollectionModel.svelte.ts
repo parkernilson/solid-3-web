@@ -11,12 +11,11 @@ export abstract class CollectionModel<
 > extends BaseModel {
 	constructor(
 		protected dataStructure: DS,
-		private key: KeyFn<T>,
+		protected key: KeyFn<T>,
 		initialData?: T[]
 	) {
 		super();
-		if (initialData)
-			this.setItems(initialData)
+		if (initialData) this.setItems(initialData);
 	}
 
 	protected abstract makeConstituentDataModel(
@@ -28,34 +27,31 @@ export abstract class CollectionModel<
 		return data.map((t) => this.makeConstituentDataModel(t));
 	}
 
-	protected abstract sendCreate(data: T): Promise<T>;
-	protected abstract sendDelete(id: IdType): Promise<void>;
-
-	protected getModel(id: IdType): DM | undefined {
+	public getModel(id: IdType): DM | undefined {
 		return this.dataStructure.get(id);
 	}
-	protected add(data: T) {
+	public add(data: T) {
 		this.dataStructure.add(this.makeConstituentDataModel(data));
 	}
-	protected addModel(model: DM) {
+	public addModel(model: DM) {
 		this.dataStructure.add(model);
 	}
-	protected setItems(data: T[]) {
+	public setItems(data: T[]) {
 		this.dataStructure.setItems(this.mapToModels(data));
 	}
-	protected setModels(models: DM[]) {
+	public setModels(models: DM[]) {
 		this.dataStructure.setItems(models);
 	}
-	protected addItems(data: T[]) {
+	public addItems(data: T[]) {
 		this.dataStructure.addItems(this.mapToModels(data));
 	}
-	protected addModels(models: DM[]) {
+	public addModels(models: DM[]) {
 		this.dataStructure.addItems(models);
 	}
-	protected remove(id: IdType) {
+	public remove(id: IdType) {
 		this.dataStructure.remove(id);
 	}
-	protected update(id: IdType, data: T) {
+	public update(id: IdType, data: T) {
 		if (this.key(data) !== id) {
 			throw new Error(
 				`CollectionModel: update called with id ${id} but data has id ${this.key(data)}`
@@ -63,7 +59,10 @@ export abstract class CollectionModel<
 		}
 		this.dataStructure.update(id, this.makeConstituentDataModel(data));
 	}
-	protected updateModel(id: IdType, model: DM) {
+	public updateWithNewId(oldId: IdType, data: T) {
+		this.dataStructure.update(oldId, this.makeConstituentDataModel(data));
+	}
+	public updateModel(id: IdType, model: DM) {
 		this.dataStructure.update(id, model);
 	}
 
@@ -71,28 +70,5 @@ export abstract class CollectionModel<
 	protected async sendLoad(): Promise<void> {
 		const data = await this.loadData();
 		this.setItems(data);
-	}
-
-	protected async optimisticCreate(data: T): Promise<void> {
-		const id = this.key(data);
-		this.add(data);
-		try {
-			const result = await this.sendCreate(data);
-			this.update(id, result);
-		} catch (e) {
-			this.remove(id);
-			throw e;
-		}
-	}
-
-	protected async optimisticDelete(id: IdType): Promise<void> {
-		const originalItem = this.getModel(id);
-		this.remove(id);
-		try {
-			await this.sendDelete(id);
-		} catch (e) {
-			if (originalItem) this.addModel(originalItem);
-			throw e;
-		}
 	}
 }

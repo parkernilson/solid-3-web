@@ -1,3 +1,5 @@
+import { Optimistic } from "../Optimistic";
+
 export interface IEntry {
 	id: string;
 	goal: string;
@@ -6,32 +8,20 @@ export interface IEntry {
 	success: boolean;
 }
 
+export type EntryCreateOptimisticParams = Pick<IEntry, 'goal' | 'textContent' | 'dateOf' | 'success'>;
+export type EntryUpdateOptimisticParams = Pick<IEntry, 'textContent' | 'dateOf' | 'success'>;
+
 export class Entry implements IEntry {
-	get id() {
-		return this._id;
-	}
-	get goal() {
-		return this._goal;
-	}
-	get textContent() {
-		return this._textContent;
-	}
-	get dateOf() {
-		return this._dateOf;
-	}
 	get dateOfObject() {
-		return new Date(this._dateOf);
-	}
-	get success() {
-		return this._success;
+		return new Date(this.dateOf);
 	}
 
 	constructor(
-		private _id: string,
-		private _goal: string,
-		private _textContent: string | null,
-		private _dateOf: string,
-		private _success: boolean,
+		public id: string,
+		public goal: string,
+		public textContent: string | null,
+		public dateOf: string,
+		public success: boolean,
 	) {}
 
 	private static formatDate(date: Date): string {
@@ -67,5 +57,22 @@ export class Entry implements IEntry {
 			dateOf: this.dateOf,
 			success: this.success,
 		}
+	}
+
+	static createOptimistic(p: EntryCreateOptimisticParams): IEntry {
+		return {
+			id: Optimistic.getTempId(),
+			goal: p.goal,
+			textContent: p.textContent,
+			dateOf: p.dateOf,
+			success: p.success,
+		};
+	}
+
+	getAppliedUpdateOptimistic(p: EntryUpdateOptimisticParams): IEntry {
+		return {
+			...this,
+			...p,
+		};
 	}
 }
