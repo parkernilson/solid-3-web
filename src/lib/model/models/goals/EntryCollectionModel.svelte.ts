@@ -1,3 +1,4 @@
+import type { ModelFactory } from '$lib/factories/models/ModelFactory.svelte';
 import type { IEntry } from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { filterUndefined, type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
@@ -25,6 +26,7 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 
 	constructor(
 		private goalService: GoalService,
+		private modelFactory: ModelFactory,
 		dataStructure: ListDataStructure<EntryDataModel>,
         private goalId: string,
 		initialData?: IEntry[]
@@ -33,7 +35,7 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 	}
 
 	protected makeConstituentDataModel(data: IEntry): EntryDataModel {
-		return new EntryDataModel(this.goalService, data.id, data);
+		return this.modelFactory.createEntryDataModel(data.id, { initialData: data })
 	}
 	protected sendCreate(): Promise<IEntry> {
 		throw new Error('Method not implemented.');

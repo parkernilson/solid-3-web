@@ -1,7 +1,6 @@
 import type { SupabaseDomainConverter } from '$lib/model/converters/supabase/SupabaseDomainConverter';
 import {
 	CurrentStreakInfo,
-	Entry,
 	Goal,
 	StreakInfo,
 	type IActivityInfo,
@@ -16,10 +15,14 @@ import {
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
 import type { SupabaseClient } from '$lib/supabase/supabase';
+import { toUTCString } from '$lib/utils/dates';
+import { stripUndefined } from '$lib/utils/objects';
 import type { PaginatedRequest, PaginatedResponse } from '$lib/utils/types';
 import { isNotNullRow } from '$lib/utils/types/isNotNullRow';
 import type {
 	AcceptSharedGoalParams,
+	CreateEntryParams,
+	CreateEntryResult,
 	CreateGoalParams,
 	CreateGoalResult,
 	getCurrentStreakParams,
@@ -27,8 +30,8 @@ import type {
 	RejectSharedGoalParams,
 	ShareGoalParams,
 	UnshareGoalParams,
-	UpsertEntryParams,
-	UpsertEntryResult
+	UpdateEntryParams,
+	UpdateEntryResult
 } from './GoalService.svelte';
 import type { SupabaseAuthService } from './SupabaseAuthService.svelte';
 
@@ -190,32 +193,35 @@ export class SupabaseGoalService implements GoalService {
 		return { id: data?.id, title };
 	}
 
-	// TODO: remove me if no longer used in refactor
-	async upsertEntry({
-		goalId,
-		entryId,
-		dateOf,
-		textContent,
-		success
-	}: UpsertEntryParams): Promise<UpsertEntryResult> {
-		const { data, error } = await this.supabase.rpc('upsert_entry', {
+	async createEntry({ goalId, dateOf, success, textContent }: CreateEntryParams): Promise<CreateEntryResult> {
+		const { data, error } = await this.supabase.rpc('create_entry', {
 			_goal_id: goalId,
-			_entry_id: entryId,
-			_date_of: dateOf,
-			_text_content: textContent,
-			_success: success
-		});
-		if (error) {
-			throw error;
-		}
-		if (!data) {
-			throw new Error('No data returned from upsert_entry');
-		}
-		return Entry.fromJson(this.converter.convertEntry(data));
+			_date_of: toUTCString(dateOf),
+			_success: success,
+			_text_content: textContent ?? undefined
+		})
+		if (error) throw error;
+		return this.converter.convertEntry(data);
+	}
+
+	async updateEntry(id: string, {
+		textContent,
+		dateOf,
+		success
+	}: UpdateEntryParams): Promise<UpdateEntryResult> {
+		const { data, error } = await this.supabase.rpc('update_entry', {
+			_entry_id: id,
+			_update_values: stripUndefined({
+				text_content: textContent,
+				date_of: dateOf ? toUTCString(dateOf) : undefined,
+				success: success
+			})
+		})
+		if (error) throw error;
+		return this.converter.convertEntry(data);
 	}
 
 	async shareGoal({ goalId, withUser }: ShareGoalParams): Promise<void> {
-		// TODO: implement email sending / notification
 		await this.supabase.rpc('share_goal', { _goal_id: goalId, _with_user: withUser });
 	}
 

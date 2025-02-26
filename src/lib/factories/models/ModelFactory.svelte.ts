@@ -8,7 +8,9 @@ import type {
 } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
+import type { DataModelInit } from '$lib/model/models/base/DataModel.svelte';
 import { EntryCollectionModel } from '$lib/model/models/goals/EntryCollectionModel.svelte';
+import { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svelte';
 import { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
 import { GoalDataModel } from '$lib/model/models/goals/GoalDataModel.svelte';
 import { GoalInfoDataModel } from '$lib/model/models/goals/GoalInfoDataModel.svelte';
@@ -23,11 +25,13 @@ import { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelt
 import { UserProfileDataModel } from '$lib/model/models/profile/UserProfileDataModel.svelte';
 import type { DataStructureFactory } from '../data-structures/DataStructureFactory.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
+import type { UpdateRunnerFactory } from './UpdateRunnerFactory.svelte';
 
 export class ModelFactory {
 	constructor(
 		private serviceFactory: ServiceFactory,
-		private dataStructureFactory: DataStructureFactory
+		private dataStructureFactory: DataStructureFactory,
+		private updateRunnerFactory: UpdateRunnerFactory
 	) {}
 
 	createAuthModel(): AuthModel {
@@ -118,9 +122,19 @@ export class ModelFactory {
 		);
 	}
 
+	createEntryDataModel(entryId: string, init: DataModelInit<IEntry> = {}) {
+		return new EntryDataModel(
+			this.serviceFactory.createGoalService(),
+			this.updateRunnerFactory.getConcurrentUpdateRunnerConstructor(),
+			entryId,
+			init
+		)
+	}
+
 	createEntryCollectionModel(goalId: string, initialData?: IEntry[]) {
 		return new EntryCollectionModel(
 			this.serviceFactory.createGoalService(),
+			this,
 			this.dataStructureFactory.createEntryCollectionModelDataStructure(),
 			goalId,
 			initialData
