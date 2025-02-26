@@ -8,7 +8,7 @@ export interface IEntry {
 	success: boolean;
 }
 
-export type EntryCreateOptimisticParams = Pick<IEntry, 'goal' | 'textContent' | 'dateOf' | 'success'>;
+export type EntryCreateParams = Pick<IEntry, 'goal' | 'textContent' | 'dateOf' | 'success'>;
 export type EntryUpdateOptimisticParams = Pick<IEntry, 'textContent' | 'dateOf' | 'success'>;
 
 export class Entry implements IEntry {
@@ -59,7 +59,7 @@ export class Entry implements IEntry {
 		}
 	}
 
-	static createOptimistic(p: EntryCreateOptimisticParams): IEntry {
+	static createOptimistic(p: EntryCreateParams): IEntry {
 		return {
 			id: Optimistic.getTempId(),
 			goal: p.goal,
