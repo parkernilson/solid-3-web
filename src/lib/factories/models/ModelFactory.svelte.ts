@@ -137,7 +137,7 @@ export class ModelFactory {
 		return new EntryCollectionModel(
 			this.serviceFactory.createGoalService(),
 			this,
-			this.createDeleteRunnerFactory.createCDRunnerConstructor(),
+			this.createDeleteRunnerFactory.createEntryCollectionCDRunnerConstructor(),
 			this.dataStructureFactory.createEntryCollectionModelDataStructure(),
 			goalId,
 			shared,

@@ -6,7 +6,7 @@ import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
 import type { ListDataStructure } from "../base/ListDataStructure.svelte";
 import type { SharedGoalPreviewDataModel } from "./SharedGoalPreviewDataModel.svelte";
 
-export class SharedGoalPreviewCollectionModel extends ListCollectionModel<ISharedGoalPreview, SharedGoalPreviewDataModel> {
+export class SharedGoalPreviewCollectionModel extends ListCollectionModel<ISharedGoalPreview, never, SharedGoalPreviewDataModel> {
     constructor(
         private goalService: GoalService,
         private modelFactory: ModelFactory,

@@ -9,8 +9,9 @@ import { ListCollectionModel } from './ListCollectionModel.svelte';
 
 export abstract class PaginatedCollectionModel<
 	T extends HasId,
+	CreateTParams,
 	DM extends DataModel<T>
-> extends ListCollectionModel<T, DM> {
+> extends ListCollectionModel<T, CreateTParams, DM> {
 	public hasMore: boolean = $state(true);
 	private defaultPageSize = 10;
 	private initialPageSize = 50;

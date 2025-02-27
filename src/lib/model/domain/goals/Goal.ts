@@ -1,9 +1,14 @@
+import { Optimistic } from "../Optimistic";
+
 export interface IGoal {
     id: string;
     owner: string;
     title: string;
     startDate: string;
 }
+
+export type GoalCreateParams = Pick<IGoal, 'owner' | 'title' | 'startDate'>;
+export type GoalUpdateOptimisticParams = Pick<IGoal, 'owner' | 'title' | 'startDate'>;
 
 export class Goal implements IGoal {
     constructor(
@@ -32,6 +37,20 @@ export class Goal implements IGoal {
     static getDefaultGoalValues(): Required<Pick<Goal, 'title'>> & Partial<Goal> {
         return {
             title: 'Untitled Goal',
+        }
+    }
+
+    static createOptimistic(params: GoalCreateParams): IGoal {
+        return {
+            ...params,
+            id: Optimistic.getTempId()
+        }
+    }
+
+    static applyUpdateOptimistic(original: IGoal, params: GoalUpdateOptimisticParams): IGoal {
+        return {
+            ...original,
+            ...params
         }
     }
 }

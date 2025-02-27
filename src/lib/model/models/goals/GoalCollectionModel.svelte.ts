@@ -1,11 +1,11 @@
 import type { ModelFactory } from "$lib/factories/models/ModelFactory.svelte";
 import type { GoalService } from "$lib/services/GoalService.svelte";
-import { type IGoalInfo } from "../../domain/goals";
+import { type GoalCreateParams, type IGoalInfo } from "../../domain/goals";
 import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
 import type { ListDataStructure } from "../base/ListDataStructure.svelte";
 import { GoalInfoDataModel } from "./GoalInfoDataModel.svelte";
 
-export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalInfoDataModel> {
+export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalCreateParams, GoalInfoDataModel> {
     constructor(
         private goalService: GoalService,
         private modelFactory: ModelFactory,

@@ -4,7 +4,6 @@ import type { DataModel } from '../DataModel.svelte';
 import type { CreateDeleteRunner } from './CreateDeleteRunner.svelte';
 
 export type CreateDeleteRunnerConstructor<T, CreateTParams, DM extends DataModel<T>> = (
-	model: CollectionModel<T, DM>,
+	model: CollectionModel<T, CreateTParams, DM>,
 	key: KeyFn<T>,
-	getOptimisticCreateT: (params: CreateTParams) => T
 ) => CreateDeleteRunner<T, CreateTParams, DM>;

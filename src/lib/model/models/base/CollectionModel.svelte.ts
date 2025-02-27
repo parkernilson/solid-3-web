@@ -1,20 +1,35 @@
 import type { KeyFn } from '$lib/model/domain/KeyFn';
 import type { IdType } from '../../domain/HasId';
 import { BaseModel } from './BaseModel.svelte';
+import type { CreateDeleteRunner, CreateDeleteRunnerConstructor, ExecuteCreateParams, ExecuteDeleteParams } from './create-delete-runners';
 import type { DataModel, DataModelInit } from './DataModel.svelte';
 import type { DataStructure } from './DataStructure.svelte';
 
 export abstract class CollectionModel<
 	T,
+	CreateTParams,
 	DM extends DataModel<T>
 > extends BaseModel {
+	
+	private cdRunner: CreateDeleteRunner<T, CreateTParams, DM> | undefined;
+
+	public get creating() {
+		return this.cdRunner?.creating ?? false;
+	}
+
+	public get deleting() {
+		return this.cdRunner?.deleting ?? false;
+	}
+
 	constructor(
 		private dataStructure: DataStructure<DM>,
 		protected key: KeyFn<T>,
-		initialData?: T[]
+		initialData?: T[],
+		cdRunnerConstructor?: CreateDeleteRunnerConstructor<T, CreateTParams, DM>
 	) {
 		super();
 		if (initialData) this.setItems(initialData);
+		if (cdRunnerConstructor) this.cdRunner = cdRunnerConstructor(this, key);
 	}
 
 	protected abstract makeConstituentDataModel(
@@ -69,5 +84,19 @@ export abstract class CollectionModel<
 	protected async sendLoad(): Promise<void> {
 		const data = await this.loadData();
 		this.setItems(data);
+	}
+
+	protected async create(params: ExecuteCreateParams<T, CreateTParams>): Promise<void> {
+		if (!this.cdRunner) {
+			throw new Error('CollectionModel: create not supported without createDeleteRunner');
+		}
+		return this.cdRunner.create(params);
+	}
+
+	protected async delete(params: ExecuteDeleteParams): Promise<void> {
+		if (!this.cdRunner) {
+			throw new Error('CollectionModel: delete not supported without createDeleteRunner');
+		}
+		return this.cdRunner.delete(params);
 	}
 }

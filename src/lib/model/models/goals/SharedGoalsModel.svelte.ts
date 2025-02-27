@@ -42,6 +42,7 @@ export class SharedGoalsModel extends BaseModel {
         ])
     }
 
+	// TODO: implement this method with built in model updates (??)
 	private async setSharedGoalStatus(goalId: string, status: ShareStatus): Promise<void> {
 		const prevStatus = this.sharedGoalPreviewsCollectionModel.markRequestStatus(goalId, status);
 		try {

@@ -1,25 +1,15 @@
 import type { ModelFactory } from '$lib/factories/models/ModelFactory.svelte';
-import { Entry, type EntryCreateParams, type IEntry } from '$lib/model/domain/goals';
+import { type EntryCreateParams, type IEntry } from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
-import type { CreateDeleteRunner, CreateDeleteRunnerConstructor } from '../base/create-delete-runners';
+import type { CreateDeleteRunnerConstructor } from '../base/create-delete-runners';
 import { ListDataStructure } from '../base/ListDataStructure.svelte';
 import { PaginatedCollectionModel } from '../base/PaginatedCollectionModel.svelte';
 import { EntryDataModel } from './EntryDataModel.svelte';
 
 type EntryCollectionCDRunnerConstructor = CreateDeleteRunnerConstructor<IEntry, EntryCreateParams, EntryDataModel>;
-type EntryCollectionCDRunner = CreateDeleteRunner<IEntry, EntryCreateParams, EntryDataModel>;
 
-export class EntryCollectionModel extends PaginatedCollectionModel<IEntry, EntryDataModel> {
-	public get creating() {
-		return this.createDeleteRunner.creating;
-	}
-
-	public get deleting() {
-		return this.createDeleteRunner.deleting;
-	}
-
-	private createDeleteRunner: EntryCollectionCDRunner;
+export class EntryCollectionModel extends PaginatedCollectionModel<IEntry, EntryCreateParams, EntryDataModel> {
 
 	constructor(
 		private goalService: GoalService,
@@ -30,8 +20,7 @@ export class EntryCollectionModel extends PaginatedCollectionModel<IEntry, Entry
 		private shared: boolean,
 		initialData?: IEntry[]
 	) {
-		super(dataStructure, (t) => t.id, initialData);
-		this.createDeleteRunner = cdRunnerConstructor(this, (t) => t.id, Entry.createOptimistic);
+		super(dataStructure, (t) => t.id, initialData, cdRunnerConstructor);
 	}
 
 	protected makeConstituentDataModel(data: IEntry): EntryDataModel {
@@ -47,7 +36,7 @@ export class EntryCollectionModel extends PaginatedCollectionModel<IEntry, Entry
 	async createEntry(params: Omit<EntryCreateParams, 'goal'>): Promise<void> {
 		const createParams = { ...params, goal: this.goalId }
 
-		await this.createDeleteRunner.create({
+		await this.create({
 			createParams,
 			optimistic: true,
 			sendCreate: async (createParams) => {

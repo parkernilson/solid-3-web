@@ -69,6 +69,7 @@ export class Entry implements IEntry {
 		};
 	}
 
+	// TODO: change to static method with params: IEntry, EntryUpdateOptimisticParams
 	getAppliedUpdateOptimistic(p: EntryUpdateOptimisticParams): IEntry {
 		return {
 			...this,

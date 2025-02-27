@@ -6,13 +6,13 @@ import type { DataModel } from '../DataModel.svelte';
 type CreateFn<T, CreateTParams> = (createParams: CreateTParams) => Promise<T>;
 type DeleteFn = (id: IdType) => Promise<void>;
 
-interface CreateParams<T, CreateTParams> {
+export interface ExecuteCreateParams<T, CreateTParams> {
 	createParams: CreateTParams;
 	optimistic?: boolean;
 	sendCreate: CreateFn<T, CreateTParams>;
 }
 
-interface DeleteParams {
+export interface ExecuteDeleteParams {
 	id: IdType;
 	optimistic?: boolean;
 	sendDelete: DeleteFn;
@@ -36,12 +36,12 @@ export class CreateDeleteRunner<
 	}
 
 	constructor(
-		private model: CollectionModel<T, DM>,
+		private model: CollectionModel<T, CreateTParams, DM>,
 		private key: KeyFn<T>,
 		private getOptimisticCreateT: GetOptimisticCreateTFn<T, CreateTParams>
 	) {}
 
-	async create(params: CreateParams<T, CreateTParams>): Promise<void> {
+	async create(params: ExecuteCreateParams<T, CreateTParams>): Promise<void> {
 		this._creating = true;
 
 		const data = this.getOptimisticCreateT(params.createParams);
@@ -63,7 +63,7 @@ export class CreateDeleteRunner<
 		}
 	}
 
-	async optimisticDelete(params: DeleteParams): Promise<void> {
+	async delete(params: ExecuteDeleteParams): Promise<void> {
 		this._deleting = true;
 		
 		const originalItem = this.model.getModel(params.id);
