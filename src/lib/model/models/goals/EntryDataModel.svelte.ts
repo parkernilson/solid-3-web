@@ -4,11 +4,11 @@ import { type DataModelInit } from '../base/DataModel.svelte';
 import { UpdatableDataModel } from '../base/UpdatableDataModel.svelte';
 import type { ConcurrentUpdateRunnerConstructor } from '../base/update-runners';
 
-export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimisticParams, string> {
+export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimisticParams> {
 	constructor(
 		private goalService: GoalService,
 		updateRunnerConstructor: ConcurrentUpdateRunnerConstructor<IEntry>,
-		entryId: string,
+		private entryId: string,
 		init: DataModelInit<IEntry> = {}
 	) {
 		super(updateRunnerConstructor, entryId, init);
@@ -26,7 +26,7 @@ export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimi
 		return this.update({
 			optimisticParams: params,
 			sendUpdate: async () => {
-				return this.goalService.updateEntry(this.id, params);
+				return this.goalService.updateEntry(this.entryId, params);
 			}
 		})
 	}

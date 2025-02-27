@@ -10,7 +10,7 @@ interface SetDataOptions {
 	optimistic?: boolean;
 }
 
-export abstract class DataModel<T, Id extends IdType = IdType> extends BaseModel {
+export abstract class DataModel<T> extends BaseModel {
 	public data = $state<T>();
 	/**
 	 * True if the current data is an optimistic representation of the expected result of some
@@ -21,7 +21,7 @@ export abstract class DataModel<T, Id extends IdType = IdType> extends BaseModel
 	public optimistic = $state<boolean>(false);
 
 	constructor(
-		public id: Id,
+		public id: IdType,
 		{ initialData, optimistic = false }: DataModelInit<T> = {}
 	) {
 		super();

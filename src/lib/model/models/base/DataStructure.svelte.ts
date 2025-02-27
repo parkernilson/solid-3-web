@@ -1,13 +1,13 @@
 import type { IdType } from "$lib/model/domain/HasId";
 
-export abstract class DataStructure<T, Id extends IdType = IdType> {
-    public key: (data: T) => Id;
+export abstract class DataStructure<T> {
+    public key: (data: T) => IdType;
 
-    constructor(key: (data: T) => Id) {
+    constructor(key: (data: T) => IdType) {
         this.key = key;
     }
 
-	abstract get(id: Id): T | undefined;
+	abstract get(id: IdType): T | undefined;
 	abstract add(data: T): void;
 	abstract setItems(data: T[]): void;
     abstract addItems(data: T[]): void;

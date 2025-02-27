@@ -1,7 +1,7 @@
 import type { IdType } from '$lib/model/domain/HasId';
 import { DataStructure } from './DataStructure.svelte';
 
-export class ListDataStructure<T, Id extends IdType = IdType> extends DataStructure<T, Id> {
+export class ListDataStructure<T> extends DataStructure<T> {
 	private _items = $state<T[]>();
 	get items() {
 		return this._items;
@@ -10,7 +10,7 @@ export class ListDataStructure<T, Id extends IdType = IdType> extends DataStruct
 		this._items = i;
 	}
 
-	get(id: Id): T | undefined {
+	get(id: IdType): T | undefined {
 		return this.items?.find((item) => this.key(item) === id);
 	}
 	add(item: T): void {

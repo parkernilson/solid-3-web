@@ -6,11 +6,10 @@ import type { DataStructure } from './DataStructure.svelte';
 
 export abstract class CollectionModel<
 	T,
-	DM extends DataModel<T> = DataModel<T>,
-	DS extends DataStructure<DM> = DataStructure<DM>
+	DM extends DataModel<T>
 > extends BaseModel {
 	constructor(
-		protected dataStructure: DS,
+		private dataStructure: DataStructure<DM>,
 		protected key: KeyFn<T>,
 		initialData?: T[]
 	) {
@@ -30,8 +29,8 @@ export abstract class CollectionModel<
 	public getModel(id: IdType): DM | undefined {
 		return this.dataStructure.get(id);
 	}
-	public add(data: T) {
-		this.dataStructure.add(this.makeConstituentDataModel(data));
+	public add(data: T, optimistic = false) {
+		this.dataStructure.add(this.makeConstituentDataModel(data, { optimistic }));
 	}
 	public addModel(model: DM) {
 		this.dataStructure.add(model);
@@ -51,16 +50,16 @@ export abstract class CollectionModel<
 	public remove(id: IdType) {
 		this.dataStructure.remove(id);
 	}
-	public update(id: IdType, data: T) {
+	public update(id: IdType, data: T, optimistic = false) {
 		if (this.key(data) !== id) {
 			throw new Error(
 				`CollectionModel: update called with id ${id} but data has id ${this.key(data)}`
 			);
 		}
-		this.dataStructure.update(id, this.makeConstituentDataModel(data));
+		this.dataStructure.update(id, this.makeConstituentDataModel(data, { optimistic }));
 	}
-	public updateWithNewId(oldId: IdType, data: T) {
-		this.dataStructure.update(oldId, this.makeConstituentDataModel(data));
+	public updateWithNewId(oldId: IdType, data: T, optimistic = false) {
+		this.dataStructure.update(oldId, this.makeConstituentDataModel(data, { optimistic }));
 	}
 	public updateModel(id: IdType, model: DM) {
 		this.dataStructure.update(id, model);

@@ -1,9 +1,9 @@
 import type { ModelFactory } from "$lib/factories/models/ModelFactory.svelte";
 import type { GoalService } from "$lib/services/GoalService.svelte";
-import { GoalInfo, type IGoalInfo } from "../../domain/goals";
-import { GoalInfoDataModel } from "./GoalInfoDataModel.svelte";
+import { type IGoalInfo } from "../../domain/goals";
 import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
 import type { ListDataStructure } from "../base/ListDataStructure.svelte";
+import { GoalInfoDataModel } from "./GoalInfoDataModel.svelte";
 
 export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalInfoDataModel> {
     constructor(
@@ -31,8 +31,10 @@ export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalInfo
 
     async createGoal(title: string): Promise<void> {
         // TODO: use the create runner
-        const optimisticGoal = GoalInfo.createOptimisticJson(this.userId, new Date(), title);
-        await this.optimisticCreate(optimisticGoal);
+        // const optimisticGoal = GoalInfo.createOptimisticJson(this.userId, new Date(), title);
+        // await this.optimisticCreate(optimisticGoal);
+
+        throw new Error("TODO: Not implemented " + title);
     }
 
     protected sendDelete(): Promise<void> {

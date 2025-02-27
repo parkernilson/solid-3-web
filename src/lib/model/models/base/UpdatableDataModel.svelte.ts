@@ -10,8 +10,7 @@ export interface UpdateParams<T, OptimisticUpdateTParams> {
 export abstract class UpdatableDataModel<
 	T,
 	OptimisticUpdateTParams,
-	Id extends IdType = IdType
-> extends DataModel<T, Id> {
+> extends DataModel<T> {
 	public get updating() {
 		return this.updateRunner.updating;
 	}
@@ -23,7 +22,7 @@ export abstract class UpdatableDataModel<
 
 	constructor(
 		updateRunnerConstructor: UpdateRunnerConstructor<T>,
-		id: Id,
+		id: IdType,
 		init: DataModelInit<T> = {}
 	) {
 		super(id, init);

@@ -25,13 +25,15 @@ import { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelt
 import { UserProfileDataModel } from '$lib/model/models/profile/UserProfileDataModel.svelte';
 import type { DataStructureFactory } from '../data-structures/DataStructureFactory.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
+import type { CreateDeleteRunnerFactory } from './CreateDeleteRunnerFactory.svelte';
 import type { UpdateRunnerFactory } from './UpdateRunnerFactory.svelte';
 
 export class ModelFactory {
 	constructor(
 		private serviceFactory: ServiceFactory,
 		private dataStructureFactory: DataStructureFactory,
-		private updateRunnerFactory: UpdateRunnerFactory
+		private updateRunnerFactory: UpdateRunnerFactory,
+		private createDeleteRunnerFactory: CreateDeleteRunnerFactory
 	) {}
 
 	createAuthModel(): AuthModel {
@@ -135,6 +137,7 @@ export class ModelFactory {
 		return new EntryCollectionModel(
 			this.serviceFactory.createGoalService(),
 			this,
+			this.createDeleteRunnerFactory.createCDRunnerConstructor(),
 			this.dataStructureFactory.createEntryCollectionModelDataStructure(),
 			goalId,
 			shared,
