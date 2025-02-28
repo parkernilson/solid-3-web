@@ -42,13 +42,16 @@ export class GoalCollectionModel extends ListCollectionModel<
 	}
 
 	async createGoal(title: string): Promise<void> {
-		const createParams = Goal.createOptimistic({ owner: this.userId, title });
+		// Use createOptimistic to generate the other create params, but make it clear that this is
+		// not a real goal object
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { id, ...createParams } = Goal.createOptimistic({ owner: this.userId, title });
 
 		await this.create({
 			createParams,
 			optimistic: true,
-			sendCreate: async (createParams) => {
-				const { id } = await this.goalService.createGoal(createParams);
+			sendCreate: async (_createParams) => {
+				const { id } = await this.goalService.createGoal(_createParams);
 				return this.goalService.getGoalInfo(id);
 			}
 		});
