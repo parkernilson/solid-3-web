@@ -23,7 +23,7 @@ export class DataStructureFactory {
 	createEntryCollectionModelDataStructure(): SortedListDataStructure<EntryDataModel> {
 		return new SortedListDataStructure<EntryDataModel>(
 			(m) => m.id,
-			(a, b) => compareNullable(Entry.compareByDate)(a.data, b.data)
+			(a, b) => -compareNullable(Entry.compareByDate)(a.data, b.data)
 		);
 	}
 }
