@@ -21,6 +21,7 @@
 	{:then _}
 		{#if presenter.goalInfo}
 			{@const goal = presenter.goalInfo}
+			{@const sharedGoal = presenter.sharedGoalInfo}
 			{@const streak = presenter.goalInfo.streak}
 			{@const record = presenter.goalInfo.record}
 			{@const isOwner = presenter.isOwner}
@@ -30,7 +31,12 @@
 						<a aria-label="Back" href="/goals" class="mr-6"
 							><i class="fa-solid fa-chevron-left fa-xl"></i></a
 						>
-						<h1 class="text-2xl xs:text-3xl flex-1 text-center">{goal.title}</h1>
+						<div class="flex-1">
+							<h1 class="text-2xl xs:text-3xl flex-1 text-center">{goal.title}</h1>
+							{#if sharedGoal}
+								<p class="text-center">{sharedGoal.ownerEmail}</p>
+							{/if}
+						</div>
 						<GoalOptionsPopover goalId={goal.id} />
 					</div>
 					<HeaderStats
