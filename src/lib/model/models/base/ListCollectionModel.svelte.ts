@@ -4,7 +4,7 @@ import type { HasId } from '../../domain/HasId';
 import { CollectionModel } from './CollectionModel.svelte';
 import type { CreateDeleteRunnerConstructor } from './create-delete-runners';
 import type { DataModel } from './DataModel.svelte';
-import { ListDataStructure } from './ListDataStructure.svelte';
+import { ListDataStructure } from './data-structures';
 
 export abstract class ListCollectionModel<
 	T extends HasId,

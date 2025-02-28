@@ -1,11 +1,10 @@
 import type { HasId } from '$lib/model/domain/HasId';
+import type { KeyFn } from '$lib/model/domain/KeyFn';
 import type { PaginatedRequest, PaginatedResponse, StartKeyType } from '$lib/utils/types';
+import type { CreateDeleteRunnerConstructor } from './create-delete-runners';
 import type { DataModel } from './DataModel.svelte';
 import { ListCollectionModel } from './ListCollectionModel.svelte';
-
-// TODO: create a SortedListDataStructure that can be used for paginated collections
-// currently there is a bug with creating items after the initial load (they will not be in
-// the correct order for paginated request)
+import type { SortedListDataStructure } from './data-structures';
 
 export abstract class PaginatedCollectionModel<
 	T extends HasId,
@@ -16,13 +15,22 @@ export abstract class PaginatedCollectionModel<
 	private defaultPageSize = 10;
 	private initialPageSize = 50;
 
+	constructor(
+		private sortedList: SortedListDataStructure<DM>,
+		key: KeyFn<T>,
+		initialData?: T[],
+		cdRunnerConstructor?: CreateDeleteRunnerConstructor<T, CreateTParams, DM>
+	) {
+		super(sortedList, key, initialData, cdRunnerConstructor);
+	}
+
 	protected abstract sendGetMoreItems(
 		request: PaginatedRequest<StartKeyType>
 	): Promise<PaginatedResponse<T, StartKeyType>>;
 
 	protected abstract getStartKey(lastItem?: T): StartKeyType | undefined;
 	private getLastExclusiveStartKey(): StartKeyType | undefined {
-		return this.getStartKey(this.items?.[this.items.length - 1].data);
+		return this.getStartKey(this.sortedList.getLastItem()?.data);
 	}
 
 	public async loadMoreItems(pageSize?: number): Promise<void> {

@@ -3,7 +3,7 @@ import type { IdType } from '../../domain/HasId';
 import { BaseModel } from './BaseModel.svelte';
 import type { CreateDeleteRunner, CreateDeleteRunnerConstructor, ExecuteCreateParams, ExecuteDeleteParams } from './create-delete-runners';
 import type { DataModel, DataModelInit } from './DataModel.svelte';
-import type { DataStructure } from './DataStructure.svelte';
+import type { DataStructure } from './data-structures';
 
 export abstract class CollectionModel<
 	T,

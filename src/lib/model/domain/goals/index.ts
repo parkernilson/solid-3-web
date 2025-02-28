@@ -4,7 +4,6 @@ export * from './GoalInfo';
 export * from './GoalStats';
 export * from './Entry';
 export * from './StreakInfo';
-export * from './EntryUpsert';
 export * from './ShareRecord';
 export * from './SharedGoalPreview';
 export * from './SharedGoal';

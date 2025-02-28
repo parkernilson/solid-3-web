@@ -19,7 +19,7 @@ export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimi
 	}
 
 	protected getOptimisticUpdateT(currentValue: IEntry, params: EntryUpdateOptimisticParams): IEntry {
-		return Entry.fromJson(currentValue).getAppliedUpdateOptimistic(params);
+		return Entry.getAppliedUpdateOptimistic(currentValue, params);
 	}
 
 	public async updateEntry(params: EntryUpdateOptimisticParams): Promise<IEntry> {

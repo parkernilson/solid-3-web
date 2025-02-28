@@ -1,3 +1,4 @@
+import { compareDates } from "$lib/utils/compare/compare-dates";
 import { Optimistic } from "../Optimistic";
 
 export interface IEntry {
@@ -69,11 +70,14 @@ export class Entry implements IEntry {
 		};
 	}
 
-	// TODO: change to static method with params: IEntry, EntryUpdateOptimisticParams
-	getAppliedUpdateOptimistic(p: EntryUpdateOptimisticParams): IEntry {
+	static getAppliedUpdateOptimistic(entry: IEntry, p: EntryUpdateOptimisticParams): IEntry {
 		return {
-			...this,
+			...entry,
 			...p,
 		};
+	}
+
+	static compareByDate(a: IEntry, b: IEntry): number {
+		return compareDates(a.dateOf, b.dateOf);
 	}
 }

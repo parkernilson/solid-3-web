@@ -3,20 +3,27 @@ import { type EntryCreateParams, type IEntry } from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
 import type { CreateDeleteRunnerConstructor } from '../base/create-delete-runners';
-import { ListDataStructure } from '../base/ListDataStructure.svelte';
+import { SortedListDataStructure } from '../base/data-structures';
 import { PaginatedCollectionModel } from '../base/PaginatedCollectionModel.svelte';
 import { EntryDataModel } from './EntryDataModel.svelte';
 
-type EntryCollectionCDRunnerConstructor = CreateDeleteRunnerConstructor<IEntry, EntryCreateParams, EntryDataModel>;
+type EntryCollectionCDRunnerConstructor = CreateDeleteRunnerConstructor<
+	IEntry,
+	EntryCreateParams,
+	EntryDataModel
+>;
 
-export class EntryCollectionModel extends PaginatedCollectionModel<IEntry, EntryCreateParams, EntryDataModel> {
-
+export class EntryCollectionModel extends PaginatedCollectionModel<
+	IEntry,
+	EntryCreateParams,
+	EntryDataModel
+> {
 	constructor(
 		private goalService: GoalService,
 		private modelFactory: ModelFactory,
 		cdRunnerConstructor: EntryCollectionCDRunnerConstructor,
-		dataStructure: ListDataStructure<EntryDataModel>,
-        private goalId: string,
+		dataStructure: SortedListDataStructure<EntryDataModel>,
+		private goalId: string,
 		private shared: boolean,
 		initialData?: IEntry[]
 	) {
@@ -24,17 +31,21 @@ export class EntryCollectionModel extends PaginatedCollectionModel<IEntry, Entry
 	}
 
 	protected makeConstituentDataModel(data: IEntry): EntryDataModel {
-		return this.modelFactory.createEntryDataModel(data.id, { initialData: data })
+		return this.modelFactory.createEntryDataModel(data.id, { initialData: data });
 	}
-    protected async sendGetMoreItems(request: PaginatedRequest<string>): Promise<PaginatedResponse<IEntry, string>> {
+	protected async sendGetMoreItems(
+		request: PaginatedRequest<string>
+	): Promise<PaginatedResponse<IEntry, string>> {
 		return this.goalService.getEntriesPaginated(this.goalId, request);
-    }
-    protected getStartKey(lastItem?: IEntry): string | undefined {
+	}
+	protected getStartKey(lastItem?: IEntry): string | undefined {
 		return lastItem?.dateOf;
-    }
+	}
 
 	async createEntry(params: Omit<EntryCreateParams, 'goal'>): Promise<void> {
-		const createParams = { ...params, goal: this.goalId }
+		if (this.shared) throw new Error('Cannot create entry in shared collection');
+
+		const createParams = { ...params, goal: this.goalId };
 
 		await this.create({
 			createParams,
@@ -47,5 +58,4 @@ export class EntryCollectionModel extends PaginatedCollectionModel<IEntry, Entry
 			}
 		});
 	}
-    
 }

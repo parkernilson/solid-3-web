@@ -1,15 +1,15 @@
 import type { ModelFactory } from "$lib/factories/models/ModelFactory.svelte";
 import type { GoalService } from "$lib/services/GoalService.svelte";
 import { type GoalCreateParams, type IGoalInfo } from "../../domain/goals";
+import type { UnsortedListDataStructure } from "../base/data-structures/UnsortedListDataStructure.svelte";
 import { ListCollectionModel } from "../base/ListCollectionModel.svelte";
-import type { ListDataStructure } from "../base/ListDataStructure.svelte";
 import { GoalInfoDataModel } from "./GoalInfoDataModel.svelte";
 
 export class GoalCollectionModel extends ListCollectionModel<IGoalInfo, GoalCreateParams, GoalInfoDataModel> {
     constructor(
         private goalService: GoalService,
         private modelFactory: ModelFactory,
-        dataStructure: ListDataStructure<GoalInfoDataModel>,
+        dataStructure: UnsortedListDataStructure<GoalInfoDataModel>,
         private userId: string
     ) {
         super(dataStructure, (data) => data.id);
