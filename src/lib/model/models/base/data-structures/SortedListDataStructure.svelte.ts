@@ -4,16 +4,20 @@ import { bisectLeftBy } from '$lib/utils/arrays/bisect-left';
 import { ListDataStructure } from './ListDataStructure.svelte';
 
 export class SortedListDataStructure<SortT, T extends SortT = SortT> extends ListDataStructure<T> {
-	private bisectLeft;
-	private isSorted;
+
+	// NOTE: These need to be getters because the parent class will use them in the constructor
+	private get isSorted() {
+		return isSortedBy<SortT, T>(this.compare);
+	};
+	private get bisectLeft() {
+		return bisectLeftBy<SortT, T>(this.compare);
+	};
 
 	constructor(
 		key: KeyFn<T>,
 		private compare: (a: SortT, b: SortT) => number
 	) {
 		super(key);
-		this.bisectLeft = bisectLeftBy<SortT, T>(this.compare);
-		this.isSorted = isSortedBy<SortT, T>(this.compare);
 	}
 
 	add(item: T): void {
