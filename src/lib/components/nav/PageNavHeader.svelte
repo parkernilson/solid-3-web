@@ -13,7 +13,7 @@
 	}
 </script>
 
-<div class="flex items-center m-3 relative">
+<div class="flex items-center my-3 relative">
 	<button aria-label="Go back" class="absolute left-0" onclick={goBack}>
 		<i class="fa-solid fa-chevron-left fa-lg"></i>
 	</button>

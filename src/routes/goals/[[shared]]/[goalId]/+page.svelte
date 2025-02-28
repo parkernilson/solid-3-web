@@ -22,12 +22,12 @@
 			{@const streak = presenter.goalInfo.streak}
 			{@const record = presenter.goalInfo.record}
 			{@const isOwner = presenter.isOwner}
-			<div class="px-3">
-				<div class="flex mt-4">
+			<div class="">
+				<div class="flex mt-4 mb-4 items-center">
 					<a aria-label="Back" href="/goals" class="mr-6"
 						><i class="fa-solid fa-chevron-left fa-xl"></i></a
 					>
-					<h1 class="text-xl flex-1">{goal.title}</h1>
+					<h1 class="text-2xl xs:text-3xl flex-1 text-center">{goal.title}</h1>
 					<GoalOptionsPopover goalId={goal.id} />
 				</div>
 				<HeaderStats
@@ -35,6 +35,7 @@
 					record={record?.streakCount || 0}
 					startDate={goal.startDate}
 				/>
+				<div class="mt-4"></div>
 				<EntryGallery goal={presenter.goalInfo} {goalModel} {isOwner} />
 			</div>
 		{:else}

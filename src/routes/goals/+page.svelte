@@ -20,7 +20,7 @@
 				</div>
 			</a>
 		{/if}
-		<div class="px-3">
+		<div class="">
 			<div class="mt-10 flex justify-between items-end">
 				<h1 class="text-6xl">Goals</h1>
 				<a href="/goals/create-goal" class="mb-2">Create new goal</a>
@@ -37,4 +37,4 @@
 			{/await}
 		</div>
 	</div>
-</ResponsiveCenterColumn>>
+</ResponsiveCenterColumn>

@@ -1,4 +1,5 @@
 import colors from 'tailwindcss/colors'
+import defaultTheme from 'tailwindcss/defaultTheme'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -19,6 +20,10 @@ export default {
         light: "#7CD7F8"
       },
       black: colors.black,
+    },
+    screens: {
+      ...defaultTheme.screens,
+      xs: "375px",
     }
   },
   plugins: [],
