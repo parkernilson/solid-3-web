@@ -2,6 +2,7 @@
 	import FieldInput from '$lib/components/FieldInput.svelte';
 	import ModalNavHeader from '$lib/components/nav/ModalNavHeader.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
+	import PagePadding from '$lib/components/ui/PagePadding.svelte';
 	import ResponsiveCenterColumn from '$lib/components/ui/ResponsiveCenterColumn.svelte';
 	import type { PageData } from './$types';
 
@@ -10,11 +11,13 @@
 </script>
 
 <ResponsiveCenterColumn>
-	<ModalNavHeader title="Create Goal" />
-	<div class="flex-1 flex flex-col items-center">
-		<div class="mt-12 text-3xl w-full">
-			<FieldInput type="text" placeholder="Title" bind:value={presenter.title} />
+	<PagePadding>
+		<ModalNavHeader title="Create Goal" />
+		<div class="flex-1 flex flex-col items-center">
+			<div class="mt-12 text-3xl w-full">
+				<FieldInput type="text" placeholder="Title" bind:value={presenter.title} />
+			</div>
+			<Button title="Create" onClick={presenter.createGoal.bind(presenter)} />
 		</div>
-		<Button title="Create" onClick={presenter.createGoal.bind(presenter)} />
-	</div>
+	</PagePadding>
 </ResponsiveCenterColumn>
