@@ -45,6 +45,7 @@ export class ModelFactory {
 			this.serviceFactory.createGoalService(),
 			this,
 			this.dataStructureFactory.createGoalCollectionModelDataStructure(),
+			this.createDeleteRunnerFactory.createGoalCollectionCDRunnerConstructor(),
 			userId
 		);
 	}
