@@ -1,16 +1,24 @@
 import type { SupabaseDomainConverter } from '$lib/model/converters/supabase/SupabaseDomainConverter';
+import { isSupabaseSharedGoal } from '$lib/model/db/supabase/SupabaseSharedGoal';
+import { isSupabaseSharedGoalPreview } from '$lib/model/db/supabase/SupabaseSharedGoalPreview';
 import {
-	CurrentStreakInfo,
+	isSupabaseCurrentStreakInfoNotNull,
+	isSupabaseCurrentStreakInfoNull,
+	isSupabaseStreakInfoNotNull,
+	isSupabaseStreakInfoNull
+} from '$lib/model/db/supabase/SupabaseStreakInfo';
+import {
 	Goal,
-	StreakInfo,
 	type IActivityInfo,
+	type ICurrentStreakInfo,
 	type IEntry,
 	type IGoal,
 	type IGoalInfo,
 	type IGoalStats,
 	type ISharedGoal,
 	type ISharedGoalInfo,
-	type ISharedGoalPreview
+	type ISharedGoalPreview,
+	type IStreakInfo
 } from '$lib/model/domain/goals';
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
@@ -18,7 +26,6 @@ import type { SupabaseClient } from '$lib/supabase/supabase';
 import { toUTCString } from '$lib/utils/dates';
 import { stripUndefined } from '$lib/utils/objects';
 import type { PaginatedRequest, PaginatedResponse } from '$lib/utils/types';
-import { isNotNullRow } from '$lib/utils/types/isNotNullRow';
 import type {
 	AcceptSharedGoalParams,
 	CreateEntryParams,
@@ -72,7 +79,7 @@ export class SupabaseGoalService implements GoalService {
 			.maybeSingle();
 		if (error) throw error;
 		if (!data) throw new Error('Shared goal not found');
-		if (!isNotNullRow(data)) throw new Error('Shared goal row has null values');
+		if (!isSupabaseSharedGoal(data)) throw new Error('Shared goal row failed type predicate');
 		return this.converter.convertSharedGoal(data);
 	}
 
@@ -108,8 +115,8 @@ export class SupabaseGoalService implements GoalService {
 
 		return {
 			activity: activityInfo,
-			streak: currentStreakInfo?.toJson() ?? null,
-			record: recordStreakInfo?.toJson() ?? null
+			streak: currentStreakInfo ?? null,
+			record: recordStreakInfo ?? null
 		};
 	}
 
@@ -193,22 +200,26 @@ export class SupabaseGoalService implements GoalService {
 		return { id: data?.id, title };
 	}
 
-	async createEntry({ goalId, dateOf, success, textContent }: CreateEntryParams): Promise<CreateEntryResult> {
+	async createEntry({
+		goalId,
+		dateOf,
+		success,
+		textContent
+	}: CreateEntryParams): Promise<CreateEntryResult> {
 		const { data, error } = await this.supabase.rpc('create_entry', {
 			_goal_id: goalId,
 			_date_of: toUTCString(dateOf),
 			_success: success,
 			_text_content: textContent ?? undefined
-		})
+		});
 		if (error) throw error;
 		return this.converter.convertEntry(data);
 	}
 
-	async updateEntry(id: string, {
-		textContent,
-		dateOf,
-		success
-	}: UpdateEntryParams): Promise<UpdateEntryResult> {
+	async updateEntry(
+		id: string,
+		{ textContent, dateOf, success }: UpdateEntryParams
+	): Promise<UpdateEntryResult> {
 		const { data, error } = await this.supabase.rpc('update_entry', {
 			_entry_id: id,
 			_update_values: stripUndefined({
@@ -216,7 +227,7 @@ export class SupabaseGoalService implements GoalService {
 				date_of: dateOf ? toUTCString(dateOf) : undefined,
 				success: success
 			})
-		})
+		});
 		if (error) throw error;
 		return this.converter.convertEntry(data);
 	}
@@ -239,16 +250,18 @@ export class SupabaseGoalService implements GoalService {
 
 	private async getCurrentStreak({
 		goalId
-	}: getCurrentStreakParams): Promise<CurrentStreakInfo | null> {
+	}: getCurrentStreakParams): Promise<ICurrentStreakInfo | null> {
 		const { data, error } = await this.supabase.rpc('get_current_streak_info', {
 			_goal_id: goalId
 		});
 		if (error) throw error;
-		if (!data || !isNotNullRow(data)) return null;
+		if (!data || isSupabaseCurrentStreakInfoNull(data)) return null;
+		if (!isSupabaseCurrentStreakInfoNotNull(data))
+			throw new Error('Current streak info failed type predicate');
 		return this.converter.convertCurrentStreakInfo(data);
 	}
 
-	private async getRecordStreak({ goalId }: { goalId: string }): Promise<StreakInfo | null> {
+	private async getRecordStreak({ goalId }: { goalId: string }): Promise<IStreakInfo | null> {
 		const { data, error } = await this.supabase
 			.from('streak_summary')
 			.select('*')
@@ -258,7 +271,9 @@ export class SupabaseGoalService implements GoalService {
 			.maybeSingle();
 
 		if (error) throw error;
-		if (!data || !isNotNullRow(data)) return null;
+		if (!data || isSupabaseStreakInfoNull(data)) return null;
+		if (!isSupabaseStreakInfoNotNull(data))
+			throw new Error('Streak info failed type predicate');
 		return this.converter.convertStreakInfo(data);
 	}
 
@@ -339,8 +354,8 @@ export class SupabaseGoalService implements GoalService {
 		if (error) throw error;
 		if (!data) return [];
 		return data.map((sharedGoalRow) => {
-			if (!isNotNullRow(sharedGoalRow)) {
-				throw new Error('Shared goal row has null values');
+			if (!isSupabaseSharedGoalPreview(sharedGoalRow)) {
+				throw new Error('Shared goal preview failed type predicate');
 			}
 			return this.converter.convertSharedGoalPreview(sharedGoalRow);
 		});
@@ -354,8 +369,8 @@ export class SupabaseGoalService implements GoalService {
 		if (error) throw error;
 		if (!data) return [];
 		return data.map((sharedGoalRow) => {
-			if (!isNotNullRow(sharedGoalRow)) {
-				throw new Error('Shared goal row has null values');
+			if (!isSupabaseSharedGoal(sharedGoalRow)) {
+				throw new Error('Shared goal failed type predicate');
 			}
 			return this.converter.convertSharedGoal(sharedGoalRow);
 		});

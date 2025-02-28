@@ -4,16 +4,16 @@ import type { SupabaseSharedGoal } from '$lib/model/db/supabase/SupabaseSharedGo
 import type { SupabaseSharedGoalPreview } from '$lib/model/db/supabase/SupabaseSharedGoalPreview';
 import type { SupabaseShareRecord } from '$lib/model/db/supabase/SupabaseShareRecord';
 import type {
-	SupabaseCurrentStreakInfo,
-	SupabaseStreakInfo
+	SupabaseCurrentStreakInfoNotNull,
+	SupabaseStreakInfoNotNull
 } from '$lib/model/db/supabase/SupabaseStreakInfo';
 import type { SupabaseUserProfile } from '$lib/model/db/supabase/SupabaseUserProfile';
 import {
-	CurrentStreakInfo,
-	StreakInfo,
+	type ICurrentStreakInfo,
 	type IEntry,
 	type IGoal,
-	type ISharedGoalPreview
+	type ISharedGoalPreview,
+	type IStreakInfo
 } from '$lib/model/domain/goals';
 import type { ISharedGoal } from '$lib/model/domain/goals/SharedGoal';
 import { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
@@ -39,17 +39,21 @@ export class SupabaseDomainConverter {
 		}
 	}
 
-	convertStreakInfo(streakInfo: SupabaseStreakInfo): StreakInfo {
-		return new StreakInfo(streakInfo.start_date, streakInfo.end_date, streakInfo.streak_count);
+	convertStreakInfo(streakInfo: SupabaseStreakInfoNotNull): IStreakInfo {
+		return {
+			startDate: streakInfo.start_date,
+			endDate: streakInfo.end_date,
+			streakCount: streakInfo.streak_count
+		}
 	}
 
-	convertCurrentStreakInfo(currentStreakInfo: SupabaseCurrentStreakInfo): CurrentStreakInfo {
-		return new CurrentStreakInfo(
-			currentStreakInfo.start_date,
-			currentStreakInfo.end_date,
-			currentStreakInfo.streak_count,
-			currentStreakInfo.current_period_success
-		);
+	convertCurrentStreakInfo(currentStreakInfo: SupabaseCurrentStreakInfoNotNull): ICurrentStreakInfo {
+		return {
+			startDate: currentStreakInfo.start_date,
+			endDate: currentStreakInfo.end_date,
+			streakCount: currentStreakInfo.streak_count,
+			currentPeriodSuccess: currentStreakInfo.current_period_success
+		}
 	}
 
 	convertUserProfile(userProfile: SupabaseUserProfile): UserProfile {
@@ -78,7 +82,7 @@ export class SupabaseDomainConverter {
 			title: sharedGoal.title,
 			owner: sharedGoal.owner,
 			ownerEmail: sharedGoal.owner_email,
-			ownerProfileImagePath: sharedGoal.owner_profile_image_path,
+			ownerProfileImagePath: sharedGoal.owner_profile_image_path ?? undefined,
 			startDate: sharedGoal.created_at,
 			sharedOn: sharedGoal.shared_on
 		};
@@ -92,7 +96,7 @@ export class SupabaseDomainConverter {
 			goalTitle: sharedGoalPreview.goal_title,
 			goalOwnerId: sharedGoalPreview.goal_owner_id,
 			goalOwnerEmail: sharedGoalPreview.goal_owner_email,
-			goalOwnerProfileImagePath: sharedGoalPreview.goal_owner_profile_image_path,
+			goalOwnerProfileImagePath: sharedGoalPreview.goal_owner_profile_image_path ?? undefined,
 			shareStatus: sharedGoalPreview.share_status,
 			sharedWith: sharedGoalPreview.shared_with,
 			sharedOn: sharedGoalPreview.shared_on

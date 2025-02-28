@@ -1,5 +1,18 @@
 import type { Database } from '$lib/supabase/database.types';
-import type { NonNullableRow } from '$lib/utils/types/isNotNullRow';
+import { isNotNullRow, type NonNullableRow } from '$lib/utils/types/isNotNullRow';
 
-export type SupabaseCurrentStreakInfo = NonNullableRow<Database['public']['Functions']['get_current_streak_info']['Returns']>
-export type SupabaseStreakInfo = NonNullableRow<Database['public']['Views']['streak_summary']['Row']>
+type SupabaseCurrentStreakInfo =
+	Database['public']['Functions']['get_current_streak_info']['Returns'];
+type SupabaseStreakInfo = Database['public']['Views']['streak_summary']['Row'];
+
+export type SupabaseCurrentStreakInfoNotNull = NonNullableRow<SupabaseCurrentStreakInfo>;
+export const isSupabaseCurrentStreakInfoNull = (data: SupabaseCurrentStreakInfo) => {
+	return data.start_date === null;
+}
+export const isSupabaseCurrentStreakInfoNotNull = isNotNullRow<SupabaseCurrentStreakInfo>;
+
+export type SupabaseStreakInfoNotNull = NonNullableRow<SupabaseStreakInfo>;
+export const isSupabaseStreakInfoNull = (data: SupabaseStreakInfo) => {
+	return data.start_date === null;
+}
+export const isSupabaseStreakInfoNotNull = isNotNullRow<SupabaseStreakInfo>;
