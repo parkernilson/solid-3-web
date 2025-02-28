@@ -4,6 +4,7 @@
 	import type { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svelte';
 	import { getContext } from 'svelte';
 	import EntryModal from './EntryModal.svelte';
+	import CircleCheck from '$lib/assets/icons/circle-check.svelte';
 
 	const {
 		entry,
@@ -20,13 +21,19 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	onclick={() => (presenter.showModal = true)}
-	class="aspect-square min-h-12 flex flex-col p-2 bg-blue-light"
+	class="aspect-square min-h-12 flex flex-col p-2 bg-blue-light relative"
 >
 	<p class="self-end">{presenter.dateFormatted}</p>
 	{#if presenter.entry.textContent}
 		{@const len = presenter.entry.textContent.length}
-		<div class="flex-1 flex flex-col justify-center">
+		<div class="flex-1 flex flex-col justify-between">
+			<span></span>
 			<p class={len > 20 ? 'text-lg' : 'text-xl'}>{presenter.entry.textContent}</p>
+			<div class="w-6 self-end">
+				{#if presenter.entry.success}
+					<CircleCheck />
+				{/if}
+			</div>
 		</div>
 	{/if}
 </div>

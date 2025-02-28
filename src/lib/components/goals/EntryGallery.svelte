@@ -22,7 +22,7 @@
 	hasMore={presenter.hasMoreEntries}
 	loading={presenter.loadingMoreEntries}
 >
-	<div class="grid grid-cols-3">
+	<div class="grid grid-cols-3 bg-white gap-[0.5px]">
 		{#if presenter.entryModels}
 			{#each presenter.entryModels as entryModel}
 				{#if entryModel.data}
