@@ -21,7 +21,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	onclick={() => (presenter.showModal = true)}
-	class="aspect-square min-h-12 flex flex-col p-2 bg-blue-light relative"
+	class="aspect-square min-h-12 flex flex-col p-2 bg-blue-light relative box-border"
 >
 	<p class="self-end">{presenter.dateFormatted}</p>
 	{#if presenter.entry.textContent}

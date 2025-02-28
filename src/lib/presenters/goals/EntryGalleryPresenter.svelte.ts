@@ -26,7 +26,7 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 
 	async loadMoreEntries() {
 		if (!this.hasMoreEntries || this.loading) return;
-		await this.loadEntries({ pageSize: 12 });
+		await this.loadEntries({ pageSize: 200 });
 	}
 
 	private async loadEntries({ pageSize }: PaginatedRequest): Promise<void> {
@@ -34,7 +34,7 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 	}
 
 	protected async loadResource(): Promise<void> {
-		await this.goalModel.entryCollectionModel.loadMoreItems(20);
+		await this.goalModel.entryCollectionModel.loadMoreItems(200);
 	}
 
 	// TODO: Re-implement entry updates

@@ -5,6 +5,7 @@
 	import { getContext, onMount } from 'svelte';
 	import InfiniteScrollingContainer from '../InfiniteScrollingContainer.svelte';
 	import EntrySquare from './EntrySquare.svelte';
+	import GridBorders from './GridBorders.svelte';
 
 	const { goal, goalModel, isOwner }: { goal: IGoalInfo; goalModel: GoalModel; isOwner: boolean } =
 		$props();
@@ -22,11 +23,13 @@
 	hasMore={presenter.hasMoreEntries}
 	loading={presenter.loadingMoreEntries}
 >
-	<div class="grid grid-cols-3 bg-white gap-[0.5px]">
+	<div class="grid grid-cols-3">
 		{#if presenter.entryModels}
-			{#each presenter.entryModels as entryModel}
+			{#each presenter.entryModels as entryModel, i}
 				{#if entryModel.data}
-					<EntrySquare entry={entryModel.data} {entryModel} {isOwner} />
+					<GridBorders numCols={3} numElements={presenter.entryModels.length} {i} >
+						<EntrySquare entry={entryModel.data} {entryModel} {isOwner} />
+					</GridBorders>
 				{/if}
 			{/each}
 		{/if}

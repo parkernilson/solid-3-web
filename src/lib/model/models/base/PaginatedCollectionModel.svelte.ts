@@ -13,11 +13,12 @@ export abstract class PaginatedCollectionModel<
 > extends ListCollectionModel<T, CreateTParams, DM> {
 	public hasMore: boolean = $state(true);
 	private defaultPageSize = 10;
-	private initialPageSize = 50;
+	private defaultInitialPageSize = 200;
 
 	constructor(
 		private sortedList: SortedListDataStructure<DM>,
 		key: KeyFn<T>,
+		private initialPageSize?: number,
 		initialData?: T[],
 		cdRunnerConstructor?: CreateDeleteRunnerConstructor<T, CreateTParams, DM>
 	) {
@@ -50,6 +51,6 @@ export abstract class PaginatedCollectionModel<
 	}
 
 	protected async sendLoad() {
-		await this.loadMoreItems(this.initialPageSize);
+		await this.loadMoreItems(this.initialPageSize ?? this.defaultInitialPageSize);
 	}
 }

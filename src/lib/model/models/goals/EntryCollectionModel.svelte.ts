@@ -18,6 +18,8 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 	EntryCreateParams,
 	EntryDataModel
 > {
+	private static initialPageSize = 210;
+
 	constructor(
 		private goalService: GoalService,
 		private modelFactory: ModelFactory,
@@ -27,7 +29,13 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 		private shared: boolean,
 		initialData?: IEntry[]
 	) {
-		super(dataStructure, (t) => t.id, initialData, cdRunnerConstructor);
+		super(
+			dataStructure,
+			(t) => t.id,
+			EntryCollectionModel.initialPageSize,
+			initialData,
+			cdRunnerConstructor
+		);
 	}
 
 	protected makeConstituentDataModel(data: IEntry): EntryDataModel {
