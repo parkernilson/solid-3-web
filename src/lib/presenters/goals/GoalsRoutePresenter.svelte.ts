@@ -14,8 +14,8 @@ export class GoalsRoutePresenter extends LoadablePresenter {
 
 	protected async loadResource(): Promise<void> {
 		await Promise.all([
-			this.goalCollectionModel.sendLoad(),
-			this.sharedGoalsModel.sendLoad()
+			this.goalCollectionModel.load(),
+			this.sharedGoalsModel.load()
 		])
 	}
 }
