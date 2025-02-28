@@ -14,7 +14,7 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div onclick={() => (showModal = true)} class="border h-32">
+<div onclick={() => (showModal = true)} class="aspect-square border min-h-12">
 	<p>{entry.dateOf}</p>
 	<p>{entry.textContent}</p>
 </div>
