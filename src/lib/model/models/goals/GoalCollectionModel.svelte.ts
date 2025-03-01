@@ -3,6 +3,7 @@ import type { GoalService } from '$lib/services/GoalService.svelte';
 import { Goal, type GoalCreateParams, type IGoalInfo } from '../../domain/goals';
 import type { CreateDeleteRunnerConstructor } from '../base/create-delete-runners';
 import type { UnsortedListDataStructure } from '../base/data-structures/UnsortedListDataStructure.svelte';
+import type { DataModelInit } from '../base/DataModel.svelte';
 import { ListCollectionModel } from '../base/ListCollectionModel.svelte';
 import { GoalInfoDataModel } from './GoalInfoDataModel.svelte';
 
@@ -31,8 +32,8 @@ export class GoalCollectionModel extends ListCollectionModel<
 		return this.goalService.listGoalInfos(this.userId);
 	}
 
-	protected makeConstituentDataModel(data: IGoalInfo): GoalInfoDataModel {
-		return this.modelFactory.createGoalInfoDataModel(data.id, data);
+	protected makeConstituentDataModel(data: IGoalInfo, init: DataModelInit<IGoalInfo>): GoalInfoDataModel {
+		return this.modelFactory.createGoalInfoDataModel(data.id, init);
 	}
 
 	protected async sendCreate(data: IGoalInfo): Promise<IGoalInfo> {

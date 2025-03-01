@@ -1,9 +1,15 @@
 import { GoalInfo, type IGoalInfo } from '$lib/model/domain/goals';
-import { isSharedGoalInfo, type ISharedGoalInfo } from '$lib/model/domain/goals/SharedGoalInfo';
+import { isSharedGoalInfo } from '$lib/model/domain/goals/SharedGoalInfo';
+import type { GoalInfoDataModel } from '$lib/model/models/goals/GoalInfoDataModel.svelte';
+import type { SharedGoalInfoDataModel } from '$lib/model/models/goals/SharedGoalInfoDataModel.svelte';
 import type { ProfileService } from '$lib/services/ProfileService.svelte';
 import { diffDays, today } from '$lib/utils/dates';
 
 export class GoalListViewPresenter {
+	get optimistic() {
+		return this.goalInfoModel.optimistic;
+	}
+
 	get title() {
 		return this.goalInfo.title;
 	}
@@ -50,7 +56,8 @@ export class GoalListViewPresenter {
 	}
 
 	constructor(
-		private goalInfo: IGoalInfo | ISharedGoalInfo,
+		private goalInfo: IGoalInfo,
+		private goalInfoModel: GoalInfoDataModel | SharedGoalInfoDataModel,
 		private profileService: ProfileService
-	) {}
+	) { }
 }

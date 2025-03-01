@@ -4,6 +4,7 @@ import type { GoalService } from '$lib/services/GoalService.svelte';
 import { type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
 import type { CreateDeleteRunnerConstructor } from '../base/create-delete-runners';
 import { SortedListDataStructure } from '../base/data-structures';
+import type { DataModelInit } from '../base/DataModel.svelte';
 import { PaginatedCollectionModel } from '../base/PaginatedCollectionModel.svelte';
 import { EntryDataModel } from './EntryDataModel.svelte';
 
@@ -38,8 +39,8 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 		);
 	}
 
-	protected makeConstituentDataModel(data: IEntry): EntryDataModel {
-		return this.modelFactory.createEntryDataModel(data.id, { initialData: data });
+	protected makeConstituentDataModel(data: IEntry, init: DataModelInit<IEntry>): EntryDataModel {
+		return this.modelFactory.createEntryDataModel(data.id, init);
 	}
 	protected async sendGetMoreItems(
 		request: PaginatedRequest<string>

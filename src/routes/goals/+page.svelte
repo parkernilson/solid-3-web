@@ -35,8 +35,10 @@
 					<!-- TODO: create loading ui -->
 				{:then _}
 					{#if presenter.displayedGoals}
-						{#each presenter.displayedGoals as goalInfo}
-							<GoalListView goal={goalInfo} />
+						{#each presenter.displayedGoals as goalInfoModel}
+						 	{#if goalInfoModel.data}
+								<GoalListView goalInfo={goalInfoModel.data} goalInfoModel={goalInfoModel} />
+							{/if}
 						{/each}
 					{/if}
 				{/await}

@@ -1,12 +1,11 @@
 import type {
 	IEntry,
-	IGoal,
 	IGoalInfo,
 	IGoalStats,
 	ISharedGoalInfo,
 	ISharedGoalPreview
 } from '$lib/model/domain/goals';
-import type { UserProfile } from '$lib/model/domain/users';
+import type { IUserProfile, UserProfile } from '$lib/model/domain/users';
 import { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { DataModelInit } from '$lib/model/models/base/DataModel.svelte';
 import { EntryCollectionModel } from '$lib/model/models/goals/EntryCollectionModel.svelte';
@@ -50,34 +49,34 @@ export class ModelFactory {
 		);
 	}
 
-	createGoalDataModel(goalId: string, initialData?: IGoal) {
-		return new GoalDataModel(this.serviceFactory.createGoalService(), goalId, initialData);
+	createGoalDataModel(goalId: string, init: DataModelInit<IGoalInfo>) {
+		return new GoalDataModel(this.serviceFactory.createGoalService(), goalId, init);
 	}
 
-	createGoalStatsDataModel(goalId: string, initialData?: IGoalStats) {
-		return new GoalStatsDataModel(this.serviceFactory.createGoalService(), goalId, initialData);
+	createGoalStatsDataModel(goalId: string, init: DataModelInit<IGoalStats>) {
+		return new GoalStatsDataModel(this.serviceFactory.createGoalService(), goalId, init);
 	}
 
-	createGoalInfoDataModel(goalId: string, initialData?: IGoalInfo) {
+	createGoalInfoDataModel(goalId: string, init: DataModelInit<IGoalInfo>) {
 		return new GoalInfoDataModel(
 			this.serviceFactory.createGoalService(),
 			goalId,
-			initialData
+			init
 		)
 	}
 
 	createGoalModel(goalId: string, initialData?: IGoalInfo) {
 		return new GoalModel(
-			this.createGoalDataModel(goalId, initialData),
-			this.createGoalStatsDataModel(goalId, initialData),
+			this.createGoalDataModel(goalId, { initialData }),
+			this.createGoalStatsDataModel(goalId, { initialData }),
 			this.createEntryCollectionModel(goalId, false)
 		)
 	}
 
 	createSharedGoalModel(goalId: string, initialData?: ISharedGoalInfo) {
 		return new GoalModel(
-			this.createSharedGoalDataModel(goalId, initialData),
-			this.createGoalStatsDataModel(goalId, initialData),
+			this.createSharedGoalDataModel(goalId, { initialData }),
+			this.createGoalStatsDataModel(goalId, { initialData }),
 			this.createEntryCollectionModel(goalId, true)
 		)
 	}
@@ -91,12 +90,12 @@ export class ModelFactory {
 		);
 	}
 
-	createSharedGoalInfoDataModel(goalId: string, initialData?: ISharedGoalInfo) {
-		return new SharedGoalInfoDataModel(this.serviceFactory.createGoalService(), goalId, initialData);
+	createSharedGoalInfoDataModel(goalId: string, init: DataModelInit<ISharedGoalInfo>) {
+		return new SharedGoalInfoDataModel(this.serviceFactory.createGoalService(), goalId, init);
 	}
 
-	createSharedGoalDataModel(goalId: string, initialData?: ISharedGoalInfo) {
-		return new SharedGoalDataModel(this.serviceFactory.createGoalService(), goalId, initialData);
+	createSharedGoalDataModel(goalId: string, init: DataModelInit<ISharedGoalInfo>) {
+		return new SharedGoalDataModel(this.serviceFactory.createGoalService(), goalId, init);
 	}
 
 	createSharedGoalPreviewCollectionModel(user: UserProfile) {
@@ -108,20 +107,20 @@ export class ModelFactory {
 		);
 	}
 
-	createSharedGoalPreviewDataModel(initialData: ISharedGoalPreview) {
-		return new SharedGoalPreviewDataModel(initialData.id, { initialData });
+	createSharedGoalPreviewDataModel(initialData: ISharedGoalPreview, init: DataModelInit<ISharedGoalPreview>) {
+		return new SharedGoalPreviewDataModel(initialData.id, init);
 	}
 
 	createSharedGoalsModel(user: UserProfile) {
 		return new SharedGoalsModel(this, user, this.serviceFactory.createGoalService());
 	}
 
-	createUserProfileDataModel(userId: string, initialData?: UserProfile) {
+	createUserProfileDataModel(userId: string, init: DataModelInit<IUserProfile>) {
 		return new UserProfileDataModel(
 			this.serviceFactory.createAuthService(),
 			this.serviceFactory.createProfileService(),
 			userId,
-			initialData
+			init
 		);
 	}
 

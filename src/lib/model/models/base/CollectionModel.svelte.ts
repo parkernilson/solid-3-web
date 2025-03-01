@@ -34,11 +34,11 @@ export abstract class CollectionModel<
 
 	protected abstract makeConstituentDataModel(
 		data: T,
-		init?: Omit<DataModelInit<T>, 'initialData'>
+		init: DataModelInit<T> 
 	): DM;
 
 	private mapToModels(data: T[]): DM[] {
-		return data.map((t) => this.makeConstituentDataModel(t));
+		return data.map((t) => this.makeConstituentDataModel(t, { initialData: t }));
 	}
 
 	public getModel(id: IdType): DM | undefined {

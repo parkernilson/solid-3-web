@@ -3,6 +3,7 @@ import type { GoalService } from '$lib/services/GoalService.svelte';
 import type { ISharedGoalPreview, ShareStatus } from '../../domain/goals';
 import type { UserProfile } from '../../domain/users';
 import type { UnsortedListDataStructure } from '../base/data-structures/UnsortedListDataStructure.svelte';
+import type { DataModelInit } from '../base/DataModel.svelte';
 import { ListCollectionModel } from '../base/ListCollectionModel.svelte';
 import type { SharedGoalPreviewDataModel } from './SharedGoalPreviewDataModel.svelte';
 
@@ -24,8 +25,8 @@ export class SharedGoalPreviewCollectionModel extends ListCollectionModel<
 		return this.goalService.listSharedGoalPreviewsWithUser(this.user);
 	}
 
-	protected makeConstituentDataModel(data: ISharedGoalPreview): SharedGoalPreviewDataModel {
-		return this.modelFactory.createSharedGoalPreviewDataModel(data);
+	protected makeConstituentDataModel(data: ISharedGoalPreview, init: DataModelInit<ISharedGoalPreview>): SharedGoalPreviewDataModel {
+		return this.modelFactory.createSharedGoalPreviewDataModel(data, init);
 	}
 
 	markRequestStatus(goalId: string, status: ShareStatus): ShareStatus {

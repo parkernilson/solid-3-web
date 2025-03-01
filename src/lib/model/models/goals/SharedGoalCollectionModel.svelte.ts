@@ -3,6 +3,7 @@ import type { GoalService } from '$lib/services/GoalService.svelte';
 import type { ISharedGoalInfo } from '../../domain/goals';
 import type { UserProfile } from '../../domain/users';
 import type { UnsortedListDataStructure } from '../base/data-structures/UnsortedListDataStructure.svelte';
+import type { DataModelInit } from '../base/DataModel.svelte';
 import { ListCollectionModel } from '../base/ListCollectionModel.svelte';
 import type { SharedGoalInfoDataModel } from './SharedGoalInfoDataModel.svelte';
 
@@ -28,8 +29,8 @@ export class SharedGoalCollectionModel extends ListCollectionModel<
 		await this.sendLoad();
 	}
 
-	protected makeConstituentDataModel(data: ISharedGoalInfo): SharedGoalInfoDataModel {
-		return this.modelFactory.createSharedGoalInfoDataModel(data.id, data);
+	protected makeConstituentDataModel(data: ISharedGoalInfo, init: DataModelInit<ISharedGoalInfo>): SharedGoalInfoDataModel {
+		return this.modelFactory.createSharedGoalInfoDataModel(data.id, init);
 	}
 
 	protected sendCreate(): Promise<ISharedGoalInfo> {

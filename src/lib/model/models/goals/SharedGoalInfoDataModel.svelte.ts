@@ -1,14 +1,14 @@
 import type { ISharedGoalInfo } from '$lib/model/domain/goals/SharedGoalInfo';
 import type { GoalService } from '$lib/services/GoalService.svelte';
-import { DataModel } from '../base/DataModel.svelte';
+import { DataModel, type DataModelInit } from '../base/DataModel.svelte';
 
 export class SharedGoalInfoDataModel extends DataModel<ISharedGoalInfo> {
 	constructor(
 		private goalService: GoalService,
 		private goalId: string,
-		initialData?: ISharedGoalInfo
+		init: DataModelInit<ISharedGoalInfo>
 	) {
-		super(goalId, { initialData });
+		super(goalId, init);
 	}
 
 	protected loadData(): Promise<ISharedGoalInfo> {

@@ -88,7 +88,7 @@ export class ProfilePagePresenter extends LoadablePresenter {
 	}
 
 	protected async loadResource(): Promise<void> {
-		await this.profileDataModel.sendLoad();
+		await this.profileDataModel.load();
 	}
 
 	public async updateProfileImage() {

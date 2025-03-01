@@ -9,7 +9,7 @@ export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimi
 		private goalService: GoalService,
 		updateRunnerConstructor: ConcurrentUpdateRunnerConstructor<IEntry>,
 		private entryId: string,
-		init: DataModelInit<IEntry> = {}
+		init: DataModelInit<IEntry>
 	) {
 		super(updateRunnerConstructor, entryId, init);
 	}

@@ -1,6 +1,9 @@
-import { GoalInfo, type IGoalInfo, type ISharedGoal } from '$lib/model/domain/goals';
+import { GoalInfo } from '$lib/model/domain/goals';
 import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
+import { DataModel } from '$lib/model/models/base/DataModel.svelte';
 import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
+import type { GoalInfoDataModel } from '$lib/model/models/goals/GoalInfoDataModel.svelte';
+import type { SharedGoalInfoDataModel } from '$lib/model/models/goals/SharedGoalInfoDataModel.svelte';
 import type { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { combineComparators } from '$lib/utils/compare';
@@ -13,24 +16,27 @@ enum DisplayGoals {
 }
 
 export class GoalsPagePresenter extends ErrorHandler {
+
 	private display = $state<DisplayGoals>(DisplayGoals.All);
-	public displayedGoals: (IGoalInfo | ISharedGoal)[] | undefined = $derived.by(() => {
-		if (!this.goals || !this.sharedGoalsWithMe) {
-			return undefined;
+	public displayedGoals: (GoalInfoDataModel | SharedGoalInfoDataModel)[] | undefined = $derived.by(
+		() => {
+			if (!this.goals || !this.sharedGoalsWithMe) {
+				return undefined
+			}
+			switch (this.display) {
+				case DisplayGoals.Shared:
+					return this.sortGoalModels(this.sharedGoalsWithMe);
+				case DisplayGoals.Self:
+					return this.sortGoalModels(this.goals);
+				case DisplayGoals.All:
+				default:
+					return this.sortGoalModels([...this.goals, ...this.sharedGoalsWithMe]);
+			}
 		}
-		switch (this.display) {
-			case DisplayGoals.Shared:
-				return this.sortGoals(this.sharedGoalsWithMe);
-			case DisplayGoals.Self:
-				return this.sortGoals(this.goals);
-			case DisplayGoals.All:
-			default:
-				return this.sortGoals([...this.goals, ...this.sharedGoalsWithMe]);
-		}
-	});
+	);
 
 	public get goals() {
-		return this.goalsCollectionModel.data;
+		return this.goalsCollectionModel.models;
 	}
 	public get sharedGoalsWithMe() {
 		return this.sharedGoalsModel.sharedGoalsWithMe;
@@ -45,17 +51,17 @@ export class GoalsPagePresenter extends ErrorHandler {
 	private compareGoals = combineComparators(
 		GoalInfo.compareStartDateJson,
 		GoalInfo.compareActivityJson
-	)
+	);
 
-	private sortGoals = (goals: IGoalInfo[]) => {
-		return goals.sort(this.compareGoals);
-	}
+	private sortGoalModels = (goalModels: (GoalInfoDataModel | SharedGoalInfoDataModel)[]) => {
+		return goalModels.sort(DataModel.compareData(this.compareGoals));
+	};
 
 	constructor(
 		private authModel: AuthModel,
 		errorService: ErrorService,
 		private goalsCollectionModel: GoalCollectionModel,
-		private sharedGoalsModel: SharedGoalsModel,
+		private sharedGoalsModel: SharedGoalsModel
 	) {
 		super(errorService);
 	}

@@ -16,20 +16,13 @@ export abstract class ListCollectionModel<
 	}
 
 	private _dataStructure = $state<ListDataStructure<DM>>()!;
-	private _data = $derived(
-		this._dataStructure.items
-			? filterUndefined(this._dataStructure.items.map((m) => m.data))
-			: undefined
-	);
+	private _data = $derived(filterUndefined(this._dataStructure.items.map((m) => m.data)));
 
 	get data() {
 		return this._data;
 	}
 	get models() {
 		return this._dataStructure.items;
-	}
-	private set data(data: T[] | undefined) {
-		this._data = data;
 	}
 
 	constructor(

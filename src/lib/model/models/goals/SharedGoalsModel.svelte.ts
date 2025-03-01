@@ -11,13 +11,11 @@ export class SharedGoalsModel extends BaseModel {
 	private sharedGoalPreviewsCollectionModel: SharedGoalPreviewCollectionModel = $state()!;
 
 	private _sharedGoalsWithMePending = $derived(
-		this.sharedGoalPreviewsCollectionModel?.data ?
-		this.sharedGoalPreviewsCollectionModel.data.filter((g) => g.shareStatus === 'pending')
-		: undefined
+		this.sharedGoalPreviewsCollectionModel.models.filter((m) => m.data?.shareStatus === 'pending')
 	);
 
 	public get sharedGoalsWithMe() {
-		return this.sharedGoalsCollectionModel.data;
+		return this.sharedGoalsCollectionModel.models;
 	}
 	public get sharedGoalsWithMePending() {
 		return this._sharedGoalsWithMePending;
