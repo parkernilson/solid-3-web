@@ -41,7 +41,7 @@
 {/snippet}
 
 {#if presenter.optimistic}
-	<p>Optimistic</p>
+	<!-- TODO: Show optimistic state here -->
 	{@render body()}
 {:else}
 	<a href={presenter.goalPageUrl}>

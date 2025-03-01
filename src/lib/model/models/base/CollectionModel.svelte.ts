@@ -45,7 +45,7 @@ export abstract class CollectionModel<
 		return this.dataStructure.get(id);
 	}
 	public add(data: T, optimistic = false) {
-		this.dataStructure.add(this.makeConstituentDataModel(data, { optimistic }));
+		this.dataStructure.add(this.makeConstituentDataModel(data, { optimistic, initialData: data }));
 	}
 	public addModel(model: DM) {
 		this.dataStructure.add(model);
@@ -74,7 +74,7 @@ export abstract class CollectionModel<
 		this.dataStructure.update(id, this.makeConstituentDataModel(data, { optimistic }));
 	}
 	public updateWithNewId(oldId: IdType, data: T, optimistic = false) {
-		this.dataStructure.update(oldId, this.makeConstituentDataModel(data, { optimistic }));
+		this.dataStructure.update(oldId, this.makeConstituentDataModel(data, { optimistic, initialData: data }));
 	}
 	public updateModel(id: IdType, model: DM) {
 		this.dataStructure.update(id, model);

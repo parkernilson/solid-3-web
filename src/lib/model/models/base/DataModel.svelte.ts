@@ -31,11 +31,11 @@ export abstract class DataModel<T> extends BaseModel {
 
 	constructor(
 		public id: IdType,
-		{ initialData, optimistic = false }: DataModelInit<T>
+		{ initialData, optimistic }: DataModelInit<T>
 	) {
 		super();
 		if (initialData) this.setData(initialData);
-		this.optimistic = optimistic;
+		this.optimistic = optimistic ?? false;
 	}
 
 	public setData(data: T, { optimistic = false }: SetDataOptions = {}): void {

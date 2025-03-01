@@ -18,11 +18,11 @@ enum DisplayGoals {
 export class GoalsPagePresenter extends ErrorHandler {
 
 	private display = $state<DisplayGoals>(DisplayGoals.All);
-	public displayedGoals: (GoalInfoDataModel | SharedGoalInfoDataModel)[] | undefined = $derived.by(
+	public get displayedGoals() {
+		return this._displayedGoals;
+	}
+	private _displayedGoals: (GoalInfoDataModel | SharedGoalInfoDataModel)[] | undefined = $derived.by(
 		() => {
-			if (!this.goals || !this.sharedGoalsWithMe) {
-				return undefined
-			}
 			switch (this.display) {
 				case DisplayGoals.Shared:
 					return this.sortGoalModels(this.sharedGoalsWithMe);

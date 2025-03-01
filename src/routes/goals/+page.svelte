@@ -7,6 +7,7 @@
 
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalsPagePresenter;
+
 </script>
 
 <ResponsiveCenterColumn>
@@ -35,7 +36,7 @@
 					<!-- TODO: create loading ui -->
 				{:then _}
 					{#if presenter.displayedGoals}
-						{#each presenter.displayedGoals as goalInfoModel}
+						{#each presenter.displayedGoals as goalInfoModel (goalInfoModel.id)}
 						 	{#if goalInfoModel.data}
 								<GoalListView goalInfo={goalInfoModel.data} goalInfoModel={goalInfoModel} />
 							{/if}
