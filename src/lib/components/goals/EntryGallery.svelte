@@ -27,7 +27,7 @@
 		{#if presenter.entryModels}
 			{#each presenter.entryModels as entryModel, i}
 				{#if entryModel.data}
-					<GridBorders numCols={3} numElements={presenter.entryModels.length} {i} >
+					<GridBorders color="transparent" width={3} numCols={3} numElements={presenter.entryModels.length} {i} >
 						<EntrySquare entry={entryModel.data} {entryModel} {isOwner} />
 					</GridBorders>
 				{/if}

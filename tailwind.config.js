@@ -16,8 +16,8 @@ export default {
       gray: colors.gray,
       slate: colors.slate,
       blue: {
-        DEFAULT: "#4BC0EC",
-        light: "#7CD7F8"
+        DEFAULT: "#20AEE3",
+        light: "#4BC0EC",
       },
       black: colors.black,
     },
