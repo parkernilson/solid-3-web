@@ -1,5 +1,5 @@
-import { compareDates } from "$lib/utils/compare/compare-dates";
-import { Optimistic } from "../Optimistic";
+import { compareDates } from '$lib/utils/compare/compare-dates';
+import { Optimistic } from '../Optimistic';
 
 export interface IEntry {
 	id: string;
@@ -10,7 +10,9 @@ export interface IEntry {
 }
 
 export type EntryCreateParams = Pick<IEntry, 'goal' | 'textContent' | 'dateOf' | 'success'>;
-export type EntryUpdateOptimisticParams = Pick<IEntry, 'textContent' | 'dateOf' | 'success'>;
+/** The user controllable params */
+export type UserEntryCreateParams = Omit<EntryCreateParams, 'goal'>;
+export type EntryUpdateParams = Pick<IEntry, 'textContent' | 'dateOf' | 'success'>;
 
 export class Entry implements IEntry {
 	get dateOfObject() {
@@ -22,7 +24,7 @@ export class Entry implements IEntry {
 		public goal: string,
 		public textContent: string | null,
 		public dateOf: string,
-		public success: boolean,
+		public success: boolean
 	) {}
 
 	private static formatDate(date: Date): string {
@@ -37,17 +39,11 @@ export class Entry implements IEntry {
 	static defaults = () => ({
 		dateOf: this.formatDate(new Date()),
 		textContent: null,
-		success: true,
+		success: true
 	});
 
 	static fromJson(json: IEntry): Entry {
-		return new Entry(
-			json.id,
-			json.goal,
-			json.textContent,
-			json.dateOf,
-			json.success,
-		);
+		return new Entry(json.id, json.goal, json.textContent, json.dateOf, json.success);
 	}
 
 	toJson(): IEntry {
@@ -56,8 +52,8 @@ export class Entry implements IEntry {
 			goal: this.goal,
 			textContent: this.textContent,
 			dateOf: this.dateOf,
-			success: this.success,
-		}
+			success: this.success
+		};
 	}
 
 	static createOptimistic(p: EntryCreateParams): IEntry {
@@ -66,14 +62,14 @@ export class Entry implements IEntry {
 			goal: p.goal,
 			textContent: p.textContent,
 			dateOf: p.dateOf,
-			success: p.success,
+			success: p.success
 		};
 	}
 
-	static getAppliedUpdateOptimistic(entry: IEntry, p: EntryUpdateOptimisticParams): IEntry {
+	static getAppliedUpdateOptimistic(entry: IEntry, p: EntryUpdateParams): IEntry {
 		return {
 			...entry,
-			...p,
+			...p
 		};
 	}
 

@@ -1,5 +1,9 @@
 import type { ModelFactory } from '$lib/factories/models/ModelFactory.svelte';
-import { type EntryCreateParams, type IEntry } from '$lib/model/domain/goals';
+import {
+	type EntryCreateParams,
+	type IEntry,
+	type UserEntryCreateParams
+} from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { compareDates, compareNullable } from '$lib/utils/compare';
 import { type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
@@ -53,7 +57,7 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 		return lastItem?.dateOf;
 	}
 
-	async createEntry(params: Omit<EntryCreateParams, 'goal'>): Promise<void> {
+	async createEntry(params: UserEntryCreateParams): Promise<void> {
 		if (this.shared) throw new Error('Cannot create entry in shared collection');
 
 		const createParams = { ...params, goal: this.goalId };

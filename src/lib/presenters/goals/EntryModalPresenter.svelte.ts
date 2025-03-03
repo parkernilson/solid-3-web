@@ -1,6 +1,9 @@
+import { goto } from '$app/navigation';
 import type { ModelFactory } from '$lib/factories/models/ModelFactory.svelte';
+import type { EntryUpdateParams, UserEntryCreateParams } from '$lib/model/domain/goals';
 import type { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svelte';
 import type { GoalModel } from '$lib/model/models/goals/GoalModel.svelte';
+import { Routes } from '$lib/model/routes';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
@@ -37,6 +40,27 @@ export class EntryModalPresenter extends LoadablePresenter {
 		if (mode === 'view') {
 			if (!entryId) throw new Error(`entryId is required in mode: ${mode}`);
 			this.entryModel = goalModel.entryCollectionModel.getModel(entryId);
+		}
+		if (mode === 'create') {
+			this.editing = true;
+		}
+	}
+
+	async submit() {
+		const params = {
+			textContent: this.currentTextContent ?? null,
+			dateOf: this.currentDateOf,
+			success: this.currentSuccess
+		} satisfies EntryUpdateParams & UserEntryCreateParams;
+
+		await goto(Routes.getGoalPageUrl(this.goalModel.goalId, this.goalModel.isSharedGoal));
+
+		if (this.mode === 'create') {
+			await this.doErrorable({ action: () => this.goalModel.createEntry(params) });
+		} else {
+			if (!this.entryId) throw new Error(`entryId is required in mode: ${this.mode}`);
+			const id = this.entryId;
+			await this.doErrorable({ action: () => this.goalModel.updateEntry(id, params) });
 		}
 	}
 

@@ -1,10 +1,10 @@
-import { Entry, type EntryUpdateOptimisticParams, type IEntry } from '$lib/model/domain/goals';
+import { Entry, type EntryUpdateParams, type IEntry } from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { type DataModelInit } from '../base/DataModel.svelte';
 import { UpdatableDataModel } from '../base/UpdatableDataModel.svelte';
 import type { ConcurrentUpdateRunnerConstructor } from '../base/update-runners';
 
-export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimisticParams> {
+export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateParams> {
 	constructor(
 		private goalService: GoalService,
 		updateRunnerConstructor: ConcurrentUpdateRunnerConstructor<IEntry>,
@@ -18,14 +18,11 @@ export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimi
 		return this.goalService.getEntry(this.entryId);
 	}
 
-	protected getOptimisticUpdateT(
-		currentValue: IEntry,
-		params: EntryUpdateOptimisticParams
-	): IEntry {
+	protected getOptimisticUpdateT(currentValue: IEntry, params: EntryUpdateParams): IEntry {
 		return Entry.getAppliedUpdateOptimistic(currentValue, params);
 	}
 
-	public async updateEntry(params: EntryUpdateOptimisticParams): Promise<IEntry> {
+	public async updateEntry(params: EntryUpdateParams): Promise<IEntry> {
 		return this.update({
 			optimisticParams: params,
 			sendUpdate: async () => {
