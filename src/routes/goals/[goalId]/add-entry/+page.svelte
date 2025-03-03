@@ -5,4 +5,4 @@
 	const { data }: PageProps = $props();
 </script>
 
-<EntryModalPage mode="create" goalRoutePresenter={data.goalRoutePresenter} />
+<EntryModalPage presenter={data.entryModalPresenter} loadingPromise={data.entryModalLoading} />

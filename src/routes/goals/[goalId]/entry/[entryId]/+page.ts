@@ -1,5 +1,11 @@
 export const load = async ({ params, parent }) => {
-	await parent();
+	const { goalModel, presenterFactory } = await parent();
 	const entryId = params.entryId;
-	return { entryId };
+	const entryModalPresenter = presenterFactory.createEntryModalPresenter(
+		goalModel,
+		'view',
+		entryId
+	);
+	const entryModalLoading = entryModalPresenter.load({});
+	return { entryId, entryModalPresenter, entryModalLoading };
 };
