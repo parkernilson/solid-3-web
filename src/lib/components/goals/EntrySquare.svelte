@@ -26,7 +26,7 @@
 		{#if presenter.textContentIsOneEmoji}
 			<div class="w-full text-4xl xs:text-5xl">{@render contentElement(textContent)}</div>
 		{:else if len < 30}
-			<div class="w-full text-sm xs:text-lg sm:text-xl">{@render contentElement(textContent)}</div>
+			<div class="w-full text-sm xs:text-md sm:text-xl">{@render contentElement(textContent)}</div>
 		{:else if len < 100}
 			<div class="w-full text-sm xs:text-md sm:text-lg">{@render contentElement(textContent)}</div>
 		{:else}
