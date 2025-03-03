@@ -1,4 +1,4 @@
-import type { IEntry } from '$lib/model/domain/goals';
+import type { GoalRoutePresenter } from './GoalRoutePresenter.svelte';
 
 export type ModifyEntryModalMode = 'create' | 'edit';
 
@@ -8,11 +8,16 @@ export class ModifyEntryModalPresenter {
 	public currentSuccess = $state<boolean>(true);
 
 	constructor(
+		private goalRoutePresenter: GoalRoutePresenter,
 		private mode: ModifyEntryModalMode,
-		private entry?: IEntry
+		private entryId?: string
 	) {
 		if (mode === 'edit') {
-			if (!entry) throw new Error('Entry is required in edit mode');
+			if (!entryId) throw new Error('entryId is required in edit mode');
+			const entryModel = goalRoutePresenter.goalModel.entryCollectionModel.getModel(entryId);
+			const entry = entryModel?.data;
+			if (!entry) throw new Error('entry not found');
+
 			this.currentTextContent = entry.textContent;
 			this.currentDateOf = entry.dateOf;
 			this.currentSuccess = entry.success;

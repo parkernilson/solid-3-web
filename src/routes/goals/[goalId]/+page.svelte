@@ -5,9 +5,13 @@
 	import HeaderBar from '$lib/components/nav/HeaderBar.svelte';
 	import PagePadding from '$lib/components/ui/PagePadding.svelte';
 	import ResponsiveCenterColumn from '$lib/components/ui/ResponsiveCenterColumn.svelte';
+	import { setContext } from 'svelte';
 	import type { PageData } from './$types';
+	import { GoalRoutePresenter } from '$lib/presenters/goals/GoalRoutePresenter.svelte';
 
 	const { data }: { data: PageData } = $props();
+	const goalRoutePresenter = data.goalRoutePresenter;
+	setContext<GoalRoutePresenter>("GoalRoutePresenter", goalRoutePresenter);
 	const presenter = data.goalPagePresenter;
 	const goalModel = data.goalModel;
 </script>

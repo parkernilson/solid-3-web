@@ -25,7 +25,7 @@ export class GoalRoutePresenter extends LoadablePresenter {
 
 	constructor(
 		errorService: ErrorService,
-		private goalModel: GoalModel
+		public goalModel: GoalModel
 	) {
 		super(errorService);
 		this._goalModel = goalModel;

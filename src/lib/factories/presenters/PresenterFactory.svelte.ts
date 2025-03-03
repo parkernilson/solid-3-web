@@ -195,7 +195,7 @@ export class PresenterFactory {
 		return new EntrySquarePresenter(entry);
 	}
 
-	createModifyEntryModalPresenter(mode: ModifyEntryModalMode, entry?: IEntry) {
-		return new ModifyEntryModalPresenter(mode, entry);
+	createModifyEntryModalPresenter(goalRoutePresenter: GoalRoutePresenter, mode: ModifyEntryModalMode, entryId?: string) {
+		return new ModifyEntryModalPresenter(goalRoutePresenter, mode, entryId);
 	}
 }
