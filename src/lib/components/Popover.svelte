@@ -20,7 +20,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="relative inline-block">
 	<button
-		class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+		class="p-2 hover:bg-blue-light rounded-full transition-colors duration-200"
 		aria-label="More options"
 		onclick={togglePopover}
 	>
@@ -29,12 +29,12 @@
 
 	{#if isOpen}
 		<div
-			class="popover-container absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10"
+			class="popover-container absolute right-0 mt-2 w-48 text-dark bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10 overflow-hidden"
 			role="menu"
 			aria-orientation="vertical"
 			aria-labelledby="options-menu"
 		>
-			<div class="py-1" role="none">
+			<div class="" role="none">
                 {@render children?.()}
 			</div>
 		</div>

@@ -5,5 +5,5 @@
 </script>
 
 <Popover>
-    <a href="/goals/{goalId}/share" class="px-2 py-1">Share</a>
+    <a href="/goals/{goalId}/share" class="px-2 py-1 block w-full hover:bg-gray-100">Share</a>
 </Popover>

@@ -20,6 +20,7 @@ export default {
         light: "#4BC0EC",
       },
       black: colors.black,
+      dark: "#555555"
     },
     screens: {
       ...defaultTheme.screens,
