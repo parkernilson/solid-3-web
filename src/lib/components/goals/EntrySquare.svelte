@@ -17,8 +17,6 @@
 </script>
 
 {#snippet textContent(textContentFormatted: string)}
- <!-- TODO: add a fade effect at the bottom of this -->
-  <!-- TODO: on small screens display as no wrap, ellipsis -->
 	<p class="overflow-hidden text-nowrap w-full xs:text-wrap text-ellipsis">{textContentFormatted}</p>
 {/snippet}
 
@@ -60,4 +58,4 @@
 	{/if}
 </div>
 
-<EntryModal bind:showModal={presenter.showModal} {entryModel} {isOwner} />
+<EntryModal bind:showModal={presenter.showModal} entryModel={entryModel} {isOwner} />
