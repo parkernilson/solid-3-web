@@ -1,7 +1,6 @@
 import type { Goal, IEntry, IGoalInfo, ISharedGoalPreview } from '$lib/model/domain/goals';
 import type { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
-import type { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svelte';
 import type { GoalCollectionModel } from '$lib/model/models/goals/GoalCollectionModel.svelte';
 import type { GoalInfoDataModel } from '$lib/model/models/goals/GoalInfoDataModel.svelte';
 import type { GoalModel } from '$lib/model/models/goals/GoalModel.svelte';
@@ -14,7 +13,6 @@ import { ProfilePicturePresenter } from '$lib/presenters/auth/ProfilePicturePres
 import { DialogPresenter } from '$lib/presenters/DialogPresenter.svelte';
 import { CreateGoalModalPresenter } from '$lib/presenters/goals/CreateGoalModalPresenter.svelte';
 import { EntryGalleryPresenter } from '$lib/presenters/goals/EntryGalleryPresenter.svelte';
-import { EntryModalPresenter } from '$lib/presenters/goals/EntryModalPresenter.svelte';
 import { EntrySquarePresenter } from '$lib/presenters/goals/EntrySquarePresenter.svelte';
 import { GoalListViewPresenter } from '$lib/presenters/goals/GoalListViewPresenter.svelte';
 import { GoalPagePresenter } from '$lib/presenters/goals/GoalPagePresenter.svelte';
@@ -104,16 +102,6 @@ export class PresenterFactory {
 			goalModel,
 			this.serviceFactory.createGoalService(),
 			this.serviceFactory.createErrorService()
-		);
-	}
-
-	createEntryModalPresenter(
-		entryModel: EntryDataModel,
-		isOwner: boolean
-	) {
-		return new EntryModalPresenter(
-			entryModel,
-			isOwner
 		);
 	}
 

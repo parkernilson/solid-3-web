@@ -4,7 +4,6 @@
 	import { type IEntry } from '$lib/model/domain/goals';
 	import type { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svelte';
 	import { getContext, type Snippet } from 'svelte';
-	import EntryModal from './EntryModal.svelte';
 
 	const {
 		entry,
@@ -57,5 +56,3 @@
 		</div>
 	{/if}
 </div>
-
-<EntryModal bind:showModal={presenter.showModal} entryModel={entryModel} {isOwner} />
