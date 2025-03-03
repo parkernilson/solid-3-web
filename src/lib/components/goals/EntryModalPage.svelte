@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
 	import { GoalRoutePresenter } from '$lib/presenters/goals/GoalRoutePresenter.svelte';
-	import type { ModifyEntryModalMode } from '$lib/presenters/goals/ModifyEntryModalPresenter.svelte';
+	import type { EntryModalMode } from '$lib/presenters/goals/EntryModalPresenter.svelte';
 	import { getContext } from 'svelte';
 	import ModalNavHeader from '../nav/ModalNavHeader.svelte';
 	import PagePadding from '../ui/PagePadding.svelte';
 	import ResponsiveCenterColumn from '../ui/ResponsiveCenterColumn.svelte';
 
-	const { mode, entryId, goalRoutePresenter }: { mode: ModifyEntryModalMode; entryId?: string; goalRoutePresenter: GoalRoutePresenter } = $props();
+	const { mode, entryId, goalRoutePresenter }: { mode: EntryModalMode; entryId?: string; goalRoutePresenter: GoalRoutePresenter } = $props();
 
 	const presenterFactory = getContext<PresenterFactory>('PresenterFactory');
-	const presenter = presenterFactory.createModifyEntryModalPresenter(
+	const presenter = presenterFactory.createEntryModalPresenter(
 		goalRoutePresenter,
 		mode,
 		entryId

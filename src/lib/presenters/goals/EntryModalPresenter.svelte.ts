@@ -1,19 +1,19 @@
 import type { GoalRoutePresenter } from './GoalRoutePresenter.svelte';
 
-export type ModifyEntryModalMode = 'create' | 'edit';
+export type EntryModalMode = 'create' | 'edit' | 'view';
 
-export class ModifyEntryModalPresenter {
+export class EntryModalPresenter {
 	public currentTextContent = $state<string | undefined | null>();
 	public currentDateOf = $state<string>(new Date().toLocaleDateString());
 	public currentSuccess = $state<boolean>(true);
 
 	constructor(
 		private goalRoutePresenter: GoalRoutePresenter,
-		private mode: ModifyEntryModalMode,
+		private mode: EntryModalMode,
 		private entryId?: string
 	) {
-		if (mode === 'edit') {
-			if (!entryId) throw new Error('entryId is required in edit mode');
+		if (mode === 'edit' || mode === 'view') {
+			if (!entryId) throw new Error(`entryId is required in mode: ${mode}`);
 			const entryModel = goalRoutePresenter.goalModel.entryCollectionModel.getModel(entryId);
 			const entry = entryModel?.data;
 			if (!entry) throw new Error('entry not found');
