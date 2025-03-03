@@ -1,4 +1,5 @@
 import { Optimistic } from '$lib/model/domain/Optimistic';
+import { compareNullable } from '$lib/utils/compare';
 import { compareDates } from '$lib/utils/compare/compare-dates';
 import { Goal, type IGoal } from './Goal';
 import type { IGoalStats } from './GoalStats';
@@ -49,7 +50,7 @@ export class GoalInfo extends Goal implements IGoalInfo {
 	}
 
 	static compareActivity(a: GoalInfo, b: GoalInfo): number {
-		return compareDates(a.lastEntryDate, b.lastEntryDate);
+		return compareNullable(compareDates)(a.lastEntryDate, b.lastEntryDate);
 	}
 
 	static compareActivityJson(a: IGoalInfo, b: IGoalInfo): number {

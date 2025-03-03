@@ -7,14 +7,14 @@
 	import PagePadding from '../ui/PagePadding.svelte';
 	import ResponsiveCenterColumn from '../ui/ResponsiveCenterColumn.svelte';
 
-	const { mode, entryId, goalRoutePresenter }: { mode: EntryModalMode; entryId?: string; goalRoutePresenter: GoalRoutePresenter } = $props();
+	const {
+		mode,
+		entryId,
+		goalRoutePresenter
+	}: { mode: EntryModalMode; entryId?: string; goalRoutePresenter: GoalRoutePresenter } = $props();
 
 	const presenterFactory = getContext<PresenterFactory>('PresenterFactory');
-	const presenter = presenterFactory.createEntryModalPresenter(
-		goalRoutePresenter,
-		mode,
-		entryId
-	);
+	const presenter = presenterFactory.createEntryModalPresenter(goalRoutePresenter, mode, entryId);
 </script>
 
 <ResponsiveCenterColumn>
@@ -27,7 +27,12 @@
 				{:else}
 					<p>{presenter.currentDateOf}</p>
 				{/if}
-				<input disabled={!presenter.editing} class="block" type="checkbox" bind:checked={presenter.currentSuccess} />
+				<input
+					disabled={!presenter.editing}
+					class="block"
+					type="checkbox"
+					bind:checked={presenter.currentSuccess}
+				/>
 			</div>
 			<div class="flex flex-col justify-center">
 				{#if presenter.editing}

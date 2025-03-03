@@ -9,6 +9,14 @@ type DeleteFn = (id: IdType) => Promise<void>;
 export interface ExecuteCreateParams<T, CreateTParams> {
 	createParams: CreateTParams;
 	optimistic?: boolean;
+	/** 
+	 * This function is called with the data that will be created. If the function
+	 * returns false, the item will be still be created, but not added to the collection.
+	 *
+	 * This may be useful for items in paginated collections that are not yet within
+	 * the range of loaded items.
+	 */
+	shouldAdd?: (data?: T) => boolean;
 	sendCreate: CreateFn<T, CreateTParams>;
 }
 
@@ -46,17 +54,20 @@ export class CreateDeleteRunner<
 
 		const data = this.getOptimisticCreateT(params.createParams);
 		const optimisticId = this.key(data);
-		if (params.optimistic) this.model.add(data, true);
+
+		const shouldAdd = params.shouldAdd?.(data) ?? true;
+
+		if (params.optimistic && shouldAdd) this.model.add(data, true);
 
 		try {
 			const result = await params.sendCreate(params.createParams);
-			if (params.optimistic) {
+			if (params.optimistic && shouldAdd) {
 				this.model.updateWithNewId(optimisticId, result);
-			} else {
+			} else if (shouldAdd) {
 				this.model.add(result);
 			}
 		} catch (e) {
-			if (params.optimistic) this.model.remove(optimisticId);
+			if (params.optimistic && shouldAdd) this.model.remove(optimisticId);
 			throw e;
 		} finally {
 			this._creating = false;

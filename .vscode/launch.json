@@ -1,56 +1,45 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Debug dev",
-            "request": "launch",
-            "runtimeArgs": [
-                "run",
-                "dev",
-            ],
-            "runtimeExecutable": "npm",
-            "console": "integratedTerminal",
-            "type": "node",
-        },
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:5173",
-            "webRoot": "${workspaceFolder}",
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Debug Vitest Tests",
-            "autoAttachChildProcesses": true,
-            "skipFiles": ["<node_internals>/**"],
-            "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "run",
-                "test"
-            ],
-            "smartStep": true,
-            "console": "integratedTerminal"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Debug Current Test File",
-            "autoAttachChildProcesses": true,
-            "skipFiles": ["<node_internals>/**"],
-            "runtimeExecutable": "npm",
-            "runtimeArgs": [
-              "run",
-              "test",
-              "--",
-              "${relativeFile}"
-            ],
-            "smartStep": true,
-            "console": "integratedTerminal"
-          }
-    ]
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Debug dev",
+			"request": "launch",
+			"runtimeArgs": ["run", "dev"],
+			"runtimeExecutable": "npm",
+			"console": "integratedTerminal",
+			"type": "node"
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Chrome against localhost",
+			"url": "http://localhost:5173",
+			"webRoot": "${workspaceFolder}"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Debug Vitest Tests",
+			"autoAttachChildProcesses": true,
+			"skipFiles": ["<node_internals>/**"],
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "test"],
+			"smartStep": true,
+			"console": "integratedTerminal"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Debug Current Test File",
+			"autoAttachChildProcesses": true,
+			"skipFiles": ["<node_internals>/**"],
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "test", "--", "${relativeFile}"],
+			"smartStep": true,
+			"console": "integratedTerminal"
+		}
+	]
 }

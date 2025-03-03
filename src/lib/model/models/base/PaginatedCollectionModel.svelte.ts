@@ -9,7 +9,8 @@ import type { SortedListDataStructure } from './data-structures';
 export abstract class PaginatedCollectionModel<
 	T extends HasId,
 	CreateTParams,
-	DM extends DataModel<T>
+	DM extends DataModel<T>,
+	SK extends StartKeyType = StartKeyType
 > extends ListCollectionModel<T, CreateTParams, DM> {
 	public hasMore: boolean = $state(true);
 	private defaultPageSize = 10;
@@ -26,11 +27,11 @@ export abstract class PaginatedCollectionModel<
 	}
 
 	protected abstract sendGetMoreItems(
-		request: PaginatedRequest<StartKeyType>
-	): Promise<PaginatedResponse<T, StartKeyType>>;
+		request: PaginatedRequest<SK>
+	): Promise<PaginatedResponse<T, SK>>;
 
-	protected abstract getStartKey(lastItem?: T): StartKeyType | undefined;
-	private getLastExclusiveStartKey(): StartKeyType | undefined {
+	protected abstract getStartKey(lastItem?: T): SK | undefined;
+	protected getLastExclusiveStartKey(): SK | undefined {
 		return this.getStartKey(this.sortedList.getLastItem()?.data);
 	}
 

@@ -1,6 +1,7 @@
 import type { ModelFactory } from '$lib/factories/models/ModelFactory.svelte';
 import { type EntryCreateParams, type IEntry } from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
+import { compareDates, compareNullable } from '$lib/utils/compare';
 import { type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
 import type { CreateDeleteRunnerConstructor } from '../base/create-delete-runners';
 import { SortedListDataStructure } from '../base/data-structures';
@@ -17,7 +18,8 @@ type EntryCollectionCDRunnerConstructor = CreateDeleteRunnerConstructor<
 export class EntryCollectionModel extends PaginatedCollectionModel<
 	IEntry,
 	EntryCreateParams,
-	EntryDataModel
+	EntryDataModel,
+	string
 > {
 	private static initialPageSize = 210;
 
@@ -59,6 +61,14 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 		await this.create({
 			createParams,
 			optimistic: true,
+			shouldAdd: (data) => {
+				// Only add the entry to the collection if it is within the range of
+				// entries that have already been loaded.
+				if (!this.getLastExclusiveStartKey) return false;
+				return (
+					compareNullable(compareDates)(this.getStartKey(data), this.getLastExclusiveStartKey()) > 0
+				);
+			},
 			sendCreate: async (createParams) => {
 				return this.goalService.createEntry({
 					...createParams,

@@ -19,13 +19,19 @@ import { GoalPagePresenter } from '$lib/presenters/goals/GoalPagePresenter.svelt
 import { GoalRoutePresenter } from '$lib/presenters/goals/GoalRoutePresenter.svelte';
 import { GoalsPagePresenter } from '$lib/presenters/goals/GoalsPagePresenter.svelte';
 import { GoalsRoutePresenter } from '$lib/presenters/goals/GoalsRoutePresenter.svelte';
-import { EntryModalPresenter, type EntryModalMode } from '$lib/presenters/goals/EntryModalPresenter.svelte';
+import {
+	EntryModalPresenter,
+	type EntryModalMode
+} from '$lib/presenters/goals/EntryModalPresenter.svelte';
 import { ShareGoalDialogPresenter } from '$lib/presenters/goals/ShareGoalDialogPresenter.svelte';
 import { ShareGoalPagePresenter } from '$lib/presenters/goals/ShareGoalPagePresenter.svelte';
 import { ShareRequestListViewPresenter } from '$lib/presenters/goals/ShareRequestListViewPresenter.svelte';
 import { ShareRequestsPagePresenter } from '$lib/presenters/goals/ShareRequestsPagePresenter.svelte';
 import { RootLayoutPresenter } from '$lib/presenters/root/RootLayoutPresenter.svelte';
-import { UserPickerPresenter, type UserSelectAction } from '$lib/presenters/users/UserPickerPresenter.svelte';
+import {
+	UserPickerPresenter,
+	type UserSelectAction
+} from '$lib/presenters/users/UserPickerPresenter.svelte';
 import type { VisualViewportInspector } from '$lib/presenters/window/VisualViewportInspector.svelte';
 import { ModelFactory } from '../models/ModelFactory.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
@@ -38,7 +44,11 @@ export class PresenterFactory {
 		return this._authModelInstance;
 	}
 
-	constructor(private serviceFactory: ServiceFactory, private modelFactory: ModelFactory, private visualViewportInspector: VisualViewportInspector) {
+	constructor(
+		private serviceFactory: ServiceFactory,
+		private modelFactory: ModelFactory,
+		private visualViewportInspector: VisualViewportInspector
+	) {
 		this.dialogPresenterInstance = new DialogPresenter(serviceFactory.createErrorService());
 		this._authModelInstance = this.modelFactory.createAuthModel();
 	}
@@ -59,15 +69,21 @@ export class PresenterFactory {
 		);
 	}
 
-	createGoalsRoutePresenter(goalCollectionModel: GoalCollectionModel, sharedGoalsModel: SharedGoalsModel) {
+	createGoalsRoutePresenter(
+		goalCollectionModel: GoalCollectionModel,
+		sharedGoalsModel: SharedGoalsModel
+	) {
 		return new GoalsRoutePresenter(
 			this.serviceFactory.createErrorService(),
 			goalCollectionModel,
 			sharedGoalsModel
-		)
+		);
 	}
 
-	createGoalsPagePresenter(goalCollectionModel: GoalCollectionModel, sharedGoalsModel: SharedGoalsModel) {
+	createGoalsPagePresenter(
+		goalCollectionModel: GoalCollectionModel,
+		sharedGoalsModel: SharedGoalsModel
+	) {
 		return new GoalsPagePresenter(
 			this.authModelInstance,
 			this.serviceFactory.createErrorService(),
@@ -77,24 +93,21 @@ export class PresenterFactory {
 	}
 
 	createGoalRoutePresenter(goalModel: GoalModel) {
-		return new GoalRoutePresenter(
-			this.serviceFactory.createErrorService(),
-			goalModel
-		);
+		return new GoalRoutePresenter(this.serviceFactory.createErrorService(), goalModel);
 	}
 
 	createGoalPagePresenter(goalRoutePresenter: GoalRoutePresenter) {
 		return new GoalPagePresenter(goalRoutePresenter);
 	}
 
-    createShareGoalDialogPresenter(goal: Goal) {
-        return new ShareGoalDialogPresenter(
-            goal,
-            this.serviceFactory.createGoalService(),
-            this.serviceFactory.createErrorService(),
+	createShareGoalDialogPresenter(goal: Goal) {
+		return new ShareGoalDialogPresenter(
+			goal,
+			this.serviceFactory.createGoalService(),
+			this.serviceFactory.createErrorService(),
 			this.dialogPresenterInstance
-        )
-    }
+		);
+	}
 
 	createEntryGalleryPresenter(goalId: string, goalModel: GoalModel) {
 		return new EntryGalleryPresenter(
@@ -131,7 +144,7 @@ export class PresenterFactory {
 			onSelect,
 			beforeDeselect,
 			onDeselect
-		)
+		);
 	}
 
 	createShareRequestsPagePresenter(sharedGoalsModel: SharedGoalsModel) {
@@ -141,7 +154,10 @@ export class PresenterFactory {
 		);
 	}
 
-	createShareRequestListViewPresenter(sharedGoalsModel: SharedGoalsModel, sharedGoalPreview: ISharedGoalPreview) {
+	createShareRequestListViewPresenter(
+		sharedGoalsModel: SharedGoalsModel,
+		sharedGoalPreview: ISharedGoalPreview
+	) {
 		return new ShareRequestListViewPresenter(
 			this.serviceFactory.createErrorService(),
 			sharedGoalsModel,
@@ -149,14 +165,21 @@ export class PresenterFactory {
 		);
 	}
 
-	createGoalListViewPresenter(goalInfo: IGoalInfo, goalInfoModel: GoalInfoDataModel | SharedGoalInfoDataModel) {
-		return new GoalListViewPresenter(goalInfo, goalInfoModel, this.serviceFactory.createProfileService());
+	createGoalListViewPresenter(
+		goalInfo: IGoalInfo,
+		goalInfoModel: GoalInfoDataModel | SharedGoalInfoDataModel
+	) {
+		return new GoalListViewPresenter(
+			goalInfo,
+			goalInfoModel,
+			this.serviceFactory.createProfileService()
+		);
 	}
 
 	createCreateGoalModalPresenter(goalCollectionModel: GoalCollectionModel) {
 		return new CreateGoalModalPresenter(
 			this.serviceFactory.createErrorService(),
-			goalCollectionModel,
+			goalCollectionModel
 		);
 	}
 
@@ -183,7 +206,17 @@ export class PresenterFactory {
 		return new EntrySquarePresenter(entry);
 	}
 
-	createEntryModalPresenter(goalRoutePresenter: GoalRoutePresenter, mode: EntryModalMode, entryId?: string) {
-		return new EntryModalPresenter(goalRoutePresenter, mode, entryId);
+	createEntryModalPresenter(
+		goalRoutePresenter: GoalRoutePresenter,
+		mode: EntryModalMode,
+		entryId?: string
+	) {
+		return new EntryModalPresenter(
+			this.serviceFactory.createErrorService(),
+			this.modelFactory,
+			goalRoutePresenter,
+			mode,
+			entryId
+		);
 	}
 }
