@@ -2,6 +2,7 @@ import { GoalInfo, type IGoalInfo } from '$lib/model/domain/goals';
 import { isSharedGoalInfo } from '$lib/model/domain/goals/SharedGoalInfo';
 import type { GoalInfoDataModel } from '$lib/model/models/goals/GoalInfoDataModel.svelte';
 import type { SharedGoalInfoDataModel } from '$lib/model/models/goals/SharedGoalInfoDataModel.svelte';
+import { Routes } from '$lib/model/routes';
 import type { ProfileService } from '$lib/services/ProfileService.svelte';
 import { diffDays, today } from '$lib/utils/dates';
 
@@ -35,8 +36,8 @@ export class GoalListViewPresenter {
 
 	get goalPageUrl() {
 		return isSharedGoalInfo(this.goalInfo)
-			? `/goals/${this.goalInfo.id}?shared=true`
-			: `/goals/${this.goalInfo.id}`;
+			? Routes.getGoalPageUrl(this.goalInfo.id, true)
+			: Routes.getGoalPageUrl(this.goalInfo.id, false);
 	}
 
 	get goalOwnerId(): string | undefined {

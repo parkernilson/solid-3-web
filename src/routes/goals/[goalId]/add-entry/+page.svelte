@@ -1,5 +1,8 @@
 <script lang="ts">
-	import ModifyEntryModalPage from "$lib/components/goals/ModifyEntryModalPage.svelte";
+	import ModifyEntryModalPage from '$lib/components/goals/ModifyEntryModalPage.svelte';
+	import type { PageProps } from './$types';
+
+	const { data }: PageProps = $props();
 </script>
 
-<ModifyEntryModalPage mode=create />
+<ModifyEntryModalPage mode="create" goalRoutePresenter={data.goalRoutePresenter} />

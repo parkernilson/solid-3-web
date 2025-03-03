@@ -1,3 +1,12 @@
 <script lang="ts">
-    // TODO: implement me
+	import ModifyEntryModalPage from '$lib/components/goals/ModifyEntryModalPage.svelte';
+	import type { PageProps } from './$types';
+
+	const { data }: PageProps = $props();
 </script>
+
+<ModifyEntryModalPage
+	mode="edit"
+	entryId={data.entryId}
+	goalRoutePresenter={data.goalRoutePresenter}
+/>

@@ -27,9 +27,11 @@
 		{#if presenter.entryModels}
 			{#each presenter.entryModels as entryModel, i}
 				{#if entryModel.data}
-					<GridBorders color="transparent" width={3} numCols={3} numElements={presenter.entryModels.length} {i} >
-						<EntrySquare entry={entryModel.data} {entryModel} {isOwner} />
-					</GridBorders>
+					<a href="{presenter.getEditEntryUrl(entryModel.data.id)}">
+						<GridBorders color="transparent" width={3} numCols={3} numElements={presenter.entryModels.length} {i} >
+							<EntrySquare entry={entryModel.data} {entryModel} {isOwner} />
+						</GridBorders>
+					</a>
 				{/if}
 			{/each}
 		{/if}
