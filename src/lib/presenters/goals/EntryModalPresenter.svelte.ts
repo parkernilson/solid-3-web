@@ -7,6 +7,21 @@ export class EntryModalPresenter {
 	public currentDateOf = $state<string>(new Date().toLocaleDateString());
 	public currentSuccess = $state<boolean>(true);
 
+	public editing = $state<boolean>(false);
+
+	get modalTitle() {
+		switch (this.mode) {
+			case 'create':
+				return 'Create Entry'
+			case 'edit':
+				return 'Edit Entry'
+			case 'view':
+				return 'View Entry'
+			default:
+				throw new Error("Invalid mode")
+		}
+	}
+
 	constructor(
 		private goalRoutePresenter: GoalRoutePresenter,
 		private mode: EntryModalMode,

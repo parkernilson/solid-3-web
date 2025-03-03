@@ -25,8 +25,8 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 		super(errorService);
 	}
 
-	getEditEntryUrl(entryId: string) {
-		return Routes.getEditEntryUrl(this.goalId, entryId);
+	getViewEntryUrl(entryId: string) {
+		return Routes.getViewEntryUrl(this.goalId, entryId);
 	}
 
 	async loadMoreEntries() {

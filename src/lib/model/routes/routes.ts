@@ -7,7 +7,7 @@ export class Routes {
         return `/goals/${goalId}/add-entry`;
     }
 
-    static getEditEntryUrl(goalId: string, entryId: string) {
-        return `/goals/${goalId}/edit-entry/${entryId}`;
+    static getViewEntryUrl(goalId: string, entryId: string) {
+        return `/goals/${goalId}/entry/${entryId}`;
     }
 }

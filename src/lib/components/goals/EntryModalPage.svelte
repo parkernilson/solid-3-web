@@ -19,14 +19,22 @@
 
 <ResponsiveCenterColumn>
 	<PagePadding>
-		<ModalNavHeader title={mode === 'create' ? 'Add Entry' : 'Edit Entry'} />
+		<ModalNavHeader title={presenter.modalTitle} />
 		<div class="">
 			<div class="">
-				<input type="date" bind:value={presenter.currentDateOf} />
-				<input type="checkbox" bind:checked={presenter.currentSuccess} />
+				{#if presenter.editing}
+					<input class="block" type="date" bind:value={presenter.currentDateOf} />
+				{:else}
+					<p>{presenter.currentDateOf}</p>
+				{/if}
+				<input disabled={!presenter.editing} class="block" type="checkbox" bind:checked={presenter.currentSuccess} />
 			</div>
 			<div class="flex flex-col justify-center">
-				<input type="text" bind:value={presenter.currentTextContent} />
+				{#if presenter.editing}
+					<input type="text" bind:value={presenter.currentTextContent} />
+				{:else}
+					<p>{presenter.currentTextContent}</p>
+				{/if}
 			</div>
 		</div>
 	</PagePadding>
