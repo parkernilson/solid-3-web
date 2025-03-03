@@ -35,7 +35,7 @@ export class GoalListViewPresenter {
 
 	get goalPageUrl() {
 		return isSharedGoalInfo(this.goalInfo)
-			? `/goals/shared/${this.goalInfo.id}`
+			? `/goals/${this.goalInfo.id}?shared=true`
 			: `/goals/${this.goalInfo.id}`;
 	}
 

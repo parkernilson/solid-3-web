@@ -21,6 +21,7 @@ import { GoalPagePresenter } from '$lib/presenters/goals/GoalPagePresenter.svelt
 import { GoalRoutePresenter } from '$lib/presenters/goals/GoalRoutePresenter.svelte';
 import { GoalsPagePresenter } from '$lib/presenters/goals/GoalsPagePresenter.svelte';
 import { GoalsRoutePresenter } from '$lib/presenters/goals/GoalsRoutePresenter.svelte';
+import { ModifyEntryModalPresenter, type ModifyEntryModalMode } from '$lib/presenters/goals/ModifyEntryModalPresenter.svelte';
 import { ShareGoalDialogPresenter } from '$lib/presenters/goals/ShareGoalDialogPresenter.svelte';
 import { ShareGoalPagePresenter } from '$lib/presenters/goals/ShareGoalPagePresenter.svelte';
 import { ShareRequestListViewPresenter } from '$lib/presenters/goals/ShareRequestListViewPresenter.svelte';
@@ -192,5 +193,9 @@ export class PresenterFactory {
 
 	createEntrySquarePresenter(entry: IEntry) {
 		return new EntrySquarePresenter(entry);
+	}
+
+	createModifyEntryModalPresenter(mode: ModifyEntryModalMode, entry?: IEntry) {
+		return new ModifyEntryModalPresenter(mode, entry);
 	}
 }

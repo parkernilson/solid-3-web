@@ -1,14 +1,7 @@
-import { error } from '@sveltejs/kit';
-
-export const load = async ({ parent, params }) => {
+export const load = async ({ parent, params, url }) => {
 	const { presenterFactory, modelFactory } = await parent();
-	let shared = false;
-
-	if (params.shared === 'shared') {
-		shared = true;
-	} else if (params.shared) {
-		throw error(404, 'Not found');
-	}
+	const queryParams = url.searchParams;
+	const shared = queryParams.get('shared') === 'true';
 
 	const goalModel = shared
 		? modelFactory.createSharedGoalModel(params.goalId)
