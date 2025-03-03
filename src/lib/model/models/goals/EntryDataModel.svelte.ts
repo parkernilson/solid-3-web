@@ -13,12 +13,15 @@ export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimi
 	) {
 		super(updateRunnerConstructor, entryId, init);
 	}
-    
+
 	protected loadData(): Promise<IEntry> {
-		throw new Error('Method not implemented.');
+		return this.goalService.getEntry(this.entryId);
 	}
 
-	protected getOptimisticUpdateT(currentValue: IEntry, params: EntryUpdateOptimisticParams): IEntry {
+	protected getOptimisticUpdateT(
+		currentValue: IEntry,
+		params: EntryUpdateOptimisticParams
+	): IEntry {
 		return Entry.getAppliedUpdateOptimistic(currentValue, params);
 	}
 
@@ -28,6 +31,6 @@ export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateOptimi
 			sendUpdate: async () => {
 				return this.goalService.updateEntry(this.entryId, params);
 			}
-		})
+		});
 	}
 }

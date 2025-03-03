@@ -162,6 +162,18 @@ export class SupabaseGoalService implements GoalService {
 		);
 	}
 
+	async getEntry(entryId: string): Promise<IEntry> {
+		const { data, error } = await this.supabase
+			.from('entries')
+			.select('*')
+			.eq('id', entryId)
+			.single();
+		if (error) {
+			throw error;
+		}
+		return this.converter.convertEntry(data);
+	}
+
 	async getEntriesPaginated(
 		goalId: string,
 		{ pageSize, exclusiveStartKey }: PaginatedRequest<string>
@@ -272,8 +284,7 @@ export class SupabaseGoalService implements GoalService {
 
 		if (error) throw error;
 		if (!data || isSupabaseStreakInfoNull(data)) return null;
-		if (!isSupabaseStreakInfoNotNull(data))
-			throw new Error('Streak info failed type predicate');
+		if (!isSupabaseStreakInfoNotNull(data)) throw new Error('Streak info failed type predicate');
 		return this.converter.convertStreakInfo(data);
 	}
 
