@@ -1,8 +1,8 @@
 import type { ModelFactory } from '$lib/factories/models/ModelFactory.svelte';
 import type { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svelte';
+import type { GoalModel } from '$lib/model/models/goals/GoalModel.svelte';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
-import type { GoalRoutePresenter } from './GoalRoutePresenter.svelte';
 
 export type EntryModalMode = 'create' | 'view';
 
@@ -29,14 +29,14 @@ export class EntryModalPresenter extends LoadablePresenter {
 	constructor(
 		errorService: ErrorService,
 		private modelFactory: ModelFactory,
-		private goalRoutePresenter: GoalRoutePresenter,
+		private goalModel: GoalModel,
 		private mode: EntryModalMode,
 		private entryId?: string
 	) {
 		super(errorService);
 		if (mode === 'view') {
 			if (!entryId) throw new Error(`entryId is required in mode: ${mode}`);
-			this.entryModel = goalRoutePresenter.goalModel.entryCollectionModel.getModel(entryId);
+			this.entryModel = goalModel.entryCollectionModel.getModel(entryId);
 		}
 	}
 

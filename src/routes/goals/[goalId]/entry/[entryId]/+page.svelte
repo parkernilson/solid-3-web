@@ -5,8 +5,4 @@
 	const { data }: PageProps = $props();
 </script>
 
-<EntryModalPage
-	mode="view"
-	entryId={data.entryId}
-	goalRoutePresenter={data.goalRoutePresenter}
-/>
+<EntryModalPage mode="view" entryId={data.entryId} goalModel={data.goalModel} />

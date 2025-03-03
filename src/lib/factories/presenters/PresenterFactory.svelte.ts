@@ -206,15 +206,11 @@ export class PresenterFactory {
 		return new EntrySquarePresenter(entry);
 	}
 
-	createEntryModalPresenter(
-		goalRoutePresenter: GoalRoutePresenter,
-		mode: EntryModalMode,
-		entryId?: string
-	) {
+	createEntryModalPresenter(goalModel: GoalModel, mode: EntryModalMode, entryId?: string) {
 		return new EntryModalPresenter(
 			this.serviceFactory.createErrorService(),
 			this.modelFactory,
-			goalRoutePresenter,
+			goalModel,
 			mode,
 			entryId
 		);
