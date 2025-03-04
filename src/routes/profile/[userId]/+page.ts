@@ -1,12 +1,8 @@
 export const load = async ({ params, parent }) => {
-	const { modelFactory, presenterFactory, rootLayoutPresenter } = await parent();
+	const { modelFactory, presenterFactory, user } = await parent();
 	const { userId } = params;
-	const profileModel = modelFactory.createUserProfileDataModel(userId, rootLayoutPresenter.user);
-    const profilePagePresenter = presenterFactory.createProfilePagePresenter(profileModel, userId);
+	const profileModel = modelFactory.createUserProfileDataModel(userId, { initialData: user });
+	const profilePagePresenter = presenterFactory.createProfilePagePresenter(profileModel, userId);
 
-	return {
-		user: rootLayoutPresenter.user,
-        profilePagePresenter,
-        loadingProfilePage: profilePagePresenter.load({})
-	};
+	return { profilePagePresenter, loadingProfilePage: profilePagePresenter.load({}) };
 };

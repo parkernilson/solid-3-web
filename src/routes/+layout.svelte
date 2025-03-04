@@ -10,13 +10,6 @@
 	let { children, data }: { children?: Function; data: LayoutData } = $props();
 
 	setContext<PresenterFactory>('PresenterFactory', data.presenterFactory);
-
-	// $effect(() => {
-	// const routeId = $page.route.id;
-	// if (!data.rootLayoutPresenter.user && $page.route.id !== '/(auth)/register') {
-	// 	goto('/login');
-	// }
-	// });
 </script>
 
 <div class="h-full">

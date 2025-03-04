@@ -1,15 +1,16 @@
-import type { AuthModel } from "$lib/model/models/auth/AuthModel.svelte";
-import type { AuthService } from "$lib/services/AuthService.svelte";
-import type { ErrorService } from "$lib/services/ErrorService.svelte";
-import { ErrorHandler } from "$lib/utils/ErrorHandler";
+import { invalidateAll } from '$app/navigation';
+import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
+import type { AuthService } from '$lib/services/AuthService.svelte';
+import type { ErrorService } from '$lib/services/ErrorService.svelte';
+import { ErrorHandler } from '$lib/utils/ErrorHandler';
 
 export class LoginPresenter extends ErrorHandler {
 	private _email = $state('');
 	private _password = $state('');
 
-    public get user() {
-        return this.authModel.user
-    }
+	public get user() {
+		return this.authModel.user;
+	}
 
 	public get email() {
 		return this._email;
@@ -24,7 +25,11 @@ export class LoginPresenter extends ErrorHandler {
 		this._password = p;
 	}
 
-	constructor(private authModel: AuthModel, private authService: AuthService, errorService: ErrorService) {
+	constructor(
+		private authModel: AuthModel,
+		private authService: AuthService,
+		errorService: ErrorService
+	) {
 		super(errorService);
 	}
 
@@ -32,16 +37,17 @@ export class LoginPresenter extends ErrorHandler {
 		await this.doErrorable({
 			action: async () => {
 				await this.authService.login(this.email, this.password);
+				invalidateAll();
 			}
-		})
+		});
 	}
 
 	async register() {
 		await this.doErrorable({
 			action: async () => {
 				await this.authService.register(this.email, this.password);
+				invalidateAll();
 			}
-		})
+		});
 	}
-
 }

@@ -14,7 +14,7 @@
 
 <ResponsiveCenterColumn>
 	<PagePadding>
-		<HeaderBar rootLayoutPresenter={data.rootLayoutPresenter} />
+		<HeaderBar user={data.user} />
 	</PagePadding>
 	{#await data.loadingGoalRoute}
 		<p>loading goal</p>

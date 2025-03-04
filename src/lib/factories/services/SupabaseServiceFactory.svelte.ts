@@ -5,15 +5,11 @@ import { SupabaseAuthService } from '$lib/services/SupabaseAuthService.svelte';
 import { SupabaseGoalService } from '$lib/services/SupabaseGoalService.svelte';
 import { SupabaseProfileService } from '$lib/services/SupabaseProfileService.svelte';
 import type { SupabaseClient } from '$lib/supabase/supabase';
-import type { SupabaseFactory } from '../supabase/SupabaseFactory.svelte';
 import { ServiceFactory } from './ServiceFactory.svelte';
 
 export class SupabaseServiceFactory extends ServiceFactory {
-	private supabase: SupabaseClient;
-
-	constructor(supabaseFactory: SupabaseFactory) {
+	constructor(private supabase: SupabaseClient) {
 		super();
-		this.supabase = supabaseFactory.createSupabaseClient();
 	}
 
 	createGoalService(): SupabaseGoalService {
@@ -25,11 +21,7 @@ export class SupabaseServiceFactory extends ServiceFactory {
 	}
 
 	createAuthService(): SupabaseAuthService {
-		return new SupabaseAuthService(
-			this.supabase,
-			new SupabaseDomainConverter(),
-			this.createErrorService(),
-		);
+		return new SupabaseAuthService(this.supabase, new SupabaseDomainConverter());
 	}
 
 	createErrorService(): ConsoleLoggingErrorService {

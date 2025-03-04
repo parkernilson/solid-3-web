@@ -5,33 +5,35 @@ import { UpdateRunnerFactory } from '$lib/factories/models/UpdateRunnerFactory.s
 import { PresenterFactory } from '$lib/factories/presenters/PresenterFactory.svelte';
 import { SupabaseServiceFactory } from '$lib/factories/services/SupabaseServiceFactory.svelte';
 import { SupabaseFactory } from '$lib/factories/supabase/SupabaseFactory.svelte';
+import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import { VisualViewportInspector } from '$lib/presenters/window/VisualViewportInspector.svelte';
 
 export const ssr = false;
 
+const supabaseFactory = new SupabaseFactory();
+const dataStructureFactory = new DataStructureFactory();
+const updateRunnerFactory = new UpdateRunnerFactory();
+const createDeleteRunnerFactory = new CreateDeleteRunnerFactory();
+const supabase = supabaseFactory.createSupabaseClient();
+const serviceFactory = new SupabaseServiceFactory(supabase);
+const modelFactory = new ModelFactory(
+	serviceFactory,
+	dataStructureFactory,
+	updateRunnerFactory,
+	createDeleteRunnerFactory,
+	supabase
+);
+const visualViewportInspector = new VisualViewportInspector();
+const authModel: AuthModel = modelFactory.createAuthModel();
+const presenterFactory = new PresenterFactory(
+	authModel,
+	serviceFactory,
+	modelFactory,
+	visualViewportInspector
+);
+
 export const load = async () => {
-	const supabaseFactory = new SupabaseFactory();
-	const dataStructureFactory = new DataStructureFactory();
-	const updateRunnerFactory = new UpdateRunnerFactory();
-	const createDeleteRunnerFactory = new CreateDeleteRunnerFactory();
-	const serviceFactory = new SupabaseServiceFactory(supabaseFactory);
-	const modelFactory = new ModelFactory(
-		serviceFactory,
-		dataStructureFactory,
-		updateRunnerFactory,
-		createDeleteRunnerFactory
-	);
-	const visualViewportInspector = new VisualViewportInspector(window);
-	const presenterFactory = new PresenterFactory(
-		serviceFactory,
-		modelFactory,
-		visualViewportInspector
-	);
-	const presenter = presenterFactory.createRootLayoutPresenter();
-	await presenter.load({});
-	return {
-		presenterFactory,
-		modelFactory,
-		rootLayoutPresenter: presenter
-	};
+	authModel.setupAuthStateListener();
+	visualViewportInspector.setupListener(window);
+	return { presenterFactory, modelFactory, authModel };
 };

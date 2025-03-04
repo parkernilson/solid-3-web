@@ -1,3 +1,4 @@
+import { invalidateAll } from '$app/navigation';
 import { UserProfile } from '$lib/model/domain/users';
 import type { AuthModel } from '$lib/model/models/auth/AuthModel.svelte';
 import type { UserProfileDataModel } from '$lib/model/models/profile/UserProfileDataModel.svelte';
@@ -71,6 +72,7 @@ export class ProfilePagePresenter extends LoadablePresenter {
 		this.doErrorable({
 			action: async () => {
 				await this.authService.logout();
+				invalidateAll();
 			}
 		});
 	}

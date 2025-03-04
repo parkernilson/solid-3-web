@@ -27,7 +27,6 @@ import { ShareGoalDialogPresenter } from '$lib/presenters/goals/ShareGoalDialogP
 import { ShareGoalPagePresenter } from '$lib/presenters/goals/ShareGoalPagePresenter.svelte';
 import { ShareRequestListViewPresenter } from '$lib/presenters/goals/ShareRequestListViewPresenter.svelte';
 import { ShareRequestsPagePresenter } from '$lib/presenters/goals/ShareRequestsPagePresenter.svelte';
-import { RootLayoutPresenter } from '$lib/presenters/root/RootLayoutPresenter.svelte';
 import {
 	UserPickerPresenter,
 	type UserSelectAction
@@ -38,32 +37,19 @@ import type { ServiceFactory } from '../services/ServiceFactory.svelte';
 
 export class PresenterFactory {
 	private dialogPresenterInstance: DialogPresenter;
-	private _authModelInstance: AuthModel;
-
-	private get authModelInstance() {
-		return this._authModelInstance;
-	}
 
 	constructor(
+		private authModel: AuthModel,
 		private serviceFactory: ServiceFactory,
 		private modelFactory: ModelFactory,
 		private visualViewportInspector: VisualViewportInspector
 	) {
 		this.dialogPresenterInstance = new DialogPresenter(serviceFactory.createErrorService());
-		this._authModelInstance = this.modelFactory.createAuthModel();
-	}
-
-	createRootLayoutPresenter() {
-		return new RootLayoutPresenter(
-			this.authModelInstance,
-			this.serviceFactory.createAuthService(),
-			this.serviceFactory.createErrorService()
-		);
 	}
 
 	createLoginPresenter() {
 		return new LoginPresenter(
-			this.authModelInstance,
+			this.authModel,
 			this.serviceFactory.createAuthService(),
 			this.serviceFactory.createErrorService()
 		);
@@ -85,7 +71,7 @@ export class PresenterFactory {
 		sharedGoalsModel: SharedGoalsModel
 	) {
 		return new GoalsPagePresenter(
-			this.authModelInstance,
+			this.authModel,
 			this.serviceFactory.createErrorService(),
 			goalCollectionModel,
 			sharedGoalsModel
@@ -136,7 +122,7 @@ export class PresenterFactory {
 	) {
 		return new UserPickerPresenter(
 			this.serviceFactory.createErrorService(),
-			this.authModelInstance,
+			this.authModel,
 			this.serviceFactory.createGoalService(),
 			excludeSelf,
 			initialSelectedUsers,
@@ -187,7 +173,7 @@ export class PresenterFactory {
 		return new ProfilePagePresenter(
 			this.serviceFactory.createErrorService(),
 			this.serviceFactory.createAuthService(),
-			this.authModelInstance,
+			this.authModel,
 			userProfileDataModel,
 			userId,
 			this.serviceFactory.createProfileService()

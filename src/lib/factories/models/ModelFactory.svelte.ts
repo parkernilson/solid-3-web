@@ -22,6 +22,7 @@ import { SharedGoalPreviewCollectionModel } from '$lib/model/models/goals/Shared
 import { SharedGoalPreviewDataModel } from '$lib/model/models/goals/SharedGoalPreviewDataModel.svelte';
 import { SharedGoalsModel } from '$lib/model/models/goals/SharedGoalsModel.svelte';
 import { UserProfileDataModel } from '$lib/model/models/profile/UserProfileDataModel.svelte';
+import type { SupabaseClient } from '$lib/supabase/supabase';
 import type { DataStructureFactory } from '../data-structures/DataStructureFactory.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
 import type { CreateDeleteRunnerFactory } from './CreateDeleteRunnerFactory.svelte';
@@ -32,11 +33,12 @@ export class ModelFactory {
 		private serviceFactory: ServiceFactory,
 		private dataStructureFactory: DataStructureFactory,
 		private updateRunnerFactory: UpdateRunnerFactory,
-		private createDeleteRunnerFactory: CreateDeleteRunnerFactory
+		private createDeleteRunnerFactory: CreateDeleteRunnerFactory,
+		private supabase: SupabaseClient
 	) {}
 
 	createAuthModel(): AuthModel {
-		return new AuthModel(this.serviceFactory.createAuthService());
+		return new AuthModel(this.serviceFactory.createAuthService(), this.supabase);
 	}
 
 	createGoalCollectionModel(userId: string) {
@@ -58,11 +60,7 @@ export class ModelFactory {
 	}
 
 	createGoalInfoDataModel(goalId: string, init: DataModelInit<IGoalInfo>) {
-		return new GoalInfoDataModel(
-			this.serviceFactory.createGoalService(),
-			goalId,
-			init
-		)
+		return new GoalInfoDataModel(this.serviceFactory.createGoalService(), goalId, init);
 	}
 
 	createGoalModel(goalId: string, initialData?: IGoalInfo) {
@@ -70,7 +68,7 @@ export class ModelFactory {
 			this.createGoalDataModel(goalId, { initialData }),
 			this.createGoalStatsDataModel(goalId, { initialData }),
 			this.createEntryCollectionModel(goalId, false)
-		)
+		);
 	}
 
 	createSharedGoalModel(goalId: string, initialData?: ISharedGoalInfo) {
@@ -78,7 +76,7 @@ export class ModelFactory {
 			this.createSharedGoalDataModel(goalId, { initialData }),
 			this.createGoalStatsDataModel(goalId, { initialData }),
 			this.createEntryCollectionModel(goalId, true)
-		)
+		);
 	}
 
 	createSharedGoalCollectionModel(user: UserProfile) {
@@ -107,7 +105,10 @@ export class ModelFactory {
 		);
 	}
 
-	createSharedGoalPreviewDataModel(initialData: ISharedGoalPreview, init: DataModelInit<ISharedGoalPreview>) {
+	createSharedGoalPreviewDataModel(
+		initialData: ISharedGoalPreview,
+		init: DataModelInit<ISharedGoalPreview>
+	) {
 		return new SharedGoalPreviewDataModel(initialData.id, init);
 	}
 
@@ -130,7 +131,7 @@ export class ModelFactory {
 			this.updateRunnerFactory.getConcurrentUpdateRunnerConstructor(),
 			entryId,
 			init
-		)
+		);
 	}
 
 	createEntryCollectionModel(goalId: string, shared: boolean, initialData?: IEntry[]) {

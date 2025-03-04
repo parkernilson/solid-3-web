@@ -1,20 +1,15 @@
 import type { SupabaseDomainConverter } from '$lib/model/converters/supabase/SupabaseDomainConverter';
 import type { UserProfile } from '$lib/model/domain/users';
 import { type SupabaseClient } from '$lib/supabase/supabase';
-import { ErrorHandler } from '$lib/utils/ErrorHandler';
-import { AuthSessionMissingError } from '@supabase/supabase-js';
-import { type AuthService, type AuthStateEvent, type Subscription } from './AuthService.svelte';
-import type { ErrorService } from './ErrorService.svelte';
+import { type AuthService } from './AuthService.svelte';
 
-export class SupabaseAuthService extends ErrorHandler implements AuthService {
+export class SupabaseAuthService implements AuthService {
 	private supabase: SupabaseClient;
 
 	constructor(
 		supabase: SupabaseClient,
-		private converter: SupabaseDomainConverter,
-		errorService: ErrorService
+		private converter: SupabaseDomainConverter
 	) {
-		super(errorService);
 		this.supabase = supabase;
 	}
 
@@ -34,43 +29,6 @@ export class SupabaseAuthService extends ErrorHandler implements AuthService {
 			throw new Error('User profile not found');
 		}
 		return this.converter.convertUserProfile(data);
-	}
-
-	async subscribeToAuthState(handler: (event: AuthStateEvent) => void): Promise<Subscription> {
-		const { data: initialUserData, error: initialUserError } = await this.supabase.auth.getUser();
-		if (initialUserError && !(initialUserError instanceof AuthSessionMissingError)) {
-			throw initialUserError;
-		}
-		if (!initialUserError) {
-			const userProfile = await this.getUserProfile(initialUserData?.user.id);
-			handler({
-				type: 'INITIAL_SESSION',
-				user: userProfile
-			});
-		}
-
-		const { data } = this.supabase.auth.onAuthStateChange(async (e, session) => {
-			// NOTE: await was not working in this callback, so we need to
-			// call a promise and make sure that any errors get caught.
-			this.doErrorable({
-				action: async () => {
-					const userProfile = session?.user.id ? await this.getUserProfile(session.user.id) : null;
-					if (e === 'SIGNED_IN') {
-						handler({
-							type: e,
-							user: userProfile
-						});
-					} else if (e === 'SIGNED_OUT') {
-						handler({
-							type: 'SIGNED_OUT',
-							user: null
-						});
-					}
-				}
-			});
-		});
-
-		return { unsubscribe: data.subscription.unsubscribe };
 	}
 
 	async login(email: string, password: string) {

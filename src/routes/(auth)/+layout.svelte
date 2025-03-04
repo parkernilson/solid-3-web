@@ -1,15 +1,8 @@
 <script lang="ts">
-	import type { LayoutData } from './$types';
 	import SolidLogo from '$lib/assets/solid-logo.svg';
-	import { goto } from '$app/navigation';
+	import type { LayoutData } from './$types';
 	const { children, data }: { children?: Function; data: LayoutData } = $props();
 	const loginPresenter = data.loginPresenter;
-
-	// $effect(() => {
-	//     if (loginPresenter.user) {
-	//         goto("/goals");
-	//     }
-	// })
 </script>
 
 <div class="h-full flex flex-col">
