@@ -33,7 +33,7 @@ const presenterFactory = new PresenterFactory(
 );
 
 export const load = async () => {
-	authModel.setupAuthStateListener();
+	await authModel.setupAuthStateListener();
 	visualViewportInspector.setupListener(window);
 	return { presenterFactory, modelFactory, authModel };
 };

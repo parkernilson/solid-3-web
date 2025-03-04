@@ -37,7 +37,7 @@ export class LoginPresenter extends ErrorHandler {
 		await this.doErrorable({
 			action: async () => {
 				await this.authService.login(this.email, this.password);
-				invalidateAll();
+				await invalidateAll();
 			}
 		});
 	}
@@ -46,7 +46,7 @@ export class LoginPresenter extends ErrorHandler {
 		await this.doErrorable({
 			action: async () => {
 				await this.authService.register(this.email, this.password);
-				invalidateAll();
+				await invalidateAll();
 			}
 		});
 	}
