@@ -6,6 +6,8 @@ import type { PaginatedRequest } from '$lib/utils/types/pagination';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export class EntryGalleryPresenter extends LoadablePresenter {
+	private initialPageSize = 200;
+
 	get entryModels() {
 		return this.goalModel.entryCollectionModel.models;
 	}
@@ -14,6 +16,10 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 	}
 	get loadingMoreEntries() {
 		return this.goalModel.entryCollectionModel.loading;
+	}
+
+	get hasEntryToday() {
+		return this.goalModel.entryCollectionModel.hasEntryToday;
 	}
 
 	constructor(
@@ -25,13 +31,17 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 		super(errorService);
 	}
 
+	getAddEntryUrl() {
+		return Routes.getAddEntryUrl(this.goalId);
+	}
+
 	getViewEntryUrl(entryId: string) {
 		return Routes.getViewEntryUrl(this.goalId, entryId);
 	}
 
 	async loadMoreEntries() {
 		if (!this.hasMoreEntries || this.loading) return;
-		await this.loadEntries({ pageSize: 200 });
+		await this.loadEntries({ pageSize: this.initialPageSize });
 	}
 
 	private async loadEntries({ pageSize }: PaginatedRequest): Promise<void> {

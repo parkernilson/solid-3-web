@@ -1,8 +1,11 @@
 import type { Database } from '$lib/supabase/database.types';
-import type { SupabaseCurrentStreakInfo, SupabaseStreakInfo } from './SupabaseStreakInfo';
+import type {
+	SupabaseCurrentStreakInfoNotNull,
+	SupabaseStreakInfoNotNull
+} from './SupabaseStreakInfo';
 
 export type SupabaseGoal = Database['public']['Tables']['goals']['Row'];
 export type SupabaseGoalInfo = SupabaseGoal & {
-	streak: SupabaseCurrentStreakInfo;
-	record: SupabaseStreakInfo;
+	streak: SupabaseCurrentStreakInfoNotNull;
+	record: SupabaseStreakInfoNotNull;
 };

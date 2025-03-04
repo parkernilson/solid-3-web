@@ -133,12 +133,9 @@ export class UserPickerPresenter extends ErrorHandler {
 					(this.displayedUsers?.length ?? 0 > 0)
 						? this.displayedUsers?.[this.displayedUsers.length - 1].email
 						: undefined;
-				const { data: users, hasMore } = await this.goalService.getUsersPaginated(
+				const { items: users, hasMore } = await this.goalService.getUsersPaginated(
 					this.searchTerm,
-					{
-						pageSize: 10,
-						exclusiveStartKey
-					},
+					{ pageSize: 10, exclusiveStartKey },
 					this.excludeSelf ? this.authModel.user?.id : undefined
 				);
 				this.hasMoreUsers = hasMore;

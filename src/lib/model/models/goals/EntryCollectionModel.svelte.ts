@@ -6,6 +6,7 @@ import {
 } from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { compareDates, compareNullable } from '$lib/utils/compare';
+import { today } from '$lib/utils/dates';
 import { type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
 import type { CreateDeleteRunnerConstructor } from '../base/create-delete-runners';
 import { SortedListDataStructure } from '../base/data-structures';
@@ -26,6 +27,11 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 	string
 > {
 	private static initialPageSize = 210;
+
+	private todayEntry = $derived(
+		this.models.find((m) => compareNullable(compareDates)(m.data?.dateOf, today()) === 0)
+	);
+	public hasEntryToday = $derived(!!this.todayEntry);
 
 	constructor(
 		private goalService: GoalService,

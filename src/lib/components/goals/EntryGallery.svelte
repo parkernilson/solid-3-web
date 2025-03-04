@@ -13,6 +13,10 @@
 	const presenterFactory = getContext<PresenterFactory>('PresenterFactory');
 	const presenter = presenterFactory.createEntryGalleryPresenter(goal.id, goalModel);
 
+	$effect(() => {
+		$inspect(presenter.hasEntryToday);
+	});
+
 	onMount(async () => {
 		await presenter.load({});
 	});
@@ -23,14 +27,19 @@
 	hasMore={presenter.hasMoreEntries}
 	loading={presenter.loadingMoreEntries}
 >
-	<div class="grid grid-cols-3">
+	<div class="grid grid-cols-3 gap-1">
+		{#if !presenter.hasEntryToday}
+			<a aria-label="Create entry" href={presenter.getAddEntryUrl()}>
+				<div class="aspect-square min-h-12 flex flex-col p-2 bg-blue-light rounded-xl">
+					<p>Tap here to create entry</p>
+				</div>
+			</a>
+		{/if}
 		{#if presenter.entryModels}
 			{#each presenter.entryModels as entryModel, i}
 				{#if entryModel.data}
-					<a href="{presenter.getViewEntryUrl(entryModel.data.id)}">
-						<GridBorders color="transparent" width={3} numCols={3} numElements={presenter.entryModels.length} {i} >
-							<EntrySquare entry={entryModel.data} {entryModel} {isOwner} />
-						</GridBorders>
+					<a href={presenter.getViewEntryUrl(entryModel.data.id)}>
+						<EntrySquare entry={entryModel.data} {entryModel} {isOwner} />
 					</a>
 				{/if}
 			{/each}
