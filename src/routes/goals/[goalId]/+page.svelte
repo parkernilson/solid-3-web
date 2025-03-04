@@ -26,7 +26,7 @@
 			{@const record = presenter.goalInfo.record}
 			{@const isOwner = presenter.isOwner}
 			<div class="">
-				<PagePadding hfull={false}>
+				<PagePadding>
 					<div class="flex mt-4 mb-4 items-center">
 						<a aria-label="Back" href="/goals" class="mr-6"
 							><i class="fa-solid fa-chevron-left fa-xl"></i></a
@@ -46,7 +46,7 @@
 					/>
 					<div class="mt-4"></div>
 				</PagePadding>
-				<PagePadding bp="sm" hfull={false}>
+				<PagePadding bp="sm">
 					<EntryGallery goal={presenter.goalInfo} {goalModel} {isOwner} />
 				</PagePadding>
 			</div>
