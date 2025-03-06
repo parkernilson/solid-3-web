@@ -1,6 +1,6 @@
 import { PUBLIC_LOG_LEVEL } from '$env/static/public';
 
-type LogLevel = 'debug' | 'none';
+export type LogLevel = 'debug' | 'none';
 
 export const log =
 	(level: LogLevel) =>
