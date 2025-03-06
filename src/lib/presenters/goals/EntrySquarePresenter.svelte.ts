@@ -22,18 +22,13 @@ export class EntrySquarePresenter {
 
 	public get textContentFormatted() {
 		if (!this.entry.textContent) {
-			return undefined; 
+			return undefined;
 		}
 
 		if (isOneEmoji(this.entry.textContent)) {
 			return this.entry.textContent;
 		}
 
-		// TODO: remove this and replace with css truncation
-		// const len = this.entry.textContent.length;
-		// return len < this.MAX_CHARS
-		// 	? this.entry.textContent
-		// 	: this.entry.textContent?.substring(0, this.MAX_CHARS) + '...';
 		return this.entry.textContent;
 	}
 
