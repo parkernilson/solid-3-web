@@ -5,7 +5,6 @@
 	import { getContext, onMount } from 'svelte';
 	import InfiniteScrollingContainer from '../InfiniteScrollingContainer.svelte';
 	import EntrySquare from './EntrySquare.svelte';
-	import GridBorders from './GridBorders.svelte';
 
 	const { goal, goalModel, isOwner }: { goal: IGoalInfo; goalModel: GoalModel; isOwner: boolean } =
 		$props();

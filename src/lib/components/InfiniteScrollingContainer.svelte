@@ -23,17 +23,19 @@
 			{
 				root: null,
 				rootMargin: '0px',
-				threshold: 0.5
+				threshold: 0
 			}
 		);
 
 		if (sentinel) {
 			observer.observe(sentinel);
 		}
+
+		// TODO: cleanup the observer to prevent memory leaks
 	});
 </script>
 
 <div>
 	{@render children?.()}
-	{#if hasMore}<div bind:this={sentinel}></div>{/if}
+	{#if hasMore}<div class="mt-[-10px]" id="sentinel" bind:this={sentinel}></div>{/if}
 </div>
