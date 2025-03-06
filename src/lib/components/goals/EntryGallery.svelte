@@ -21,6 +21,7 @@
 	loadMoreItems={presenter.loadMoreEntries.bind(presenter)}
 	hasMore={presenter.hasMoreEntries}
 	loading={presenter.loadingMoreEntries}
+	ready={presenter.loadedInitialEntries}
 >
 	<div class="grid grid-cols-3 gap-1">
 		{#if !presenter.hasEntryToday}
@@ -31,7 +32,7 @@
 			</a>
 		{/if}
 		{#if presenter.entryModels}
-			{#each presenter.entryModels as entryModel, i}
+			{#each presenter.entryModels as entryModel, i (entryModel.id)}
 				{#if entryModel.data}
 					<a href={presenter.getViewEntryUrl(entryModel.data.id)}>
 						<EntrySquare entry={entryModel.data} {entryModel} {isOwner} />

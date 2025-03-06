@@ -51,6 +51,10 @@ export abstract class PaginatedCollectionModel<
 		);
 	}
 
+	/**
+	 * WARNING - This method overrides the parent sendLoad method. Be sure to
+	 * implement the correct behavior based on the super class.
+	 */
 	protected async sendLoad() {
 		await this.loadMoreItems(this.initialPageSize ?? this.defaultInitialPageSize);
 	}

@@ -1,17 +1,16 @@
 import type { KeyFn } from '$lib/model/domain/KeyFn';
-import { isSortedBy } from '$lib/utils/arrays';
+import { immutableSplice, isSortedBy } from '$lib/utils/arrays';
 import { bisectLeftBy } from '$lib/utils/arrays/bisect-left';
 import { ListDataStructure } from './ListDataStructure.svelte';
 
 export class SortedListDataStructure<SortT, T extends SortT = SortT> extends ListDataStructure<T> {
-
 	// NOTE: These need to be getters because the parent class will use them in the constructor
 	private get isSorted() {
 		return isSortedBy<SortT, T>(this.compare);
-	};
+	}
 	private get bisectLeft() {
 		return bisectLeftBy<SortT, T>(this.compare);
-	};
+	}
 
 	constructor(
 		key: KeyFn<T>,
@@ -25,7 +24,13 @@ export class SortedListDataStructure<SortT, T extends SortT = SortT> extends Lis
 			throw new Error('Item with that id already exists');
 		}
 		const index = this.bisectLeft(this.items, item);
-		this.items.splice(index, 0, item);
+		this.items = immutableSplice(this.items, index, 0, item);
+	}
+	addItems(items: T[]): void {
+		if (!this.isSorted(items)) {
+			throw new Error('Items are not sorted');
+		}
+		this.items = [...this.items, ...items].sort(this.compare);
 	}
 	/** Items must each have a unique identity according to the key function */
 	setItems(items: T[]): void {

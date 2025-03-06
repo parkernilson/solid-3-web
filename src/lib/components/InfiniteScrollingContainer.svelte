@@ -1,13 +1,20 @@
 <script lang="ts">
+	import { debug } from '$lib/utils/logging';
 	import { onMount } from 'svelte';
 
 	const {
 		loadMoreItems,
 		hasMore,
 		loading,
+		ready,
 		children
-	}: { loadMoreItems: () => Promise<void>; hasMore: boolean; loading: boolean; children: any } =
-		$props();
+	}: {
+		loadMoreItems: () => Promise<void>;
+		hasMore: boolean;
+		loading: boolean;
+		ready: boolean;
+		children: any;
+	} = $props();
 
 	let observer = $state<IntersectionObserver>();
 	let sentinel = $state<HTMLElement>();
@@ -16,7 +23,7 @@
 		observer = new IntersectionObserver(
 			async (entries) => {
 				const entry = entries[0];
-				if (entry.isIntersecting && !loading && hasMore) {
+				if (entry.isIntersecting && ready && !loading && hasMore) {
 					await loadMoreItems();
 				}
 			},

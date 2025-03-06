@@ -9,7 +9,7 @@ type DeleteFn = (id: IdType) => Promise<void>;
 export interface ExecuteCreateParams<T, CreateTParams> {
 	createParams: CreateTParams;
 	optimistic?: boolean;
-	/** 
+	/**
 	 * This function is called with the data that will be created. If the function
 	 * returns false, the item will be still be created, but not added to the collection.
 	 *
@@ -28,11 +28,7 @@ export interface ExecuteDeleteParams {
 
 type GetOptimisticCreateTFn<T, OptimisticCreateTParams> = (params: OptimisticCreateTParams) => T;
 
-export class CreateDeleteRunner<
-	T,
-	CreateTParams,
-	DM extends DataModel<T>
-> {
+export class CreateDeleteRunner<T, CreateTParams, DM extends DataModel<T>> {
 	private _creating = $state(false);
 	public get creating() {
 		return this._creating;
@@ -76,14 +72,14 @@ export class CreateDeleteRunner<
 
 	async delete(params: ExecuteDeleteParams): Promise<void> {
 		this._deleting = true;
-		
+
 		const originalItem = this.model.getModel(params.id);
 		if (params.optimistic) this.model.remove(params.id);
 
 		try {
 			await params.sendDelete(params.id);
 			if (!params.optimistic) this.model.remove(params.id);
-		} catch(e) {
+		} catch (e) {
 			if (originalItem && params.optimistic) this.model.addModel(originalItem);
 			throw e;
 		} finally {
