@@ -4,7 +4,7 @@ import type { GoalInfoDataModel } from '$lib/model/models/goals/GoalInfoDataMode
 import type { SharedGoalInfoDataModel } from '$lib/model/models/goals/SharedGoalInfoDataModel.svelte';
 import { Routes } from '$lib/model/routes';
 import type { ProfileService } from '$lib/services/ProfileService.svelte';
-import { diffDays, today } from '$lib/utils/dates';
+import { DateEx } from '$lib/utils/dates';
 
 export class GoalListViewPresenter {
 	get optimistic() {
@@ -22,7 +22,7 @@ export class GoalListViewPresenter {
 	get lastActivityMessage() {
 		const goalInfoObj = GoalInfo.fromJson(this.goalInfo);
 		return goalInfoObj.lastEntryDate
-			? `Last activity ${diffDays(today(), goalInfoObj.lastEntryDate)} days ago`
+			? `Last activity ${DateEx.diffDays(DateEx.todayDate(), goalInfoObj.lastEntryDate)} days ago`
 			: 'No activity yet';
 	}
 
@@ -60,5 +60,5 @@ export class GoalListViewPresenter {
 		private goalInfo: IGoalInfo,
 		private goalInfoModel: GoalInfoDataModel | SharedGoalInfoDataModel,
 		private profileService: ProfileService
-	) { }
+	) {}
 }

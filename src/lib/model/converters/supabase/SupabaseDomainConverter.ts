@@ -24,9 +24,9 @@ export class SupabaseDomainConverter {
 		return {
 			id: goal.id,
 			title: goal.title,
-			startDate: goal.created_at,
+			startDate: goal.start_date,
 			owner: goal.owner
-		}
+		};
 	}
 
 	convertEntry(entry: SupabaseEntry): IEntry {
@@ -36,7 +36,7 @@ export class SupabaseDomainConverter {
 			textContent: entry.text_content,
 			dateOf: entry.date_of,
 			success: entry.success
-		}
+		};
 	}
 
 	convertStreakInfo(streakInfo: SupabaseStreakInfoNotNull): IStreakInfo {
@@ -44,16 +44,18 @@ export class SupabaseDomainConverter {
 			startDate: streakInfo.start_date,
 			endDate: streakInfo.end_date,
 			streakCount: streakInfo.streak_count
-		}
+		};
 	}
 
-	convertCurrentStreakInfo(currentStreakInfo: SupabaseCurrentStreakInfoNotNull): ICurrentStreakInfo {
+	convertCurrentStreakInfo(
+		currentStreakInfo: SupabaseCurrentStreakInfoNotNull
+	): ICurrentStreakInfo {
 		return {
 			startDate: currentStreakInfo.start_date,
 			endDate: currentStreakInfo.end_date,
 			streakCount: currentStreakInfo.streak_count,
 			currentPeriodSuccess: currentStreakInfo.current_period_success
-		}
+		};
 	}
 
 	convertUserProfile(userProfile: SupabaseUserProfile): UserProfile {
@@ -64,10 +66,7 @@ export class SupabaseDomainConverter {
 		);
 	}
 
-	convertShareRecord(
-		userProfile: UserProfile,
-		shareRecord: SupabaseShareRecord
-	): ShareRecord {
+	convertShareRecord(userProfile: UserProfile, shareRecord: SupabaseShareRecord): ShareRecord {
 		return new ShareRecord(
 			userProfile,
 			shareRecord.goal,
@@ -83,7 +82,7 @@ export class SupabaseDomainConverter {
 			owner: sharedGoal.owner,
 			ownerEmail: sharedGoal.owner_email,
 			ownerProfileImagePath: sharedGoal.owner_profile_image_path ?? undefined,
-			startDate: sharedGoal.created_at,
+			startDate: sharedGoal.start_date,
 			sharedOn: sharedGoal.shared_on
 		};
 	}

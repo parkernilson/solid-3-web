@@ -1,4 +1,4 @@
-import { compareDates } from '$lib/utils/compare/compare-dates';
+import { DateEx } from '$lib/utils/dates';
 import { Optimistic } from '../Optimistic';
 
 export interface IEntry {
@@ -16,7 +16,7 @@ export type EntryUpdateParams = Pick<IEntry, 'textContent' | 'dateOf' | 'success
 
 export class Entry implements IEntry {
 	get dateOfObject() {
-		return new Date(this.dateOf);
+		return DateEx.fromISODateOnly(this.dateOf);
 	}
 
 	constructor(
@@ -37,7 +37,7 @@ export class Entry implements IEntry {
 	}
 
 	static defaults = () => ({
-		dateOf: this.formatDate(new Date()),
+		dateOf: this.formatDate(DateEx.todayDate()),
 		textContent: null,
 		success: true
 	});
@@ -74,6 +74,8 @@ export class Entry implements IEntry {
 	}
 
 	static compareByDate(a: IEntry, b: IEntry): number {
-		return compareDates(a.dateOf, b.dateOf);
+		const aEntry = Entry.fromJson(a);
+		const bEntry = Entry.fromJson(b);
+		return DateEx.compare(aEntry.dateOfObject, bEntry.dateOfObject);
 	}
 }

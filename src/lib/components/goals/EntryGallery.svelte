@@ -13,10 +13,6 @@
 	const presenterFactory = getContext<PresenterFactory>('PresenterFactory');
 	const presenter = presenterFactory.createEntryGalleryPresenter(goal.id, goalModel);
 
-	$effect(() => {
-		$inspect(presenter.hasEntryToday);
-	});
-
 	onMount(async () => {
 		await presenter.load({});
 	});

@@ -1,3 +1,4 @@
+import { DateEx } from '$lib/utils/dates';
 import { Optimistic } from '../Optimistic';
 
 export interface IGoal {
@@ -17,8 +18,8 @@ export class Goal implements IGoal {
 		public title: string,
 		public startDate: string
 	) {}
-	get startDateObj(): Date {
-		return new Date(this.startDate);
+	get startDateObj(): DateEx {
+		return DateEx.fromISODateOnly(this.startDate);
 	}
 
 	toJson(): IGoal {
@@ -46,7 +47,7 @@ export class Goal implements IGoal {
 		return {
 			...params,
 			id: Optimistic.getTempId(),
-			startDate: params.startDate ?? new Date().toISOString()
+			startDate: params.startDate ?? DateEx.todayDate().toISODateOnlyString()
 		};
 	}
 

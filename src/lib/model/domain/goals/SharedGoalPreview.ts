@@ -1,4 +1,5 @@
-import type { ShareStatus } from "./ShareRecord";
+import { DateEx } from '$lib/utils/dates';
+import type { ShareStatus } from './ShareRecord';
 
 export interface ISharedGoalPreview {
 	id: string;
@@ -15,7 +16,7 @@ export interface ISharedGoalPreview {
 
 export class SharedGoalPreview implements ISharedGoalPreview {
 	get sharedOnDate() {
-		return new Date(this.sharedOn);
+		return DateEx.fromISODateOnly(this.sharedOn);
 	}
 
 	constructor(
@@ -29,7 +30,7 @@ export class SharedGoalPreview implements ISharedGoalPreview {
 		public sharedWith: string,
 		public sharedOn: string,
 		public goalOwnerProfileImagePath?: string
-	){}
+	) {}
 
 	toJson(): ISharedGoalPreview {
 		return {
@@ -43,7 +44,7 @@ export class SharedGoalPreview implements ISharedGoalPreview {
 			sharedWith: this.sharedWith,
 			sharedOn: this.sharedOn,
 			goalOwnerProfileImagePath: this.goalOwnerProfileImagePath
-		}
+		};
 	}
 
 	static fromJson(json: ISharedGoalPreview): SharedGoalPreview {

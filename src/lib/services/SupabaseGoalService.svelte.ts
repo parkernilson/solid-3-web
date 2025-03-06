@@ -23,7 +23,6 @@ import {
 import type { ShareRecord } from '$lib/model/domain/goals/ShareRecord';
 import { UserProfile } from '$lib/model/domain/users';
 import type { SupabaseClient } from '$lib/supabase/supabase';
-import { toUTCString } from '$lib/utils/dates';
 import { stripUndefined } from '$lib/utils/objects';
 import type { PaginatedRequest, PaginatedResponse } from '$lib/utils/types';
 import type {
@@ -205,6 +204,10 @@ export class SupabaseGoalService implements GoalService {
 	}
 
 	async createGoal({ title }: CreateGoalParams): Promise<CreateGoalResult> {
+		// TODO: add the ability to specify start date (?)
+		// Should we let the user specify dates in the past? Or only allow today?
+		// Since the server may be in a different timezone than the user, we may need
+		// to let the user specify the date.
 		const { data, error } = await this.supabase.rpc('create_goal', { _title: title });
 		if (error) {
 			throw error;
@@ -220,7 +223,7 @@ export class SupabaseGoalService implements GoalService {
 	}: CreateEntryParams): Promise<CreateEntryResult> {
 		const { data, error } = await this.supabase.rpc('create_entry', {
 			_goal_id: goalId,
-			_date_of: toUTCString(dateOf),
+			_date_of: dateOf,
 			_success: success,
 			_text_content: textContent ?? undefined
 		});
@@ -236,7 +239,7 @@ export class SupabaseGoalService implements GoalService {
 			_entry_id: id,
 			_update_values: stripUndefined({
 				text_content: textContent,
-				date_of: dateOf ? toUTCString(dateOf) : undefined,
+				date_of: dateOf,
 				success: success
 			})
 		});

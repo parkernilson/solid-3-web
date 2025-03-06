@@ -5,13 +5,20 @@ import type { EntryDataModel } from '$lib/model/models/goals/EntryDataModel.svel
 import type { GoalModel } from '$lib/model/models/goals/GoalModel.svelte';
 import { Routes } from '$lib/model/routes';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
+import { DateEx } from '$lib/utils/dates';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export type EntryModalMode = 'create' | 'view';
 
 export class EntryModalPresenter extends LoadablePresenter {
 	public currentTextContent = $state<string | undefined | null>();
-	public currentDateOf = $state<string>(new Date().toLocaleDateString());
+
+	private formatter = new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit'
+	});
+	public currentDateOf = $state<string>(this.formatter.format(DateEx.todayDate()));
 	public currentSuccess = $state<boolean>(true);
 
 	public editing = $state<boolean>(false);

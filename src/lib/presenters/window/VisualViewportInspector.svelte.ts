@@ -13,7 +13,6 @@ export class VisualViewportInspector {
 	}
 
 	listen(e: Event) {
-		console.log('resize event', this);
 		const v = e.target as VisualViewport;
 		this.viewport = { height: v.height, width: v.width };
 	}

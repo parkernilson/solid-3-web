@@ -5,8 +5,8 @@ import {
 	type UserEntryCreateParams
 } from '$lib/model/domain/goals';
 import type { GoalService } from '$lib/services/GoalService.svelte';
-import { compareDates, compareNullable } from '$lib/utils/compare';
-import { today } from '$lib/utils/dates';
+import { compareNullable } from '$lib/utils/compare';
+import { DateEx } from '$lib/utils/dates';
 import { type PaginatedRequest, type PaginatedResponse } from '$lib/utils/types';
 import type { CreateDeleteRunnerConstructor } from '../base/create-delete-runners';
 import { SortedListDataStructure } from '../base/data-structures';
@@ -29,7 +29,13 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 	private static initialPageSize = 210;
 
 	private todayEntry = $derived(
-		this.models.find((m) => compareNullable(compareDates)(m.data?.dateOf, today()) === 0)
+		this.models.find(
+			(m) =>
+				compareNullable(DateEx.compareDateOnlyStrings)(
+					m.data?.dateOf,
+					DateEx.todayDateOnlyString()
+				) === 0
+		)
 	);
 	public hasEntryToday = $derived(!!this.todayEntry);
 
@@ -76,7 +82,10 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 				// entries that have already been loaded.
 				if (!this.getLastExclusiveStartKey) return false;
 				return (
-					compareNullable(compareDates)(this.getStartKey(data), this.getLastExclusiveStartKey()) > 0
+					compareNullable(DateEx.compareDateOnlyStrings)(
+						this.getStartKey(data),
+						this.getLastExclusiveStartKey()
+					) > 0
 				);
 			},
 			sendCreate: async (createParams) => {

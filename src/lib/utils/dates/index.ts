@@ -1,3 +1,1 @@
-export * from './diff';
-export * from './today';
-export * from './toUTCString';
+export * from './DateEx';

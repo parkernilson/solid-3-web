@@ -23,7 +23,7 @@ export interface CreateGoalResult {
 export interface CreateEntryParams {
 	goalId: string;
 	textContent?: string | null;
-	dateOf: Date | string;
+	dateOf: string;
 	success: boolean;
 }
 
@@ -32,7 +32,7 @@ export type CreateEntryResult = IEntry;
 /** Null values will set the value to null, undefined values will be ignored */
 export interface UpdateEntryParams {
 	textContent?: string | null;
-	dateOf?: Date | string;
+	dateOf?: string;
 	success?: boolean;
 }
 

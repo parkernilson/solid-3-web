@@ -9,10 +9,10 @@ export class CurrentStreakInfo extends StreakInfo {
 		return this._currentPeriodSuccess;
 	}
 	constructor(
-		startDate: Date | string,
-		endDate: Date | string,
+		startDate: string,
+		endDate: string,
 		streakCount: number,
-		private _currentPeriodSuccess: boolean,
+		private _currentPeriodSuccess: boolean
 	) {
 		super(startDate, endDate, streakCount);
 	}
@@ -20,11 +20,16 @@ export class CurrentStreakInfo extends StreakInfo {
 	toJson(): ICurrentStreakInfo {
 		return {
 			...super.toJson(),
-			currentPeriodSuccess: this.currentPeriodSuccess,
+			currentPeriodSuccess: this.currentPeriodSuccess
 		};
 	}
 
 	static fromJson(json: ICurrentStreakInfo): CurrentStreakInfo {
-		return new CurrentStreakInfo(json.startDate, json.endDate, json.streakCount, json.currentPeriodSuccess);
+		return new CurrentStreakInfo(
+			json.startDate,
+			json.endDate,
+			json.streakCount,
+			json.currentPeriodSuccess
+		);
 	}
 }

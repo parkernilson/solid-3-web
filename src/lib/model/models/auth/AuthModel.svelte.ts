@@ -25,7 +25,6 @@ export class AuthModel {
 		return new Promise((res, rej) => {
 			let initialUserResolved = false;
 			this.authStateSubscription = this.supabase.auth.onAuthStateChange((e, session) => {
-				console.log('auth state change', e, session);
 				if (e === 'INITIAL_SESSION' || e === 'SIGNED_IN') {
 					if (session?.user) {
 						this.authService

@@ -34,6 +34,7 @@ import {
 import type { VisualViewportInspector } from '$lib/presenters/window/VisualViewportInspector.svelte';
 import { ModelFactory } from '../models/ModelFactory.svelte';
 import type { ServiceFactory } from '../services/ServiceFactory.svelte';
+import { HeaderStatsPresenter } from '$lib/presenters/goals/HeaderStatsPresenter.svelte';
 
 export class PresenterFactory {
 	private dialogPresenterInstance: DialogPresenter;
@@ -200,5 +201,9 @@ export class PresenterFactory {
 			mode,
 			entryId
 		);
+	}
+
+	createHeaderStatsPresenter(streak: number, record: number, startDate: string) {
+		return new HeaderStatsPresenter(streak, record, startDate);
 	}
 }

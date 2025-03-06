@@ -1,6 +1,6 @@
 import { Optimistic } from '$lib/model/domain/Optimistic';
 import { compareNullable } from '$lib/utils/compare';
-import { compareDates } from '$lib/utils/compare/compare-dates';
+import { DateEx } from '$lib/utils/dates';
 import { Goal, type IGoal } from './Goal';
 import type { IGoalStats } from './GoalStats';
 
@@ -12,7 +12,7 @@ export class GoalInfo extends Goal implements IGoalInfo {
 		title: string,
 		owner: string,
 		startDate: string,
-		private goalStats: IGoalStats
+		public goalStats: IGoalStats
 	) {
 		super(id, title, owner, startDate);
 	}
@@ -34,23 +34,23 @@ export class GoalInfo extends Goal implements IGoalInfo {
 		});
 	}
 
-	get lastEntryDate(): Date | undefined {
+	get lastEntryDate(): DateEx | undefined {
 		return this.goalStats.activity?.lastEntry?.dateOf
-			? new Date(this.goalStats.activity.lastEntry.dateOf)
+			? DateEx.fromISODateOnly(this.goalStats.activity.lastEntry.dateOf)
 			: undefined;
 	}
 
-	static createOptimisticJson(userId: string, currentDate: Date, title: string): IGoalInfo {
+	static createOptimisticJson(userId: string, currentDate: DateEx, title: string): IGoalInfo {
 		return {
 			id: Optimistic.getTempId(),
 			owner: userId,
 			title,
-			startDate: currentDate.toISOString()
+			startDate: currentDate.toISODateOnlyString()
 		};
 	}
 
 	static compareActivity(a: GoalInfo, b: GoalInfo): number {
-		return compareNullable(compareDates)(a.lastEntryDate, b.lastEntryDate);
+		return compareNullable(DateEx.compare)(a.lastEntryDate, b.lastEntryDate);
 	}
 
 	static compareActivityJson(a: IGoalInfo, b: IGoalInfo): number {
@@ -58,7 +58,7 @@ export class GoalInfo extends Goal implements IGoalInfo {
 	}
 
 	static compareStartDate(a: GoalInfo, b: GoalInfo): number {
-		return compareDates(a.startDateObj, b.startDateObj);
+		return DateEx.compare(a.startDateObj, b.startDateObj);
 	}
 
 	static compareStartDateJson(a: IGoalInfo, b: IGoalInfo): number {
