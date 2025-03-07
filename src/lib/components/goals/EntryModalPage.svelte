@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { EntryModalPresenter } from '$lib/presenters/goals/EntryModalPresenter.svelte';
+	import DatePicker from '$lib/shadcn/components/ui/date-picker/DatePicker.svelte';
 	import ModalNavHeader from '../nav/ModalNavHeader.svelte';
 	import Button from '../ui/Button.svelte';
 	import PagePadding from '../ui/PagePadding.svelte';
@@ -23,7 +24,8 @@
 			<div class="h-full text-dark">
 				<div class="">
 					{#if presenter.editing}
-						<input class="block" type="date" bind:value={presenter.currentDateOf} />
+						<DatePicker />
+						<!-- <input class="block" type="date" bind:value={presenter.currentDateOf} /> -->
 					{:else}
 						<p>{presenter.currentDateOf}</p>
 					{/if}
