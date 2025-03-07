@@ -19,8 +19,8 @@
 			<Button
 				variant="outline"
 				class={cn(
-					'w-[280px] justify-start text-left font-normal',
-					!value && 'text-muted-foreground'
+					'w-[280px] justify-start text-left font-normal'
+					// !value && 'text-muted-foreground'
 				)}
 				{...props}
 			>

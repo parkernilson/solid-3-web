@@ -4,7 +4,7 @@
 		placeholder,
 		type
 	}: {
-		value?: string;
+		value?: string | null;
 		placeholder?: string;
 		type: 'text' | 'password';
 	} = $props();
