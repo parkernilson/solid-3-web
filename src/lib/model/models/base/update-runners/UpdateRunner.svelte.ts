@@ -13,8 +13,11 @@ export abstract class UpdateRunner {
 		this._updating = value;
 	}
 
+	private inFlightUpdates = 0;
+
 	protected initUpdate(operation: ExecuteUpdateParams) {
 		this.setUpdating(true);
+		this.inFlightUpdates++;
 		if (operation.applyOptimistic) {
 			operation.applyOptimistic();
 		}
@@ -38,6 +41,8 @@ export abstract class UpdateRunner {
 	}
 
 	protected finalizeUpdate() {
-		this.setUpdating(false);
+		if (--this.inFlightUpdates === 0) {
+			this.setUpdating(false);
+		}
 	}
 }

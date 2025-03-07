@@ -36,13 +36,12 @@ export class GoalModel extends BaseModel {
 		super();
 	}
 
-	// TODO: implement the abstract update runner that I talked about for
-	// "Per Entry Streaks", because we should run these updates using that here
-	// to group the stat updates with the entry updates / create / delete
+	// TODO: use the update method on UpdatableModel to run these updates
 
 	async createEntry(params: UserEntryCreateParams): Promise<void> {
 		// TODO: refresh goal stats
 		await this.entryCollectionModel.createEntry(params);
+		await this.goalStatsModel.reload();
 	}
 
 	async updateEntry(id: string, params: EntryUpdateParams): Promise<void> {
@@ -50,6 +49,7 @@ export class GoalModel extends BaseModel {
 		const model = this.entryCollectionModel.getModel(id);
 		if (!model) throw new Error(`Entry model not found for id: ${id}`);
 		await model.updateEntry(params);
+		await this.goalStatsModel.reload();
 	}
 
 	async sendLoad(): Promise<void> {

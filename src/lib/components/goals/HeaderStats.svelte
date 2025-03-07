@@ -6,7 +6,10 @@
 		$props();
 
 	const presenterFactory = getContext<PresenterFactory>('PresenterFactory');
-	const presenter = presenterFactory.createHeaderStatsPresenter(streak, record, startDate);
+	// Note: If using state variables to construct the presenter, instead of models, need to derive the presenter
+	const presenter = $derived(
+		presenterFactory.createHeaderStatsPresenter(streak, record, startDate)
+	);
 </script>
 
 <div class="flex items-center">

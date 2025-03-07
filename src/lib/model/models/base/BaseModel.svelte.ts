@@ -20,19 +20,45 @@ export abstract class BaseModel {
 		this._loaded = value;
 	}
 
+	private loadsInFlight = 0;
+
 	protected abstract sendLoad(): Promise<void>;
+
 	/**
 	 * If the model has not been loaded, load it.
 	 */
 	async load() {
+		if (!this.loaded) {
+			await this.executeLoad(this.sendLoad.bind(this));
+		}
+	}
+
+	/**
+	 * Reload the data by calling the sendLoad method.
+	 * NOTE: The difference between this and load is that this will always
+	 * reload the data, even if it has already been loaded. It will not affect
+	 * the this.loaded property, only the this.loading property.
+	 */
+	async reload() {
+		await this.executeLoad(this.sendLoad.bind(this));
+	}
+
+	/**
+	 * @param send The function to call to send the load request. This could be used to provide
+	 * a custom loading function, like for example, an optional reload function which differs from
+	 * the default sendLoad method. However, there is no reason to support that at this time
+	 * (as of 2024-03-07)
+	 */
+	async executeLoad(send: () => Promise<void>) {
 		this.loading = true;
+		this.loadsInFlight++;
 		try {
-			if (!this.loaded) {
-				await this.sendLoad();
-			}
+			await send();
 			this.loaded = true;
 		} finally {
-			this.loading = false;
+			if (--this.loadsInFlight === 0) {
+				this.loading = false;
+			}
 		}
 	}
 }

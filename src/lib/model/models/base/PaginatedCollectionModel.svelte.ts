@@ -56,6 +56,8 @@ export abstract class PaginatedCollectionModel<
 	 * implement the correct behavior based on the super class.
 	 */
 	protected async sendLoad() {
+		// TODO: Make this call something that resets the data, not appends, since reload will
+		// call this method and it should reset the data.
 		await this.loadMoreItems(this.initialPageSize ?? this.defaultInitialPageSize);
 	}
 }

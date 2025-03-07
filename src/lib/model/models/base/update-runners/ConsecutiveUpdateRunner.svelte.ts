@@ -5,7 +5,6 @@ import { UpdateRunner, type ExecuteUpdateParams } from './UpdateRunner.svelte';
  * then running the send functions in the order received each only after the previous update has
  * successfully resolved.
  *
-//  TODO: make sure this is actually how it works
  * If any of the send functions fail, all pending updates corresponding to an optimistic update
  * are rejected and rolled back starting from the most recently applied optimistic update going
  * back to the failing operation.
@@ -30,9 +29,7 @@ export class ConsecutiveUpdateRunner extends UpdateRunner {
 				}
 			} finally {
 				this.queue.shift();
-				if (this.queue.length === 0) {
-					this.finalizeUpdate();
-				}
+				this.finalizeUpdate();
 			}
 		}
 	}

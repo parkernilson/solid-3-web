@@ -5,11 +5,18 @@
 	import HeaderBar from '$lib/components/nav/HeaderBar.svelte';
 	import PagePadding from '$lib/components/ui/PagePadding.svelte';
 	import ResponsiveCenterColumn from '$lib/components/ui/ResponsiveCenterColumn.svelte';
+	import { shouldDebug } from '$lib/utils/logging';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalPagePresenter;
 	const goalModel = data.goalModel;
+
+	$effect(() => {
+		if (shouldDebug()) {
+			$inspect(presenter.goalInfo);
+		}
+	});
 </script>
 
 <ResponsiveCenterColumn>
@@ -19,6 +26,7 @@
 	{#await data.loadingGoalRoute}
 		<p>loading goal</p>
 	{:then _}
+		<p>{JSON.stringify(presenter.goalInfo)}</p>
 		{#if presenter.goalInfo}
 			{@const goal = presenter.goalInfo}
 			{@const sharedGoal = presenter.sharedGoalInfo}
