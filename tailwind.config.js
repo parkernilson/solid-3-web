@@ -77,6 +77,8 @@ const config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
+				logo: ['basic-sans', 'sans-serif'],
+				body: ['basic-sans', 'sans-serif'],
 				sans: [...fontFamily.sans]
 			},
 			keyframes: {
