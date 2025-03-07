@@ -21,9 +21,14 @@ export class GoalListViewPresenter {
 
 	get lastActivityMessage() {
 		const goalInfoObj = GoalInfo.fromJson(this.goalInfo);
-		return goalInfoObj.lastEntryDate
-			? `Last activity ${DateEx.diffDays(DateEx.todayDate(), goalInfoObj.lastEntryDate)} days ago`
-			: 'No activity yet';
+		if (!goalInfoObj.lastEntryDate) {
+			return 'No activity yet';
+		} else {
+			const diffDays = DateEx.diffDays(goalInfoObj.lastEntryDate, DateEx.todayDate());
+			return diffDays === 0
+				? 'Last activity today'
+				: `Last activity ${DateEx.diffDays(DateEx.todayDate(), goalInfoObj.lastEntryDate)} days ago`;
+		}
 	}
 
 	get isSharedGoal() {
