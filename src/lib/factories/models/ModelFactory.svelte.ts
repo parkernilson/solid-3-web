@@ -65,6 +65,7 @@ export class ModelFactory {
 
 	createGoalModel(goalId: string, initialData?: IGoalInfo) {
 		return new GoalModel(
+			this.updateRunnerFactory.getConsecutiveUpdateRunner(),
 			this.createGoalDataModel(goalId, { initialData }),
 			this.createGoalStatsDataModel(goalId, { initialData }),
 			this.createEntryCollectionModel(goalId, false)
@@ -73,6 +74,7 @@ export class ModelFactory {
 
 	createSharedGoalModel(goalId: string, initialData?: ISharedGoalInfo) {
 		return new GoalModel(
+			this.updateRunnerFactory.getConsecutiveUpdateRunner(),
 			this.createSharedGoalDataModel(goalId, { initialData }),
 			this.createGoalStatsDataModel(goalId, { initialData }),
 			this.createEntryCollectionModel(goalId, true)

@@ -5,13 +5,16 @@ import type {
 	ISharedGoal,
 	UserEntryCreateParams
 } from '$lib/model/domain/goals';
-import { BaseModel } from '../base/BaseModel.svelte';
+import { UpdatableModel } from '../base/UpdatableModel.svelte';
+import type { ConsecutiveUpdateRunner } from '../base/update-runners';
 import type { EntryCollectionModel } from './EntryCollectionModel.svelte';
 import { GoalDataModel } from './GoalDataModel.svelte';
 import type { GoalStatsDataModel } from './GoalStatsDataModel.svelte';
 import { SharedGoalDataModel } from './SharedGoalDataModel.svelte';
 
-export class GoalModel extends BaseModel {
+// TODO: Implement orchestrated updates using the UpdatableModel update method
+
+export class GoalModel extends UpdatableModel {
 	public get goalId(): string {
 		return this.goalDataModel.id as string;
 	}
@@ -29,23 +32,20 @@ export class GoalModel extends BaseModel {
 	}
 
 	constructor(
+		updateRunner: ConsecutiveUpdateRunner,
 		private goalDataModel: GoalDataModel | SharedGoalDataModel,
 		private goalStatsModel: GoalStatsDataModel,
 		public entryCollectionModel: EntryCollectionModel
 	) {
-		super();
+		super(updateRunner);
 	}
 
-	// TODO: use the update method on UpdatableModel to run these updates
-
 	async createEntry(params: UserEntryCreateParams): Promise<void> {
-		// TODO: refresh goal stats
 		await this.entryCollectionModel.createEntry(params);
 		await this.goalStatsModel.reload();
 	}
 
 	async updateEntry(id: string, params: EntryUpdateParams): Promise<void> {
-		// TODO: refresh goal stats
 		const model = this.entryCollectionModel.getModel(id);
 		if (!model) throw new Error(`Entry model not found for id: ${id}`);
 		await model.updateEntry(params);
