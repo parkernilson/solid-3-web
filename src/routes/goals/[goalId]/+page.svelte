@@ -11,12 +11,6 @@
 	const { data }: { data: PageData } = $props();
 	const presenter = data.goalPagePresenter;
 	const goalModel = data.goalModel;
-
-	$effect(() => {
-		if (shouldDebug()) {
-			$inspect(presenter.goalInfo);
-		}
-	});
 </script>
 
 <ResponsiveCenterColumn>
@@ -26,7 +20,6 @@
 	{#await data.loadingGoalRoute}
 		<p>loading goal</p>
 	{:then _}
-		<p>{JSON.stringify(presenter.goalInfo)}</p>
 		{#if presenter.goalInfo}
 			{@const goal = presenter.goalInfo}
 			{@const sharedGoal = presenter.sharedGoalInfo}
