@@ -128,7 +128,7 @@ export class ModelFactory {
 	createEntryDataModel(entryId: string, init: DataModelInit<IEntry> = {}) {
 		return new EntryDataModel(
 			this.serviceFactory.createGoalService(),
-			this.updateRunnerFactory.getConcurrentUpdateRunnerConstructor(),
+			this.updateRunnerFactory.getConcurrentUpdateRunner(),
 			entryId,
 			init
 		);

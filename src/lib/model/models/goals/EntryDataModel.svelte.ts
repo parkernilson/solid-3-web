@@ -2,16 +2,16 @@ import { Entry, type EntryUpdateParams, type IEntry } from '$lib/model/domain/go
 import type { GoalService } from '$lib/services/GoalService.svelte';
 import { type DataModelInit } from '../base/DataModel.svelte';
 import { UpdatableDataModel } from '../base/UpdatableDataModel.svelte';
-import type { ConcurrentUpdateRunnerConstructor } from '../base/update-runners';
+import type { ConcurrentUpdateRunner } from '../base/update-runners';
 
 export class EntryDataModel extends UpdatableDataModel<IEntry, EntryUpdateParams> {
 	constructor(
 		private goalService: GoalService,
-		updateRunnerConstructor: ConcurrentUpdateRunnerConstructor<IEntry>,
+		updateRunner: ConcurrentUpdateRunner,
 		private entryId: string,
 		init: DataModelInit<IEntry>
 	) {
-		super(updateRunnerConstructor, entryId, init);
+		super(updateRunner, entryId, init);
 	}
 
 	protected loadData(): Promise<IEntry> {
