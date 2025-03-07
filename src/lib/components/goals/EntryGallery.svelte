@@ -24,10 +24,15 @@
 	ready={presenter.loadedInitialEntries}
 >
 	<div class="grid grid-cols-3 gap-1">
-		{#if !presenter.hasEntryToday}
+		{#if !presenter.hasEntryToday && presenter.isOwner}
 			<a aria-label="Create entry" href={presenter.getAddEntryUrl()}>
-				<div class="aspect-square min-h-12 flex flex-col p-2 bg-blue-light rounded-xl">
-					<p>Tap here to create entry</p>
+				<div
+					class="aspect-square min-h-12 flex flex-col items-center justify-center p-2 text-blue-dark border-blue-light border-dotted border-[3px] rounded-xl"
+				>
+					<div class="flex flex-col items-center">
+						<i class="fa-solid fa-pencil fa-2xl p-3"></i>
+						<p class="mt-1">Create a new entry</p>
+					</div>
 				</div>
 			</a>
 		{/if}

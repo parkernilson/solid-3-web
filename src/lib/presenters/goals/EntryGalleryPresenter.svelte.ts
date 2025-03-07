@@ -24,6 +24,9 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 	get hasEntryToday() {
 		return this.goalModel.entryCollectionModel.hasEntryToday;
 	}
+	get isOwner() {
+		return !this.goalModel.isSharedGoal;
+	}
 
 	constructor(
 		private goalId: string,
