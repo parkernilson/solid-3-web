@@ -1,38 +1,42 @@
-# create-svelte
+# Solid App
+A goal sharing app where you make a daily goal and share it with your friends to build accountability and community.
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+# Technical Overview
+## Data ERD
+![Data ERD](./src/lib/assets/docs/DataERD.png)
 
-## Creating a project
+## Tech Stack
+![Tech Stack Diagram](./src/lib/assets/docs/SolidTechStackv1.1.png)
+Backend will be hosted on Supabase, using mostly Postgres Functions for authenticated / authorized backend logic. Edge Functions will be used where more complex logic and/or integrations with other services are required.
 
-If you're seeing this, you've probably already done this step. Congrats!
+Frontend will be written as a SvelteKit SPA hosted from an AWS S3 bucket through CloudFront. We will use a service worker to implement web push notifications and support PWA.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+# UX Overview
+## UX Prototype
+![UX Prototype](./src/lib/assets/docs/SolidUX.png)
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+# Roadmap
+As of Mar 14, I have implemented the backend and frontend to support everything in the UX prototype except for the Modify Entry modal and the Share Goal modal.
 
-## Developing
+The goal for the next 4 weeks is to:
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- [ ] complete the frontend as specified in the UX Prototype.
+- [ ] Implement service worker for notifications
+- [ ] Send notifications upon daily completion of goal to users it is shared with
+- [ ] Send reminder notifications to user to complete goal each day
+- [ ] Deploy backend to Supabase
+- [ ] Deploy frontend to S3
+- [ ] Bonus: Implement CI/CD for backend and frontend deployments
+- [ ] Bonus: Implement PWA support
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## 3/19
+Complete the Modify Entry modal and the Share Goal modal
+## 3/26
+Start service worker
+## 4/2
+Implement service worker for notifications
+## 4/9
+Send notifications on daily completion
+Send notifications for daily reminder
+## 4/16
+Deploy backend and frontend
