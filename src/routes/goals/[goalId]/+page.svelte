@@ -14,7 +14,7 @@
 </script>
 
 <ResponsiveCenterColumn>
-	<PagePadding>
+	<PagePadding hfull={false}>
 		<HeaderBar user={data.user} />
 	</PagePadding>
 	{#await data.loadingGoalRoute}
