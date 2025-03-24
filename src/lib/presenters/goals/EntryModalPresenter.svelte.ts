@@ -6,6 +6,7 @@ import type { GoalModel } from '$lib/model/models/goals/GoalModel.svelte';
 import { Routes } from '$lib/model/routes';
 import type { ErrorService } from '$lib/services/ErrorService.svelte';
 import { DateEx } from '$lib/utils/dates';
+import { type DateValue } from '@internationalized/date';
 import { LoadablePresenter } from '../LoadablePresenter.svelte';
 
 export type EntryModalMode = 'create' | 'view';
@@ -13,12 +14,20 @@ export type EntryModalMode = 'create' | 'view';
 export class EntryModalPresenter extends LoadablePresenter {
 	public currentTextContent = $state<string | undefined | null>();
 
-	private formatter = new Intl.DateTimeFormat('en-US', {
+	public datePickerDateValue = $state<DateValue>()!;
+	private initialDate = $state<DateEx>(DateEx.todayDate());
+
+	private displayFormatter = new Intl.DateTimeFormat('en-US', {
 		year: 'numeric',
 		month: '2-digit',
 		day: '2-digit'
 	});
-	public currentDateOf = $state<string>(this.formatter.format(DateEx.todayDate()));
+	private currentDateOf = $derived<DateEx>(
+		(this.datePickerDateValue
+			? DateEx.fromISODateOnly(this.datePickerDateValue?.toString())
+			: null) ?? this.initialDate
+	);
+	public currentDateOfDisplay = $derived<string>(this.displayFormatter.format(this.currentDateOf));
 	public currentSuccess = $state<boolean>(true);
 
 	public editing = $state<boolean>(false);
@@ -56,7 +65,7 @@ export class EntryModalPresenter extends LoadablePresenter {
 	async submit() {
 		const params = {
 			textContent: this.currentTextContent ?? null,
-			dateOf: this.currentDateOf,
+			dateOf: this.currentDateOf.toISODateOnlyString(),
 			success: this.currentSuccess
 		} satisfies EntryUpdateParams & UserEntryCreateParams;
 
@@ -87,7 +96,7 @@ export class EntryModalPresenter extends LoadablePresenter {
 		}
 
 		this.currentTextContent = this.entryModel.data.textContent;
-		this.currentDateOf = this.entryModel.data.dateOf;
+		this.initialDate = DateEx.fromISODateOnly(this.entryModel.data.dateOf);
 		this.currentSuccess = this.entryModel.data.success;
 	}
 }

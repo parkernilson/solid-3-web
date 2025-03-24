@@ -10,7 +10,7 @@
 		dateStyle: 'long'
 	});
 
-	let value = $state<DateValue>();
+	let { value = $bindable() }: { value: DateValue } = $props();
 </script>
 
 <Popover.Root>

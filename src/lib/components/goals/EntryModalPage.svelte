@@ -27,9 +27,9 @@
 			<div class="h-full text-foreground">
 				<div class="">
 					{#if presenter.editing}
-						<DatePicker />
+						<DatePicker bind:value={presenter.datePickerDateValue} />
 					{:else}
-						<p>{presenter.currentDateOf}</p>
+						<p>{presenter.currentDateOfDisplay}</p>
 					{/if}
 					<label class="flex mt-2">
 						<SlideToggle disabled={!presenter.editing} bind:checked={presenter.currentSuccess} />

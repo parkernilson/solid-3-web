@@ -4,6 +4,7 @@
  */
 export class DateEx extends Date {
 	static isoDateOnlyRegex = /^(\d{4})-(\d{2})-(\d{2})$/;
+	static isoDateRegex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})$/;
 
 	/**
 	 * Returns a new DateExtended object at midnight of the given
@@ -15,6 +16,15 @@ export class DateEx extends Date {
 			throw new Error(`Invalid date string: ${dateString}, expected 'yyyy-mm-dd'`);
 		}
 		return new DateEx(`${dateString}T00:00:00`);
+	}
+
+	static fromISODate(isoString: string): DateEx {
+		if (!DateEx.isoDateRegex.test(isoString)) {
+			throw new Error(
+				`Invalid iso string: ${isoString}, expected format: 'YYYY-MM-DDThh:mm:ss.sssTZD'`
+			);
+		}
+		return new DateEx(isoString);
 	}
 
 	toISODateOnlyString(): string {
