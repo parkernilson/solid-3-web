@@ -30,9 +30,9 @@ The goal for the next 4 weeks is to:
 - [ ] Bonus: Implement PWA support
 
 ## 3/19
-Complete the Modify Entry modal and the Share Goal modal
+Start the Modify Entry modal and the Share Goal modal
 ## 3/26
-Start service worker
+Complete the Modify Entry modal and the Share Goal modal
 ## 4/2
 Implement service worker for notifications
 ## 4/9
