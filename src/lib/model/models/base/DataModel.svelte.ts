@@ -39,6 +39,7 @@ export abstract class DataModel<T> extends BaseModel {
 	}
 
 	public setData(data: T | undefined, { optimistic = false }: SetDataOptions = {}): void {
+		this.loaded = true;
 		this.data = data;
 		this.optimistic = optimistic;
 	}
