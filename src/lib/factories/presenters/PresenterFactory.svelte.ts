@@ -193,13 +193,19 @@ export class PresenterFactory {
 		return new EntrySquarePresenter(entry);
 	}
 
-	createEntryModalPresenter(goalModel: GoalModel, mode: EntryModalMode, entryId?: string) {
+	createEntryModalPresenter(
+		goalModel: GoalModel,
+		mode: EntryModalMode,
+		entryId?: string,
+		isOwner?: boolean
+	) {
 		return new EntryModalPresenter(
 			this.serviceFactory.createErrorService(),
 			this.modelFactory,
 			goalModel,
 			mode,
-			entryId
+			entryId,
+			isOwner
 		);
 	}
 

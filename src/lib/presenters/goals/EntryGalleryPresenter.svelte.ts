@@ -42,7 +42,7 @@ export class EntryGalleryPresenter extends LoadablePresenter {
 	}
 
 	getViewEntryUrl(entryId: string) {
-		return Routes.getViewEntryUrl(this.goalId, entryId);
+		return Routes.getViewEntryUrl(this.goalId, entryId, !this.isOwner);
 	}
 
 	async loadMoreEntries() {

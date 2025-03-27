@@ -11,6 +11,7 @@ export const load = async ({ parent, params, url }) => {
 	return {
 		loadingGoalRoute: goalRoutePresenter.load({}),
 		goalModel,
-		goalRoutePresenter
+		goalRoutePresenter,
+		goalIsShared: shared
 	};
 };

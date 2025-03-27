@@ -50,12 +50,17 @@ export class EntryModalPresenter extends LoadablePresenter {
 		private modelFactory: ModelFactory,
 		private goalModel: GoalModel,
 		private mode: EntryModalMode,
-		private entryId?: string
+		private entryId?: string,
+		/** True if the current user it the owner of the entry */
+		private isOwner?: boolean
 	) {
 		super(errorService);
 		if (mode === 'view') {
 			if (!entryId) throw new Error(`entryId is required in mode: ${mode}`);
 			this.entryModel = goalModel.entryCollectionModel.getModel(entryId);
+			if (isOwner) {
+				this.editing = true;
+			}
 		}
 		if (mode === 'create') {
 			this.editing = true;

@@ -11,7 +11,7 @@ export class Routes {
 		return `/goals/${goalId}/add-entry`;
 	}
 
-	static getViewEntryUrl(goalId: string, entryId: string) {
-		return `/goals/${goalId}/entry/${entryId}`;
+	static getViewEntryUrl(goalId: string, entryId: string, shared: boolean) {
+		return `/goals/${goalId}/entry/${entryId}` + (shared ? '?shared=true' : '');
 	}
 }
