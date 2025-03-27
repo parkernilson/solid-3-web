@@ -12,11 +12,13 @@
 	}: { entry: IEntry; entryModel: EntryDataModel; isOwner: boolean } = $props();
 
 	const presenterFactory = getContext<PresenterFactory>('PresenterFactory');
-	const presenter = presenterFactory.createEntrySquarePresenter(entry);
+	const presenter = $derived(presenterFactory.createEntrySquarePresenter(entry));
 </script>
 
 {#snippet textContent(textContentFormatted: string)}
-	<p class="overflow-hidden text-nowrap w-full xs:text-wrap text-ellipsis">{textContentFormatted}</p>
+	<p class="overflow-hidden text-nowrap w-full xs:text-wrap text-ellipsis">
+		{textContentFormatted}
+	</p>
 {/snippet}
 
 {#snippet adjustTextSize(textContent: string | null | undefined, contentElement: Snippet<[string]>)}
@@ -43,12 +45,18 @@
 >
 	<p class="self-end">{presenter.dateFormatted}</p>
 	{#if presenter.textContentFormatted}
-		<div class="relative overflow-clip flex-1 flex flex-col items-center justify-center pb-6 {presenter.textContentIsOneEmoji ? 'self-center' : ''}">
+		<div
+			class="relative overflow-clip flex-1 flex flex-col items-center justify-center pb-6 {presenter.textContentIsOneEmoji
+				? 'self-center'
+				: ''}"
+		>
 			{@render adjustTextSize(presenter.textContentFormatted, textContent)}
 		</div>
 	{/if}
 	{#if !presenter.textContentIsOneEmoji}
-		<div class="pointer-events-none invisible xs:visible absolute w-full h-12 bottom-0 bg-gradient-to-b from-transparent to-blue-light via-blue-light/75"></div>
+		<div
+			class="pointer-events-none invisible xs:visible absolute w-full h-12 bottom-0 bg-gradient-to-b from-transparent to-blue-light via-blue-light/75"
+		></div>
 	{/if}
 	{#if presenter.entry.success}
 		<div class="w-4 xs:w-6 absolute bottom-3 right-3">

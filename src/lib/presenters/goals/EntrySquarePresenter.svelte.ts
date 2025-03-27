@@ -2,7 +2,7 @@ import { Entry, type IEntry } from '$lib/model/domain/goals';
 import { isOneEmoji } from '$lib/utils/strings';
 
 export class EntrySquarePresenter {
-	public entry: Entry;
+	public entry = $state<Entry>()!;
 	public showModal = $state(false);
 	public readonly MAX_CHARS = 120;
 
@@ -12,15 +12,11 @@ export class EntrySquarePresenter {
 		year: '2-digit'
 	});
 
-	public get dateFormatted() {
-		return this.formatter.format(this.entry.dateOfObject);
-	}
-
-	public get textContentIsOneEmoji() {
-		return this.entry.textContent ? isOneEmoji(this.entry.textContent) : false;
-	}
-
-	public get textContentFormatted() {
+	public dateFormatted = $derived(this.formatter.format(this.entry.dateOfObject));
+	public textContentIsOneEmoji = $derived(
+		this.entry.textContent ? isOneEmoji(this.entry.textContent) : false
+	);
+	public textContentFormatted = $derived.by(() => {
 		if (!this.entry.textContent) {
 			return undefined;
 		}
@@ -30,7 +26,7 @@ export class EntrySquarePresenter {
 		}
 
 		return this.entry.textContent;
-	}
+	});
 
 	constructor(entry: IEntry) {
 		this.entry = Entry.fromJson(entry);
