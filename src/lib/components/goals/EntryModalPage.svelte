@@ -26,7 +26,7 @@
 		{:then _}
 			<div class="h-full text-foreground">
 				<div class="">
-					{#if presenter.editing}
+					{#if presenter.dateIsEditable && presenter.editing}
 						<DatePicker bind:value={presenter.datePickerDateValue} />
 					{:else}
 						<p>{presenter.currentDateOfDisplay}</p>

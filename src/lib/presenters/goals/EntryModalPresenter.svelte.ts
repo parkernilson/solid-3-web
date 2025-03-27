@@ -32,6 +32,10 @@ export class EntryModalPresenter extends LoadablePresenter {
 
 	public editing = $state<boolean>(false);
 
+	public get dateIsEditable() {
+		return this.mode === 'create';
+	}
+
 	private entryModel?: EntryDataModel;
 
 	get modalTitle() {
