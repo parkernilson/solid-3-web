@@ -247,6 +247,11 @@ export class SupabaseGoalService implements GoalService {
 		return this.converter.convertEntry(data);
 	}
 
+	async deleteEntry(id: string): Promise<void> {
+		const { error } = await this.supabase.rpc('delete_entry', { _entry_id: id });
+		if (error) throw error;
+	}
+
 	async shareGoal({ goalId, withUser }: ShareGoalParams): Promise<void> {
 		await this.supabase.rpc('share_goal', { _goal_id: goalId, _with_user: withUser });
 	}

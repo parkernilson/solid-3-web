@@ -1,8 +1,12 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
 	const {
-		title
+		title,
+		actions
 	}: {
 		title: string;
+		actions?: Snippet;
 	} = $props();
 
 	const goBack = () => {
@@ -12,7 +16,10 @@
 
 <div class="flex items-center justify-between my-3">
 	<h1 class="text-2xl">{title}</h1>
-	<button aria-label="Cancel" onclick={goBack}>
-		<i class="fa-solid fa-x fa-lg"></i>
-	</button>
+	<div class="flex">
+		{@render actions?.()}
+		<button aria-label="Cancel" onclick={goBack}>
+			<i class="fa-solid fa-x fa-lg"></i>
+		</button>
+	</div>
 </div>

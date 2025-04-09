@@ -12,7 +12,7 @@ import { GoalDataModel } from './GoalDataModel.svelte';
 import type { GoalStatsDataModel } from './GoalStatsDataModel.svelte';
 import { SharedGoalDataModel } from './SharedGoalDataModel.svelte';
 
-// TODO: Implement orchestrated updates using the UpdatableModel update method
+// TODO: Implement orchestrated updates using the UpdatableModel update method (?)
 
 export class GoalModel extends UpdatableModel {
 	public get goalId(): string {
@@ -49,6 +49,11 @@ export class GoalModel extends UpdatableModel {
 		const model = this.entryCollectionModel.getModel(id);
 		if (!model) throw new Error(`Entry model not found for id: ${id}`);
 		await model.updateEntry(params);
+		await this.goalStatsModel.reload();
+	}
+
+	async deleteEntry(id: string): Promise<void> {
+		await this.entryCollectionModel.deleteEntry(id);
 		await this.goalStatsModel.reload();
 	}
 

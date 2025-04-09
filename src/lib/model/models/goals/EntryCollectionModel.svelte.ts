@@ -96,4 +96,14 @@ export class EntryCollectionModel extends PaginatedCollectionModel<
 			}
 		});
 	}
+
+	async deleteEntry(id: string): Promise<void> {
+		return this.delete({
+			id,
+			optimistic: true,
+			sendDelete: async () => {
+				await this.goalService.deleteEntry(id);
+			}
+		});
+	}
 }

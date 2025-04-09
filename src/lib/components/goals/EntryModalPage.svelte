@@ -8,6 +8,7 @@
 	import ResponsiveCenterColumn from '../ui/ResponsiveCenterColumn.svelte';
 	import SlideToggle from '../ui/SlideToggle.svelte';
 	import FieldInput from '../FieldInput.svelte';
+	import ConfirmActionButton from '../ui/ConfirmActionButton.svelte';
 
 	const {
 		presenter,
@@ -20,7 +21,22 @@
 
 <ResponsiveCenterColumn>
 	<PagePadding>
-		<ModalNavHeader title={presenter.modalTitle} />
+		<ModalNavHeader title={presenter.modalTitle}>
+			{#snippet actions()}
+				{#if presenter.isDeletable}
+					<div class="mr-4">
+						<ConfirmActionButton
+							title="Are you sure?"
+							description="This action is permanent. You will be deleting this entry forever."
+							onAction={presenter.deleteEntry.bind(presenter)}
+							actionName="Delete"
+						>
+							<i class="fa-solid fa-trash fa-lg"></i>
+						</ConfirmActionButton>
+					</div>
+				{/if}
+			{/snippet}
+		</ModalNavHeader>
 		{#await loadingPromise}
 			<p>Loading...</p>
 		{:then _}

@@ -35,6 +35,9 @@ export class EntryModalPresenter extends LoadablePresenter {
 	public get dateIsEditable() {
 		return this.mode === 'create';
 	}
+	public get isDeletable() {
+		return !!(this.mode === 'view' && this.isOwner);
+	}
 
 	private entryModel?: EntryDataModel;
 
@@ -87,6 +90,16 @@ export class EntryModalPresenter extends LoadablePresenter {
 			const id = this.entryId;
 			await this.doErrorable({ action: () => this.goalModel.updateEntry(id, params) });
 		}
+	}
+
+	async deleteEntry() {
+		if (!this.entryId) throw new Error(`entryId is required to delete an entry`);
+		await this.doErrorable({
+			action: async () => {
+				await goto(Routes.getGoalPageUrl(this.goalModel.goalId, this.goalModel.isSharedGoal));
+				return this.goalModel.deleteEntry(this.entryId!);
+			}
+		});
 	}
 
 	protected async loadResource(): Promise<void> {

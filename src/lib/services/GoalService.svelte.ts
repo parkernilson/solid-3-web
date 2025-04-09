@@ -72,6 +72,7 @@ export interface GoalService {
 	createGoal(params: CreateGoalParams): Promise<CreateGoalResult>;
 	createEntry(params: CreateEntryParams): Promise<CreateEntryResult>;
 	updateEntry(id: string, params: UpdateEntryParams): Promise<UpdateEntryResult>;
+	deleteEntry(id: string): Promise<void>;
 	shareGoal(params: ShareGoalParams): Promise<void>;
 	rejectSharedGoal(params: RejectSharedGoalParams): Promise<void>;
 	unshareGoal(params: UnshareGoalParams): Promise<void>;
